@@ -24,7 +24,7 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 
 # Copy static assets from the previous stage (builder) to the working directory of this stage
-COPY --from=builder /app/dist/portfolio_frontend .
+COPY --from=builder /app/dist/frontend .
 
 # Copy nginx configuration file
 COPY /nginx.conf  /etc/nginx/conf.d/default.conf
