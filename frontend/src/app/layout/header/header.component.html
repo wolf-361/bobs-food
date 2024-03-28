@@ -1,1 +1,31 @@
-<p>header works!</p>
+<mat-toolbar>
+    <button mat-icon-button >
+        <img src="assets/bobicon.png" alt="App icon">
+    </button>
+    <span>Bob's duck</span>
+    <span class="spacer"></span>
+    
+    <!-- Menu items, if mobile -->
+    <div *ngIf="showMobileMenu" class="mobile-menu" #mobileMenu>
+        <button mat-button routerLink="/">Commander</button>
+        <button mat-button color="accent" routerLink="/login">
+            <mat-icon>account_circle</mat-icon>
+            <span>Se connecter</span>
+        </button>
+    </div>
+
+    <!-- Menu items, if not mobile -->
+    @if (this.mobileQuery.matches) {
+        <button mat-icon-button (click)="toggleMenu()">
+            <mat-icon>menu</mat-icon>
+        </button>
+    } @else {
+        <button mat-button routerLink="/">Commander</button>
+        <span class="spacer"></span>
+        <button mat-button color="accent" routerLink="/login">
+            <mat-icon>account_circle</mat-icon>
+            <span>Se connecter</span>
+        </button>
+    }
+
+</mat-toolbar>
