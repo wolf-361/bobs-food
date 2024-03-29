@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatToolbarModule, RouterLink, RouterLinkActive, CommonModule],
+  imports: [ MatIconModule, MatButtonModule, MatToolbarModule, RouterLink, RouterLinkActive, CommonModule ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -30,6 +30,7 @@ export class HeaderComponent implements OnDestroy {
 
     // Listen to click events on the document
     document.addEventListener('click', (event) => {
+      if (!this.mobileMenu) return;
       // Close the mobile menu if the click event was outside the menu
       // If the click is outside of the menu, close it
       if (!this.elementRef.nativeElement.contains(event.target) || this.mobileMenu.nativeElement.contains(event.target)) {
