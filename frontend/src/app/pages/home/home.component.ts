@@ -2,7 +2,7 @@ import { Component, Injector } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { BaseOverlayControllerComponent } from '../../overlays/base-overlay-controller/base-overlay-controller';
+import { BaseOverlayController } from '../../overlays/base-overlay-controller/base-overlay-controller';
 import { ChoisirCommandeComponent } from '../../overlays/choisir-commande/choisir-commande.component';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
@@ -14,7 +14,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent extends BaseOverlayControllerComponent{
+export class HomeComponent extends BaseOverlayController{
 
   constructor(
     private injector: Injector,

@@ -1,7 +1,7 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 
-export abstract class BaseOverlayControllerComponent {
+export abstract class BaseOverlayController {
   public overlayRef?: OverlayRef;
   
   constructor(
