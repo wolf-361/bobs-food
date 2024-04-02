@@ -7,9 +7,19 @@ import { CommandeModule } from './commande/commande.module';
 import { RestaurentModule } from './restaurent/restaurent.module';
 import { ItemModule } from './item/item.module';
 import { ConfigModule } from './config/config.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { configService } from './config/config.service';
 
 @Module({
-  imports: [ClientModule, EmployeModule, CommandeModule, RestaurentModule, ItemModule, ConfigModule],
+  imports: [
+    ClientModule, 
+    EmployeModule, 
+    CommandeModule, 
+    RestaurentModule, 
+    ItemModule, 
+    ConfigModule,
+    TypeOrmModule.forRoot(configService.typeOrmConfig)
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
