@@ -1,0 +1,9 @@
+<div class="overlay mat-elevation-z10">
+    <mat-toolbar color="primary">
+        <span>
+            <ng-content select="[title]" class="title"></ng-content>
+        </span>
+        <button mat-icon-button (click)="close()"><mat-icon>close</mat-icon></button>
+    </mat-toolbar>
+    <ng-content></ng-content>
+</div>

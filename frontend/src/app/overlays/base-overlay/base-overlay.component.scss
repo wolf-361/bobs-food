@@ -1,0 +1,10 @@
+.overlay{
+    border-radius: 5px;
+}
+
+mat-toolbar {
+    gap: 1rem;
+    // Top border radius
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
