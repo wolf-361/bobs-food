@@ -40,6 +40,7 @@ export class SignUpDto {
 
     toCreateClientDto(salt: string, hashedPassword: string) {
         const newClient = new CreateClientDto();
+        newClient.email = this.email;
         newClient.nom = this.nom;
         newClient.prenom = this.prenom;
         newClient.adresse = this.adresse;
