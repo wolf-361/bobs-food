@@ -4,7 +4,6 @@ import { env } from 'process';
 
 @Injectable()
 export class ConfigService {
-
     /**
        * Ensure that all required environment variables are set
        * @param key The key of the environment variable
@@ -22,6 +21,15 @@ export class ConfigService {
         return env.MODE || 'dev';
     }
 
+    /**
+     * Check if the application is in development mode
+     * @returns true if the application is in development mode
+     */
+    public isDev(): boolean {
+        return this.mode === 'dev';
+    }
+
+
     public get DB_LOGGING(): boolean {
         // Default value is false
         const DB_LOGGING = env.DB_LOGGING || 'false';
@@ -38,7 +46,7 @@ export class ConfigService {
             'POSTGRES_HOST',
             'POSTGRES_PASSWORD',
             'POSTGRES_USER',
-            'POSTGRES_DATABASE',
+            'POSTGRES_DB',
         ]);
 
         // Sync defaults to false
@@ -53,20 +61,15 @@ export class ConfigService {
             entities: [
 
             ],
-            database: env.POSTGRES_DATABASE,
+            database: env.POSTGRES_DB,
             synchronize: DB_SYNC === 'true' ? true : false,
             logging: this.DB_LOGGING,
             // For Vercel
-            ssl: true,
-            extra: {
-                ssl: {
-                    rejectUnauthorized: false
-                }
-            }
+            ssl: this.isDev() ? false : { rejectUnauthorized: false }
         };
     }
 
-        // Jwt methods
+    // Jwt methods
 
     /**
      * Get's the proper config for the JWT library from environment variables
