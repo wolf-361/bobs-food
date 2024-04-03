@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
 import { ClientService } from './client.service';
-import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { SignUpDto } from './dto/sign-up.dto';
+import { LoginDto } from './dto/login.dto';
+import { Roles } from 'src/decorators/roles/roles.decorator';
 
 @Controller('client')
 export class ClientController {
@@ -13,7 +14,18 @@ export class ClientController {
     return this.clientService.signup(signupDto);
   }
 
+  @Post('login')
+  login(@Body() loginDto: LoginDto) {
+    return this.clientService.login(loginDto);
+  }
+
   @Get()
+  getSelf(@Request() req) {
+    return this.findOne(req.user.id);
+  }
+
+  @Get("all")
+  @Roles(['admin'])
   findAll() {
     return this.clientService.findAll();
   }

@@ -18,7 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
     CommandeModule, 
     RestaurentModule, 
     ItemModule, 
-    UserModule
+    UserModule, 
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -66,4 +66,13 @@ export class AuthService {
         const payload = { nom: user.nom, role: role, sub: user.id };
         return { token: this.jwtService.sign(payload), expiresIn: configService.jwtExpirationTime, role: role };
     }
+
+    /**
+     * Verify a token
+     * @param token The token to verify
+     * @returns The payload of the token
+     */
+    public verifyToken(token: string): any {
+        return this.jwtService.verify(token);
+    }
 }
