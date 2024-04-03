@@ -66,6 +66,57 @@ export class ConfigService {
         };
     }
 
+        // Jwt methods
+
+    /**
+     * Get's the proper config for the JWT library from environment variables
+     * @returns The config for the JWT library
+     */
+    public get jwtConfig(): { global: boolean, secret: string, signOptions: { expiresIn: string } } {
+        return {
+            global: true,
+            secret: this.jwtSecret,
+            signOptions: { expiresIn: this.jwtExpirationTimeString },
+        };
+    }
+
+    private get jwtExpirationTimeString(): string {
+        this.ensureValues([
+            'JWT_EXPIRATION_TIME'
+        ]);
+
+        return env.JWT_EXPIRATION_TIME;
+    }
+
+    public get jwtExpirationTime(): number {
+        this.ensureValues([
+            'JWT_EXPIRATION_TIME'
+        ]);
+
+        // Convert the string from h, m or s to s
+        const time = env.JWT_EXPIRATION_TIME;
+        const unit = time[time.length - 1];
+        const value = parseInt(time.slice(0, time.length - 1), 10);
+        switch (unit) {
+            case 'h':
+                return value * 60 * 60;
+            case 'm':
+                return value * 60;
+            case 's':
+                return value;
+            default:
+                throw new Error(`Invalid unit ${unit}`);
+        }
+    }
+
+    public get jwtSecret(): string {
+        this.ensureValues([
+            'JWT_SECRET'
+        ]);
+
+        return env.JWT_SECRET;
+    }
+
 }
 
 export const configService = new ConfigService(); 
