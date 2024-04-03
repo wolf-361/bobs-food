@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class Employe extends User {
-    @PrimaryColumn()
+    @Column()
     employeId: string;
 
     @Column({type: "enum", enum: EmployeType, default: EmployeType.EMPLOYE})

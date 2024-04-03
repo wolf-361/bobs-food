@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateEmployeDto } from './dto/create-employe.dto';
 import { UpdateEmployeDto } from './dto/update-employe.dto';
 import { Employe } from './entities/employe.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
+import { SignUpDto } from './dto/sign-up-dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class EmployeService {
@@ -12,24 +14,59 @@ export class EmployeService {
     @InjectRepository(Employe) private employeRepository: Repository<Employe>,
     private authService: AuthService
   ) {}
+  
+  signup(signupDto: SignUpDto) {
+    // Compare passwords
+    if (signupDto.password !== signupDto.confirmPassword) {
+      throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
+    }
+
+    // Hash the password
+    const { salt, hashedPassword } = this.authService.hashPassword(signupDto.password);
+
+    // Create the client
+    return this.create(signupDto.toCreateEmployeDto(salt, hashedPassword))
+  }
+
+  async login(loginDto: LoginDto) {
+    // Find the employee
+    const employe = await this.findByEmployeId(loginDto.employeId);
+
+    // Check if the employee exists
+    if (!employe) {
+      throw new HttpException('Client not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Check if the password is correct
+    if (!this.authService.comparePassword(loginDto.password, employe.hashedPassword)) {
+      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+    }
+
+    // Generate the token
+    return this.authService.generateJwtToken(employe)
+  }
 
   create(createEmployeDto: CreateEmployeDto) {
-    return 'This action adds a new employe';
+    return this.employeRepository.save(createEmployeDto);
   }
 
   findAll() {
-    return `This action returns all employe`;
+    return this.employeRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} employe`;
+  findByEmployeId(employeId: string) {
+    return this.employeRepository.findOne({ where: { employeId: employeId } });
   }
 
-  update(id: number, updateEmployeDto: UpdateEmployeDto) {
-    return `This action updates a #${id} employe`;
+  findOne(id: string) {
+    return this.employeRepository.findOne({ where: { id: id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} employe`;
+  update(id: string, updateEmployeDto: UpdateEmployeDto) {
+    return this.employeRepository.update({ id: id}, updateEmployeDto);
+  }
+
+  remove(id: string) {
+    return this.employeRepository.delete({ id: id });
   }
 }
