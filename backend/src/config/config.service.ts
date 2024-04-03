@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { env } from 'process';
+import { Commande } from 'src/commande/entities/commande.entity';
+import { Paiement } from 'src/commande/entities/paiement.entity';
+import { Item } from 'src/item/entities/item.entity';
+import { Restaurent } from 'src/restaurent/entities/restaurent.entity';
+import { Client } from 'src/user/client/entities/client.entity';
+import { Employe } from 'src/user/employe/entities/employe.entity';
 
 @Injectable()
 export class ConfigService {
@@ -59,7 +65,12 @@ export class ConfigService {
             password: env.POSTGRES_PASSWORD,
             username: env.POSTGRES_USER,
             entities: [
-
+                Client,
+                Employe,
+                Commande,
+                Paiement,
+                Item,
+                Restaurent
             ],
             database: env.POSTGRES_DB,
             synchronize: DB_SYNC === 'true' ? true : false,
