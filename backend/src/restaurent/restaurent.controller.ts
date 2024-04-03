@@ -19,16 +19,16 @@ export class RestaurentController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.restaurentService.findOne(+id);
+    return this.restaurentService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRestaurentDto: UpdateRestaurentDto) {
-    return this.restaurentService.update(+id, updateRestaurentDto);
+    return this.restaurentService.update(id, updateRestaurentDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.restaurentService.remove(+id);
+    return this.restaurentService.remove(id);
   }
 }

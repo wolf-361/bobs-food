@@ -9,7 +9,12 @@ export class Restaurent {
     @Column()
     adresse: string;
 
-    @ManyToMany(() => Item)
-    @JoinTable()
+    @ManyToMany(() => Item, { cascade: true})
+    @JoinTable({
+        name: "restaurent_menu",
+        joinColumn: { name: "restaurent_id", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "item_id", referencedColumnName: "id" }
+
+    })
     menu: Item[];
 }

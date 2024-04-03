@@ -21,12 +21,4 @@ export class Item {
 
     @Column()
     categorie: string;
-
-    @ManyToMany(() => Commande, commande => commande.items)
-    @JoinTable()
-    commandes: Commande[];
-
-    @ManyToMany(() => Restaurent, restaurent => restaurent.menu)
-    @JoinTable()
-    restaurents: Restaurent[];
 }

@@ -1,26 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Item } from './entities/item.entity';
 
 @Injectable()
 export class ItemService {
+  constructor(
+    @InjectRepository(Item) private itemRepository: Repository<Item>
+  ) {}
+
   create(createItemDto: CreateItemDto) {
     return 'This action adds a new item';
   }
 
   findAll() {
-    return `This action returns all item`;
+    return this.itemRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} item`;
+    return this.itemRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
+    return this.itemRepository.update({ id }, updateItemDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} item`;
+    return this.itemRepository.delete({ id });
   }
 }
