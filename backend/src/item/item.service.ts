@@ -12,7 +12,7 @@ export class ItemService {
   ) {}
 
   create(createItemDto: CreateItemDto) {
-    return 'This action adds a new item';
+    return this.itemRepository.save(createItemDto);
   }
 
   findAll() {

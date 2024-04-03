@@ -1,6 +1,7 @@
 import { Commande } from "src/commande/entities/commande.entity";
 import { Restaurent } from "src/restaurent/entities/restaurent.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ItemCategory } from "./item-categorie";
 
 @Entity()
 export class Item {
@@ -19,6 +20,6 @@ export class Item {
     @Column()
     image: string;
 
-    @Column()
-    categorie: string;
+    @Column({ enum: ItemCategory, default: ItemCategory.AUTRE })
+    categorie: ItemCategory;
 }

@@ -6,5 +6,6 @@ export enum ItemCategory {
     SANDWICH = 'Sandwich',
     SALADE = 'Salade',
     DESSERT = 'Dessert',
-    BOISSON = 'Boisson'
+    BOISSON = 'Boisson',
+    AUTRE = 'Autre'
 }
