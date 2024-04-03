@@ -1,9 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmployeDto } from './dto/create-employe.dto';
 import { UpdateEmployeDto } from './dto/update-employe.dto';
+import { Employe } from './entities/employe.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AuthService } from '../auth/auth.service';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class EmployeService {
+  constructor(
+    @InjectRepository(Employe) private employeRepository: Repository<Employe>,
+    private authService: AuthService
+  ) {}
+
   create(createEmployeDto: CreateEmployeDto) {
     return 'This action adds a new employe';
   }
