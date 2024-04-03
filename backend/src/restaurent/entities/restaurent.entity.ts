@@ -1,5 +1,5 @@
 import { Item } from "src/item/entities/item.entity";
-import { Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Restaurent {
@@ -9,7 +9,7 @@ export class Restaurent {
     @Column()
     adresse: string;
 
-    @ManyToOne(() => Item)
+    @ManyToMany(() => Item)
     @JoinTable()
     menu: Item[];
 }
