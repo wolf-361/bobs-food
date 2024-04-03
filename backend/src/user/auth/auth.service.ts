@@ -61,39 +61,9 @@ export class AuthService {
         if (user instanceof Error) {
             throw user;
         }
+        const role = user instanceof Client ? "client" : user instanceof Employe ? user.type : "guest";
 
-        if (!user) {
-            throw new Error("User not found");
-        }
-
-        if (user instanceof Client) {
-            return this.generateJwtTokenFromClient(user);
-        }
-
-        if (user instanceof Employe) {
-            return this.generateJwtTokenFromEmploye(user);
-        }
-
-        throw new Error("User type not supported");
-    }
-
-    /**
-     * Generate a JWT token from a client
-     * @param client The client to generate the token for
-     * @returns The token, the expiration time and the role of the user
-     */
-    private generateJwtTokenFromClient(client: Client): { token: string, expiresIn: number, role: string} {
-        const payload = { nom: client.nom, role: "client", sub: client.courriel };
-        return { token: this.jwtService.sign(payload), expiresIn: configService.jwtExpirationTime, role: "client" };
-    }
-
-    /**
-     * Generate a JWT token from an employe
-     * @param employe The employe to generate the token for
-     * @returns The token, the expiration time and the role of the user
-     */
-    private generateJwtTokenFromEmploye(employe: Employe): { token: string, expiresIn: number, role: string} {
-        const payload = { nom: employe.nom, role: employe.type, sub: employe.employeId };
-        return { token: this.jwtService.sign(payload), expiresIn: configService.jwtExpirationTime, role: employe.type };
+        const payload = { nom: user.nom, role: role, sub: user.id };
+        return { token: this.jwtService.sign(payload), expiresIn: configService.jwtExpirationTime, role: role };
     }
 }
