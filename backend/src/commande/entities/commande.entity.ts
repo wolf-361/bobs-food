@@ -18,7 +18,7 @@ export class Commande {
     @Column()
     date: Date;
 
-    @ManyToMany(() => Item)
+    @ManyToMany(() => Item, { cascade: true })
     @JoinTable()
     items: Item[];
 
