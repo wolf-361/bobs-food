@@ -7,7 +7,7 @@ export class SignUpDto {
     @IsNotEmpty()
     @IsString()
     @IsEmail()
-    email: string;
+    courriel: string;
 
     @ApiProperty({ example: 'John', description: 'The name of the client' })
     @IsNotEmpty()
@@ -37,16 +37,16 @@ export class SignUpDto {
     @IsString()
     @IsStrongPassword()
     confirmPassword: string;
+}
 
-    toCreateClientDto(salt: string, hashedPassword: string) {
-        const newClient = new CreateClientDto();
-        newClient.email = this.email;
-        newClient.nom = this.nom;
-        newClient.prenom = this.prenom;
-        newClient.adresse = this.adresse;
-        newClient.salt = salt;
-        newClient.hashedPassword = hashedPassword;
-        newClient.estInscrit = false;
-        return newClient;
-    }
+export function toCreateClientDto(signUpDto: SignUpDto, salt: string, hashedPassword: string){
+    const newClient = new CreateClientDto();
+    newClient.courriel = signUpDto.courriel;
+    newClient.nom = signUpDto.nom;
+    newClient.prenom = signUpDto.prenom;
+    newClient.adresse = signUpDto.adresse;
+    newClient.salt = salt;
+    newClient.hashedPassword = hashedPassword;
+    newClient.estInscrit = false;
+    return newClient;
 }

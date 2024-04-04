@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
-import { SignUpDto } from './dto/sign-up.dto';
+import { SignUpDto, toCreateClientDto } from './dto/sign-up.dto';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class ClientService {
     const { salt, hashedPassword } = this.authService.hashPassword(signupDto.password);
 
     // Create the client
-    return this.create(signupDto.toCreateClientDto(salt, hashedPassword))
+    return this.create(toCreateClientDto(signupDto, salt, hashedPassword));
   }
 
   async login(loginDto: LoginDto) {
