@@ -20,10 +20,8 @@ export class RestaurentService {
     // Create a new restaurent
     const restaurent = new Restaurent();
     restaurent.adresse = createRestaurentDto.adresse;
-    for (const itemId of itemIds) {
-      const item = await this.itemService.findOne(itemId);
-      restaurent.menu.push(item);
-    }
+    restaurent.menu = await this.getItemsFromDto(itemIds);
+
     return this.restaurentRepository.save(restaurent);
   }
 
@@ -42,15 +40,24 @@ export class RestaurentService {
     // Create a new restaurent
     const restaurent = new Restaurent();
     restaurent.adresse = updateRestaurentDto.adresse;
-    for (const itemId of itemIds) {
-      const item = await this.itemService.findOne(itemId);
-      restaurent.menu.push(item);
-    }
+    restaurent.menu = await this.getItemsFromDto(itemIds);
 
     return this.restaurentRepository.update(id, restaurent);
   }
 
   remove(id: string) {
     return this.restaurentRepository.delete(id);
+  }
+
+  private async getItemsFromDto(itemIds: number[]) {
+    const items = [];
+    for (const itemId of itemIds) {
+      const item = await this.itemService.findOne(itemId);
+      if (item === undefined || item === null) {
+        continue;
+      }
+      items.push(item);
+    }
+    return items;
   }
 }
