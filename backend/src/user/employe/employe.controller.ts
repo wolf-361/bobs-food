@@ -4,6 +4,7 @@ import { CreateEmployeDto } from './dto/create-employe.dto';
 import { UpdateEmployeDto } from './dto/update-employe.dto';
 import { SignUpDto } from './dto/sign-up-dto';
 import { LoginDto } from './dto/login.dto';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('employe')
 export class EmployeController {
@@ -20,6 +21,7 @@ export class EmployeController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get the current user (logged in)' })
   getSelf(@Request() req) {
     return this.findOne(req.user.id);
   }

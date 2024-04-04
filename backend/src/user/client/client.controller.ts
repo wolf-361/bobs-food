@@ -4,6 +4,7 @@ import { UpdateClientDto } from './dto/update-client.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { LoginDto } from './dto/login.dto';
 import { Roles } from 'src/decorators/roles/roles.decorator';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('client')
 export class ClientController {
@@ -20,11 +21,13 @@ export class ClientController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get the current user (logged in)' })
   getSelf(@Request() req) {
     return this.findOne(req.user.id);
   }
 
   @Get("all")
+  @ApiOperation({ summary: 'Get all users' })
   @Roles(['admin'])
   findAll() {
     return this.clientService.findAll();
