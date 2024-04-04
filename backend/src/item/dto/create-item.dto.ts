@@ -15,7 +15,7 @@ export class CreateItemDto {
 
     @ApiProperty({ example: 12.99, description: 'The price of the item'})
     @IsNotEmpty()
-    @IsNumber()
+    @IsNumber({ maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false })
     prix: number;
 
     @ApiProperty({ example: 'https://www.google.com/pizza.jpg', description: 'The image of the item'})

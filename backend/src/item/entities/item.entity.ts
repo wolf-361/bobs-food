@@ -14,7 +14,7 @@ export class Item {
     @Column()
     description: string;
 
-    @Column()
+    @Column({ type: 'float' })
     prix: number;
 
     @Column()
