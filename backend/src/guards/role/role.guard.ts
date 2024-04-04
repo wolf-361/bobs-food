@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Roles } from 'src/decorators/roles/roles.decorator';
 import { Request } from 'express';
-import { AuthService } from 'src/user/auth/auth.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class RoleGuard implements CanActivate {

@@ -9,18 +9,26 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from './config/config.service';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
+import { RoleGuard } from './guards/role/role.guard';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [ 
     ConfigModule,
     TypeOrmModule.forRoot(configService.typeOrmConfig),
-    JwtModule.register(configService.jwtConfig),
     CommandeModule, 
     RestaurentModule, 
     ItemModule, 
     UserModule, 
+    AuthModule, 
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'APP_GUARD',
+      useClass: RoleGuard
+    }
+  ],
 })
 export class AppModule {}

@@ -3,7 +3,7 @@ import { CreateEmployeDto } from './dto/create-employe.dto';
 import { UpdateEmployeDto } from './dto/update-employe.dto';
 import { Employe } from './entities/employe.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { Repository } from 'typeorm';
 import { EmployeSignUpDto, toCreateEmployeDto } from './dto/employe-sign-up-dto';
 import { EmployeLoginDto } from './dto/employe-login.dto';

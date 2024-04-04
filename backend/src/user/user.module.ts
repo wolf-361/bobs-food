@@ -6,13 +6,17 @@ import { EmployeService } from './employe/employe.service';
 import { Client } from './client/entities/client.entity';
 import { ClientController } from './client/client.controller';
 import { ClientService } from './client/client.service';
-import { AuthService } from './auth/auth.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
     imports: [
       TypeOrmModule.forFeature([Employe, Client]),
+      AuthModule
     ],
     controllers: [EmployeController, ClientController],
-    providers: [EmployeService, ClientService, AuthService],
+    providers: [
+      EmployeService, 
+      ClientService
+    ],
   })
 export class UserModule {}

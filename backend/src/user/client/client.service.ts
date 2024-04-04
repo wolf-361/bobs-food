@@ -4,7 +4,7 @@ import { UpdateClientDto } from './dto/update-client.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { ClientSignUpDto, toCreateClientDto } from './dto/client-sign-up.dto';
 import { ClientLoginDto } from './dto/client-login.dto';
 
