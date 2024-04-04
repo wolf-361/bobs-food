@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, IsAlphanumeric, IsEmail, IsStrongPassword } from "class-validator";
 import { CreateClientDto } from "./create-client.dto";
 
-export class SignUpDto {
+export class ClientSignUpDto {
     @ApiProperty({ example: 'john.doe@hotmail.com', description: 'The email of the client' })
     @IsNotEmpty()
     @IsString()
@@ -39,7 +39,7 @@ export class SignUpDto {
     confirmPassword: string;
 }
 
-export function toCreateClientDto(signUpDto: SignUpDto, salt: string, hashedPassword: string){
+export function toCreateClientDto(signUpDto: ClientSignUpDto, salt: string, hashedPassword: string){
     const newClient = new CreateClientDto();
     newClient.courriel = signUpDto.courriel;
     newClient.nom = signUpDto.nom;

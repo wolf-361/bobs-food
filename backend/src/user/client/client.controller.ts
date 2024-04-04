@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { UpdateClientDto } from './dto/update-client.dto';
-import { SignUpDto } from './dto/sign-up.dto';
-import { LoginDto } from './dto/login.dto';
+import { ClientSignUpDto } from './dto/client-sign-up.dto';
+import { ClientLoginDto } from './dto/client-login.dto';
 import { Roles } from 'src/decorators/roles/roles.decorator';
 import { ApiOperation } from '@nestjs/swagger';
 
@@ -11,12 +11,12 @@ export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Post('signup')
-  signup(@Body() signupDto: SignUpDto) {
+  signup(@Body() signupDto: ClientSignUpDto) {
     return this.clientService.signup(signupDto);
   }
 
   @Post('login')
-  login(@Body() loginDto: LoginDto) {
+  login(@Body() loginDto: ClientLoginDto) {
     return this.clientService.login(loginDto);
   }
 

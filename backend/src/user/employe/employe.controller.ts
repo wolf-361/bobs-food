@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nes
 import { EmployeService } from './employe.service';
 import { CreateEmployeDto } from './dto/create-employe.dto';
 import { UpdateEmployeDto } from './dto/update-employe.dto';
-import { SignUpDto } from './dto/sign-up-dto';
-import { LoginDto } from './dto/login.dto';
+import { EmployeSignUpDto } from './dto/employe-sign-up-dto';
+import { EmployeLoginDto } from './dto/employe-login.dto';
 import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('employe')
@@ -11,12 +11,12 @@ export class EmployeController {
   constructor(private readonly employeService: EmployeService) {}
 
   @Post('signup')
-  signup(@Body() signupDto: SignUpDto) {
+  signup(@Body() signupDto: EmployeSignUpDto) {
     return this.employeService.signup(signupDto);
   }
 
   @Post('login')
-  login(@Body() loginDto: LoginDto) {
+  login(@Body() loginDto: EmployeLoginDto) {
     return this.employeService.login(loginDto);
   }
 

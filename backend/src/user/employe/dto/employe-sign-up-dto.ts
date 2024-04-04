@@ -3,7 +3,7 @@ import { EmployeType } from "../entities/employeType";
 import { IsAlphanumeric, IsEnum, IsNotEmpty, IsString, IsStrongPassword } from "class-validator";
 import { CreateEmployeDto } from "./create-employe.dto";
 
-export class SignUpDto {
+export class EmployeSignUpDto {
     @ApiProperty({ example: 'TESS0001', description: 'The id of the employe' })
     @IsNotEmpty()
     @IsString()
@@ -43,16 +43,16 @@ export class SignUpDto {
     @IsNotEmpty()
     @IsEnum(EmployeType)
     type: EmployeType;
+}
 
-    toCreateEmployeDto(salt: string, hashedPassword: string): CreateEmployeDto {
-        const newEmploye = new CreateEmployeDto();
-        newEmploye.employeId = this.employeId;
-        newEmploye.nom = this.nom;
-        newEmploye.prenom = this.prenom;
-        newEmploye.adresse = this.adresse;
-        newEmploye.salt = salt;
-        newEmploye.hashedPassword = hashedPassword;
-        newEmploye.type = this.type;
-        return newEmploye;
-    }
+export function toCreateEmployeDto(signUpDto: EmployeSignUpDto, salt: string, hashedPassword: string){
+    const newEmploye = new CreateEmployeDto();
+    newEmploye.employeId = signUpDto.employeId;
+    newEmploye.nom = signUpDto.nom;
+    newEmploye.prenom = signUpDto.prenom;
+    newEmploye.adresse = signUpDto.adresse;
+    newEmploye.salt = salt;
+    newEmploye.hashedPassword = hashedPassword;
+    newEmploye.type = signUpDto.type;
+    return newEmploye;
 }

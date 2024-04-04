@@ -5,8 +5,8 @@ import { Employe } from './entities/employe.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
-import { SignUpDto } from './dto/sign-up-dto';
-import { LoginDto } from './dto/login.dto';
+import { EmployeSignUpDto, toCreateEmployeDto } from './dto/employe-sign-up-dto';
+import { EmployeLoginDto } from './dto/employe-login.dto';
 
 @Injectable()
 export class EmployeService {
@@ -15,7 +15,7 @@ export class EmployeService {
     private authService: AuthService
   ) {}
   
-  signup(signupDto: SignUpDto) {
+  signup(signupDto: EmployeSignUpDto) {
     // Compare passwords
     if (signupDto.password !== signupDto.confirmPassword) {
       throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
@@ -25,10 +25,10 @@ export class EmployeService {
     const { salt, hashedPassword } = this.authService.hashPassword(signupDto.password);
 
     // Create the client
-    return this.create(signupDto.toCreateEmployeDto(salt, hashedPassword))
+    return this.create(toCreateEmployeDto(signupDto, salt, hashedPassword));
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: EmployeLoginDto) {
     // Find the employee
     const employe = await this.findByEmployeId(loginDto.employeId);
 
