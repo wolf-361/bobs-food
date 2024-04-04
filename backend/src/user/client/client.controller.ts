@@ -3,7 +3,6 @@ import { ClientService } from './client.service';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { ClientSignUpDto } from './dto/client-sign-up.dto';
 import { ClientLoginDto } from './dto/client-login.dto';
-import { Roles } from 'src/decorators/roles/roles.decorator';
 import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('client')
@@ -28,7 +27,6 @@ export class ClientController {
 
   @Get("all")
   @ApiOperation({ summary: 'Get all users' })
-  @Roles(['admin'])
   findAll() {
     return this.clientService.findAll();
   }
