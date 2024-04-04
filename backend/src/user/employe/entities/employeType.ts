@@ -1,4 +1,5 @@
 export enum EmployeType {
-    ADMIN = "admin",
+    PROPRIO = "proprietaire",
     EMPLOYE = "employe",
+    GESTIONNAIRE = "gestionnaire"
 }
