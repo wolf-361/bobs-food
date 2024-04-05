@@ -11,7 +11,7 @@ async function bootstrap() {
 
   if (configService.isLocalOrDev) {
     const swaggerConfig = new DocumentBuilder()
-      .setTitle('Bob\'s duck API')
+      .setTitle('Bob\'s food API')
       .setDescription('Projet de session pour le cours de conception de logiciel INF1007')
       .setVersion('1.0')
       .build();
