@@ -1,2 +1,5 @@
-export class TypePaiement {
+export enum TypePaiement {
+    CARTE = 'Carte',
+    ESPECE = 'Espèce',
+    CHEQUE = 'Chèque'
 }
