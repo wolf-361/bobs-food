@@ -9,6 +9,6 @@ export const routes: Routes = [
     { path: 'login', component: ConnexionComponent },
     { path: 'employees', component: EmployeComponent },
     { path: 'panier', component: PanierComponent },
-    { path: 'api/**', redirectTo: '' },
+    { path: 'api/**' },
     { path: '**', redirectTo: '' }
 ];
