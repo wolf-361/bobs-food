@@ -1,0 +1,47 @@
+version: "3.7"
+
+services:
+  bobs-front:
+    build: ./frontend
+    container_name: bobs-front
+    restart: unless-stopped
+    labels:   # Will be used by watchtower to update this container
+      - "com.centurylinklabs.watchtower.enable=true"
+    ports:
+      - 127.0.0.1:9696:80
+    depends_on:
+      - bobs-back
+      - bobs-db
+  
+  bobs-back:
+    build: ./backend
+    container_name: bobs-back
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    ports:
+      - 127.0.0.1:9697:3000
+    depends_on:
+      - bobs-db
+    environment:
+      # Mode
+      MODE: 'prod'
+      DB_LOGGING: 'false'
+
+      # Database
+      DB_HOST: 'bobs-db'
+      DB_USER: 'bobs-db'
+      DB_PASSWORD: '*@foWyYrMi9GVwZFb4GKdYRjkj.ZXC6j'
+
+  bobs-db:
+    image: postgres:16.0
+    container_name: bobs-db
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'bobs-admin'
+      POSTGRES_PASSWORD: '*@foWyYrMi9GVwZFb4GKdYRjkj.ZXC6j'
+      POSTGRES_DB: 'bobs-db'
