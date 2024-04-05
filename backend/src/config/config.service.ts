@@ -24,7 +24,7 @@ export class ConfigService {
     }
 
     public get mode(): string {
-        return env.MODE || 'dev';
+        return env.MODE || 'local';
     }
 
     /**
@@ -35,6 +35,17 @@ export class ConfigService {
         return this.mode === 'dev';
     }
 
+    public isProd(): boolean {
+        return this.mode === 'prod';
+    }
+
+    public isLocalOrDev(): boolean {
+        return this.mode === 'local' || this.mode === 'dev';
+    }
+
+    public isLocal(): boolean {
+        return this.mode === 'local';
+    }
 
     public get DB_LOGGING(): boolean {
         // Default value is false
@@ -74,9 +85,7 @@ export class ConfigService {
             ],
             database: env.POSTGRES_DB,
             synchronize: DB_SYNC === 'true' ? true : false,
-            logging: this.DB_LOGGING,
-            // For Vercel
-            ssl: this.isDev() ? false : { rejectUnauthorized: false }
+            logging: this.DB_LOGGING
         };
     }
 

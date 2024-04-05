@@ -10,7 +10,7 @@ WORKDIR /app
 COPY . .
 
 # Install all the dependencies and Generate the build of the application
-RUN yarn install && yarn build:prod
+RUN yarn install && yarn build:dev
 
 # Second stage: serve the app
 

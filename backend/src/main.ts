@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { configService } from './config/config.service';
-import { RoleGuard } from './guards/role/role.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,9 +9,9 @@ async function bootstrap() {
   app.enableCors();
   app.setGlobalPrefix('api');
 
-  if (configService.isDev) {
+  if (configService.isLocalOrDev) {
     const swaggerConfig = new DocumentBuilder()
-      .setTitle('Bob\'s duck API')
+      .setTitle('Bob\'s food API')
       .setDescription('Projet de session pour le cours de conception de logiciel INF1007')
       .setVersion('1.0')
       .build();
