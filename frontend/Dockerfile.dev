@@ -30,7 +30,7 @@ COPY --from=builder /app/dist/frontend .
 COPY /nginx.conf  /etc/nginx/conf.d/default.conf
 
 # Give the proper rights to the folder to be able to read the files inside
-RUN chmod 755 .
+RUN chmod -R 755 .
 
 # Expose port 80
 EXPOSE 80
