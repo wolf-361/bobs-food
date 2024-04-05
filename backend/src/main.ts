@@ -7,9 +7,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors();
-  // app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api');
 
-  if (configService.isDev) {
+  if (configService.isLocalOrDev) {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Bob\'s duck API')
       .setDescription('Projet de session pour le cours de conception de logiciel INF1007')
