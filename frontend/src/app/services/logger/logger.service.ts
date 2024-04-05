@@ -12,6 +12,10 @@ export class LoggerService {
     this.log('🚀 [API]: ' + message);
   }
 
+  auth(message: string): void {
+    this.log('🔐 [AUTH]: ' + message);
+  }
+
   log(message: string): void {
     if (!environment.production) {
       console.log(message);
