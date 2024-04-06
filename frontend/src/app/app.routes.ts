@@ -3,10 +3,18 @@ import { HomeComponent } from './pages/home/home.component';
 import { ConnexionComponent } from './pages/connexion/connexion.component';
 import { EmployeComponent } from './pages/employe/employe.component';
 import { PanierComponent } from './pages/panier/panier.component';
+import { LoginComponent } from './pages/connexion/login/login.component';
+import { SignupComponent } from './pages/connexion/signup/signup.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
-    { path: 'login', component: ConnexionComponent },
+    {
+        path: 'auth', component: ConnexionComponent, children: [
+            { path: 'login', component: LoginComponent },
+            { path: 'register', component: SignupComponent },
+            { path: 'forgot-password', component: ConnexionComponent }
+        ]
+    },
     { path: 'employees', component: EmployeComponent },
     { path: 'panier', component: PanierComponent },
     { path: '**', redirectTo: '' }

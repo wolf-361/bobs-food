@@ -1,8 +1,12 @@
-<mat-tab-group  animationDuration="0ms"  mat-stretch-tabs="false" mat-align-tabs="center">
-    <mat-tab label="Se connecter">
-        <app-login></app-login>
-    </mat-tab>
-    <mat-tab label="S'inscrire">
-        <app-signup></app-signup>
-    </mat-tab>
-</mat-tab-group>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    @for (link of links; track link) {
+        <a mat-tab-link
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [active]="activeLink == link"> {{link.label}} </a>
+    }
+</nav>
+
+<mat-tab-nav-panel #tabPanel>
+    <router-outlet></router-outlet>
+</mat-tab-nav-panel>

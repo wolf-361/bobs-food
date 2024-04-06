@@ -9,7 +9,7 @@
     <div *ngIf="showMobileMenu" class="mobile-menu" #mobileMenu>
         <button mat-button routerLink="/">Commander</button>
         @if (!isLoggedIn()) {
-            <button mat-button color="accent" routerLink="/login">
+            <button mat-button color="accent" routerLink="/auth/login">
                 <mat-icon>account_circle</mat-icon>
                 <span>Se connecter</span>
             </button>
@@ -30,7 +30,7 @@
         <button mat-button routerLink="/">Commander</button>
         <span class="spacer"></span>
         @if (!isLoggedIn()) {
-            <button mat-button color="accent" routerLink="/login">
+            <button mat-button color="accent" routerLink="/auth/login">
                 <mat-icon>account_circle</mat-icon>
                 <span>Se connecter</span>
             </button>
