@@ -7,13 +7,28 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 3rem;
 }
 
 form {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 1rem;
     width: 100%;
     max-width: 300px;
+}
+
+form mat-form-field {
+    width: 90%;
+}
+
+// Hide mat error message except the first one
+form mat-error:not(:first-of-type) {
+    display: none;
+}
+
+button {
+    width: 80%;
 }
