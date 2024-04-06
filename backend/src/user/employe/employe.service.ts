@@ -25,7 +25,10 @@ export class EmployeService {
     const { salt, hashedPassword } = this.authService.hashPassword(signupDto.password);
 
     // Create the client
-    return this.create(toCreateEmployeDto(signupDto, salt, hashedPassword));
+    this.create(toCreateEmployeDto(signupDto, salt, hashedPassword)).then(employe => {
+      // Generate the token
+      return this.authService.generateJwtToken(employe);
+    });
   }
 
   async login(loginDto: EmployeLoginDto) {
