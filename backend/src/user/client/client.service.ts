@@ -25,7 +25,10 @@ export class ClientService {
     const { salt, hashedPassword } = this.authService.hashPassword(signupDto.password);
 
     // Create the client
-    return this.create(toCreateClientDto(signupDto, salt, hashedPassword));
+    this.create(toCreateClientDto(signupDto, salt, hashedPassword)).then(client => {
+      // Generate the token
+      return this.authService.generateJwtToken(client);
+    });
   }
 
   async login(loginDto: ClientLoginDto) {

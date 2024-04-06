@@ -8,6 +8,7 @@ import { Restaurent } from '../../dto/restaurent/restaurent';
 import { Item } from '../../dto/item/item';
 import { Employe } from '../../dto/user/employe';
 import { Client } from '../../dto/user/client';
+import { LoginResponse } from '../auth/login.response';
 
 @Injectable({
   providedIn: 'root'
@@ -115,15 +116,15 @@ export class ApiService {
     );
   }
 
-  loginEmploye(employeId: string, password: string): Observable<Employe> {
-    return this.http.post<Employe>(`${this.apiUrl}/employe/login`, { employeId, password }).pipe(
+  loginEmploye(employeId: string, password: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/employe/login`, { employeId, password }).pipe(
       catchError(this.handleError),
       retry(3)
     );
   }
 
-  signupEmploye(employe: Employe): Observable<Employe> {
-    return this.http.post<Employe>(`${this.apiUrl}/employe/signup`, employe).pipe(
+  signupEmploye(employe: Employe): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/employe/signup`, employe).pipe(
       catchError(this.handleError),
       retry(3)
     );
@@ -144,15 +145,15 @@ export class ApiService {
     );
   }
 
-  loginClient(courriel: string, password: string): Observable<Client> {
-    return this.http.post<Client>(`${this.apiUrl}/client/login`, { courriel, password }).pipe(
+  loginClient(courriel: string, password: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/client/login`, { courriel, password }).pipe(
       catchError(this.handleError),
       retry(3)
     );
   }
 
-  signupClient(client: Client): Observable<Client> {
-    return this.http.post<Client>(`${this.apiUrl}/client/signup`, client).pipe(
+  signupClient(client: Client): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/client/signup`, client).pipe(
       catchError(this.handleError),
       retry(3)
     );
@@ -164,14 +165,11 @@ export class ApiService {
    * Handle the error and log it
    * @param error The error to handle
    */
-  public handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      this.logger.error(`🔥 [API] An error occurred: ${error.error.message}`);
-    } else {
-      this.logger.error(`🔥 [API] Backend returned code ${error.status}, body was: ${error.error}`);
-    }
-
-    return throwError(() => new Error('Something bad happened; please try again later.'));
+  public handleError(error: HttpErrorResponse): Observable<never> {
+    // Throw the error to the subscriber (in a non deprecated way)
+    return new Observable<never>(subscriber => {
+      subscriber.error(error);
+    });
   }
 
   /**
