@@ -8,10 +8,17 @@
     <!-- Menu items, if mobile -->
     <div *ngIf="showMobileMenu" class="mobile-menu" #mobileMenu>
         <button mat-button routerLink="/">Commander</button>
-        <button mat-button color="accent" routerLink="/login">
-            <mat-icon>account_circle</mat-icon>
-            <span>Se connecter</span>
-        </button>
+        @if (!isLoggedIn()) {
+            <button mat-button color="accent" routerLink="/login">
+                <mat-icon>account_circle</mat-icon>
+                <span>Se connecter</span>
+            </button>
+        } @else {
+            <button mat-button color="accent" (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon>
+                <span>Se déconnecter</span>
+            </button>
+        }
     </div>
 
     <!-- Menu items, if not mobile -->
@@ -22,10 +29,17 @@
     } @else {
         <button mat-button routerLink="/">Commander</button>
         <span class="spacer"></span>
-        <button mat-button color="accent" routerLink="/login">
-            <mat-icon>account_circle</mat-icon>
-            <span>Se connecter</span>
-        </button>
+        @if (!isLoggedIn()) {
+            <button mat-button color="accent" routerLink="/login">
+                <mat-icon>account_circle</mat-icon>
+                <span>Se connecter</span>
+            </button>
+        } @else {
+            <button mat-button color="accent" (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon>
+                <span>Se déconnecter</span>
+            </button>
+        }
     }
 
 </mat-toolbar>
