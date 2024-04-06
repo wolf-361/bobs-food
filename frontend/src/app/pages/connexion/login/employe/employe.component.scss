@@ -1,0 +1,11 @@
+@import "src/styles/constant.scss";
+
+:host {
+    height: calc($page-height - 48px - 48px); // 48px for each tab-group
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+}

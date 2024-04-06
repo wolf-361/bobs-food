@@ -1,20 +1,8 @@
-<h1>Se connecter</h1>
-<form [formGroup]="this.loginForm" (ngSubmit)="this.onSubmit()" novalisate>
-    <mat-form-field appearance="outline">
-        <mat-label>Entrer votre adresse email</mat-label>
-        <input matInput type="email" required placeholder="Adresse email" formControlName="email" autocomplete="email"
-            required>
-        <mat-error *ngIf="form['email'].errors?.['required']">Ce champ est obligatoire</mat-error>
-        <mat-error *ngIf="form['email'].errors?.['email']">Adresse email invalide</mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Entrer votre mot de passe</mat-label>
-        <input matInput type="password" required placeholder="Mot de passe" formControlName="password"
-            autocomplete="current-password" required>
-        <mat-error *ngIf="form['password'].errors?.['required']">Ce champ est obligatoire</mat-error>
-        <mat-error *ngIf="form['password'].errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</mat-error>
-        <mat-error *ngIf="form['password'].errors?.['maxlength']">Le mot de passe doit contenir au plus 20 caractères</mat-error>
-        <mat-error *ngIf="form['password'].errors?.['pattern']">Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule et un chiffre</mat-error>
-    </mat-form-field>
-    <button mat-raised-button color="primary" type="submit">Se connecter</button>
-</form>
+<mat-tab-group animationDuration="0ms" headerPosition="below"  mat-stretch-tabs="false" mat-align-tabs="center" color="accent">
+    <mat-tab label="Client">
+        <app-client></app-client>
+    </mat-tab>
+    <mat-tab label="Employer">
+        <app-employe></app-employe>
+    </mat-tab>
+</mat-tab-group>
