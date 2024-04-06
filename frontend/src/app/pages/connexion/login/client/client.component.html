@@ -12,9 +12,6 @@
         <input matInput type="password" required placeholder="Mot de passe" formControlName="password"
             autocomplete="current-password" required>
         <mat-error *ngIf="form['password'].errors?.['required']">Ce champ est obligatoire</mat-error>
-        <mat-error *ngIf="form['password'].errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</mat-error>
-        <mat-error *ngIf="form['password'].errors?.['maxlength']">Le mot de passe doit contenir au plus 20 caractères</mat-error>
-        <mat-error *ngIf="form['password'].errors?.['pattern']">Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule et un chiffre</mat-error>
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit">Se connecter</button>
 </form>

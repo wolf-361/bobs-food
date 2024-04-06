@@ -1,0 +1,34 @@
+@import "src/styles/constant.scss";
+
+:host {
+    height: calc($page-height - 48px - 48px); // 48px for each tab-group
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+form mat-form-field {
+    width: 90%;
+}
+
+// Hide mat error message except the first one
+form mat-error:not(:first-of-type) {
+    display: none;
+}
+
+button {
+    width: 80%;
+}
