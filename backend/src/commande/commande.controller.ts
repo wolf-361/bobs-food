@@ -3,7 +3,9 @@ import { CommandeService } from './commande.service';
 import { CreateCommandeDto } from './dto/create-commande.dto';
 import { UpdateCommandeDto } from './dto/update-commande.dto';
 import { Roles } from 'src/decorators/roles/roles.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('commande')
 @Controller('commande')
 export class CommandeController {
   constructor(private readonly commandeService: CommandeService) {}
