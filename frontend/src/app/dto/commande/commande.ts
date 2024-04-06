@@ -4,15 +4,15 @@ import { Paiement } from "./paiement";
 import { TypeCommande } from "./type-commande";
 
 export class Commande {
-    id: number;
+    id?: number;
     type: TypeCommande;
     total: number;
     date: Date;
     items: Item[];
-    client: Client;
+    client?: Client;
     paiement: Paiement;
 
-    constructor(id: number, type: TypeCommande, total: number, date: Date, items: Item[], client: Client, paiement: Paiement) {
+    constructor(type: TypeCommande, total: number, date: Date, items: Item[], paiement: Paiement, id?: number, client?: Client) {
         this.id = id;
         this.type = type;
         this.total = total;

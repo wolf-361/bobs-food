@@ -6,6 +6,8 @@ import { BaseOverlayController } from '../../overlays/base-overlay-controller/ba
 import { ChoisirCommandeComponent } from '../../overlays/choisir-commande/choisir-commande.component';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ApiService } from '../../services/api/api.service';
+import { Restaurent } from '../../dto/restaurent/restaurent';
 
 @Component({
   selector: 'app-home',
@@ -16,11 +18,17 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 })
 export class HomeComponent extends BaseOverlayController{
 
+
   constructor(
     private injector: Injector,
-    private parentOverlay: Overlay
+    private parentOverlay: Overlay,
+    private api: ApiService
   ) {
     super(parentOverlay);
+
+
+
+
   }
 
   protected override get componentPortal(): ComponentPortal<any> {

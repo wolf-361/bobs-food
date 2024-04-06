@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { Commande } from '../../dto/commande/commande';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class LoggerService {
 
   auth(message: string): void {
     this.log('🔐 [AUTH]: ' + message);
+  }
+
+  commande(message: string) {
+    this.log('🍔 [COMMANDE]: ' + message);
   }
 
   log(message: string): void {
