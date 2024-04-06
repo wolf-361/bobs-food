@@ -5,6 +5,7 @@ import {MatButton, MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -23,6 +24,7 @@ export class HeaderComponent implements OnDestroy {
     private elementRef: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
     private media: MediaMatcher,
+    private auth: AuthService
   ) { 
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -45,5 +47,13 @@ export class HeaderComponent implements OnDestroy {
 
   toggleMenu() {
     this.showMobileMenu = !this.showMobileMenu;
+  }
+
+  isLoggedIn() {
+    return this.auth.IsAuthenticated;
+  }
+
+  logout() {
+    this.auth.clearSession();
   }
 }
