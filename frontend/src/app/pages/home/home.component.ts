@@ -53,6 +53,10 @@ export class HomeComponent extends BaseOverlayController{
     this.commande.addItem(item);
   }
 
+  removeItem(item: Item) {
+    this.commande.removeItem(item);
+  }
+
   passerCommande() {
     this.commande.submit();
   }

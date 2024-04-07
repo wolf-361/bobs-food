@@ -13,7 +13,7 @@
             <div class="categorie-items">
             <!-- Show the category items -->
             @for (item of this.getItems(categorie); track item.id) {
-                <app-item [item]="item" (click)="addItem(item)"></app-item>
+                <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
             }
             </div>
         </div>
