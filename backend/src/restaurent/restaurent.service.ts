@@ -14,6 +14,11 @@ export class RestaurentService {
   ) {}
 
   async create(createRestaurentDto: CreateRestaurentDto) {
+    const possibleRestaurent = await this.restaurentRepository.findOne({ where: { adresse: createRestaurentDto.adresse } });
+    if (possibleRestaurent !== undefined && possibleRestaurent !== null) {
+      return possibleRestaurent;
+    }
+
     // Get the item ids from the createRestaurentDto
     const itemIds = createRestaurentDto.menu;
 
