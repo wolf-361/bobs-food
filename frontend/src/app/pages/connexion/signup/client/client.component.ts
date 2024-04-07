@@ -90,17 +90,23 @@ export class ClientComponent {
     return this.creditCardForm.controls;
   }
 
+  verifierSignupForm() {
+  }
+
+  verifierClientInfoForm() {
+  }
+
+  verifierCreditCardForm() {
+  }
+
   verifier() {
-    
+    // TODO: Vérifier le client pour que le client puisse confirmer son inscription
   }
 
   onSubmit() {
     if (!this.signupForm.valid) {
       return;
     }
-
-    console.log(this.signupForm.value);
-
     // TODO: signup
   }
 
