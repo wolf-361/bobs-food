@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Item } from '../../dto/item/item';
 
 @Component({
   selector: 'app-item',
@@ -8,5 +9,5 @@ import { Component } from '@angular/core';
   styleUrl: './item.component.scss'
 })
 export class ItemComponent {
-
+  @Input({required: true}) item!: Item;
 }
