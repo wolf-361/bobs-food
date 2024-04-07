@@ -4,6 +4,7 @@ import { Item } from '../../dto/item/item';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { CommandeService } from '../../services/commande/commande.service';
 
 @Component({
   selector: 'app-item-popup',
@@ -18,11 +19,22 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ItemPopupComponent {
   item: Item;
+  isDansCommande: boolean = false;
 
   constructor(
     private overlayRef: OverlayRef,
-    item: Item
+    item: Item,
+    private command: CommandeService
   ) {
     this.item = item;
+    this.command.isSelected(this.item).subscribe((isSelected: boolean) => this.isDansCommande = isSelected);
    }
+
+   addItem() {
+     this.command.addItem(this.item);
+   }
+
+    removeItem() {
+      this.command.removeItem(this.item);
+    }
 }
