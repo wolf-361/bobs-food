@@ -37,6 +37,15 @@ export class ClientSignUpDto {
     @IsString()
     @IsStrongPassword()
     confirmPassword: string;
+
+    constructor(courriel: string, nom: string, prenom: string, adresse: string, password: string, confirmPassword: string){
+        this.courriel = courriel;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresse = adresse;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+    }
 }
 
 export function toCreateClientDto(signUpDto: ClientSignUpDto, salt: string, hashedPassword: string){

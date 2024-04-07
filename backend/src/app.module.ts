@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { RoleGuard } from './guards/role/role.guard';
 import { AuthModule } from './auth/auth.module';
+import { InitService } from './init/init.service';
 
 @Module({
   imports: [ 
@@ -28,7 +29,8 @@ import { AuthModule } from './auth/auth.module';
     {
       provide: 'APP_GUARD',
       useClass: RoleGuard
-    }
+    },
+    InitService
   ],
 })
 export class AppModule {}
