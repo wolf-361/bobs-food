@@ -32,9 +32,12 @@
                     <mat-error *ngIf="signup['confirmPassword'].errors?.['mismatch']">Les mots de passe ne correspondent
                     </mat-error>
                 </mat-form-field>
+                <div class="buttons">
+                    <button mat-raised-button color="primary" matStepperNext
+                        [disabled]="!this.signupForm.dirty ||this.signupForm.invalid">Continuer</button>
+                </div>
             </form>
-            <button mat-raised-button color="primary" matStepperNext
-                [disabled]="!this.signupForm.dirty ||this.signupForm.invalid">Continuer</button>
+
         </div>
     </mat-step>
     <mat-step [stepControl]="this.clientInfoForm" errorMessage="Entres vos informations personelles">
@@ -59,12 +62,12 @@
                         autocomplete="address-line1" required>
                     <mat-error *ngIf="clientInfo['adresse'].errors?.['required']">Ce champ est obligatoire</mat-error>
                 </mat-form-field>
+                <div class="buttons">
+                    <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
+                    <button mat-raised-button color="primary" matStepperNext
+                        [disabled]="!this.clientInfoForm.dirty ||this.clientInfoForm.invalid">Continuer</button>
+                </div>
             </form>
-            <div class="buttons">
-                <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
-                <button mat-raised-button color="primary" matStepperNext (click)="this.verifier()"
-                    [disabled]="!this.clientInfoForm.dirty ||this.clientInfoForm.invalid">Vérifier</button>
-            </div>
         </div>
     </mat-step>
     <mat-step [stepControl]="this.creditCardForm" optional>
@@ -91,11 +94,11 @@
                     <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
                         autocomplete="cc-csc">
                 </mat-form-field>
+                <div class="buttons">
+                    <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
+                    <button mat-raised-button color="primary" matStepperNext>Vérifier</button>
+                </div>
             </form>
-            <div class="buttons">
-                <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
-                <button mat-raised-button color="primary" matStepperNext>Continuer</button>
-            </div>
         </div>
     </mat-step>
     <mat-step>
