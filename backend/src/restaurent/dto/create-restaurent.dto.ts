@@ -9,4 +9,9 @@ export class CreateRestaurentDto {
     @ApiProperty({ example: [1, 2, 3], description: 'The menu of the restaurent (item ids)'})
     @IsNumber({}, { each: true })
     menu: number[];
+
+    constructor(adresse: string, menu: number[]) {
+        this.adresse = adresse;
+        this.menu = menu;
+    }
 }

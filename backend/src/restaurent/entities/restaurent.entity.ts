@@ -17,9 +17,4 @@ export class Restaurent {
 
     })
     menu: Item[];
-
-    constructor(adresse: string, menu: Item[]) {
-        this.adresse = adresse;
-        this.menu = menu;
-    }
 }
