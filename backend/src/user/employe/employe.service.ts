@@ -15,7 +15,14 @@ export class EmployeService {
     private authService: AuthService
   ) {}
   
-  signup(signupDto: EmployeSignUpDto) {
+  async signup(signupDto: EmployeSignUpDto): Promise<{ token: string, expiresIn: number, role: string }> {
+    // Check if the employee already exists
+    await this.findByEmployeId(signupDto.employeId).then(employe => {
+      if (employe !== undefined && employe !== null) {
+        throw new HttpException('Employee already exists', HttpStatus.BAD_REQUEST);
+      }
+    });
+
     // Compare passwords
     if (signupDto.password !== signupDto.confirmPassword) {
       throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
@@ -25,13 +32,11 @@ export class EmployeService {
     const { salt, hashedPassword } = this.authService.hashPassword(signupDto.password);
 
     // Create the client
-    this.create(toCreateEmployeDto(signupDto, salt, hashedPassword)).then(employe => {
-      // Generate the token
-      return this.authService.generateJwtToken(employe);
-    });
+    const employe = await this.create(toCreateEmployeDto(signupDto, salt, hashedPassword));
+    return this.authService.generateJwtToken(employe);
   }
 
-  async login(loginDto: EmployeLoginDto) {
+  async login(loginDto: EmployeLoginDto): Promise<{ token: string, expiresIn: number, role: string }> {
     // Find the employee
     const employe = await this.findByEmployeId(loginDto.employeId);
 

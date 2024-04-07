@@ -9,6 +9,10 @@ export class ClientSignUpDto {
     @IsEmail()
     courriel: string;
 
+    @ApiProperty({ example: false, description: 'If the client wants to retain information' })
+    @IsNotEmpty()
+    estInscrit: boolean;
+
     @ApiProperty({ example: 'John', description: 'The name of the client' })
     @IsNotEmpty()
     @IsString()
@@ -38,8 +42,11 @@ export class ClientSignUpDto {
     @IsStrongPassword()
     confirmPassword: string;
 
-    constructor(courriel: string, nom: string, prenom: string, adresse: string, password: string, confirmPassword: string){
+    // TODO: add more fields here
+
+    constructor(courriel: string, estInscrit: boolean, nom: string, prenom: string, adresse: string, password: string, confirmPassword: string) {
         this.courriel = courriel;
+        this.estInscrit = estInscrit;
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;

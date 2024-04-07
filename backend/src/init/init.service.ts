@@ -35,8 +35,8 @@ export class InitService {
      */
     async init() {
         this.logger.log("Initializing the database...");
-        this.initClients();
-        this.initEmployes();
+        await this.initClients();
+        await this.initEmployes();
         await this.initItems();
         await this.initRestaurents();
         await this.initCommandes();
@@ -46,7 +46,7 @@ export class InitService {
         this.logger.log("Checking if the database is already initialized...");
         // Check if all the items are in the database.
         return await this.itemService.findAll().then(items => {
-            return items.length == this.initData.items.length;
+            return items.length >= this.initData.items.length - 1; // To be sure that the database is initialized.
         });
     }     
         
@@ -62,9 +62,10 @@ export class InitService {
      * Initialize the items.
      */
     private async initItems() {
-        this.initData.items.forEach(async item => {
-            await this.itemService.create(item);  
-        });
+        for (const item of this.initData.items) {
+            await this.itemService.create(item);
+        }
+        this.logger.log("Items initialized.");
     }
 
     /**
@@ -81,27 +82,35 @@ export class InitService {
             new CreateRestaurentDto("789 Rue des Forges, Trois-Rivières", itemIds)
         ]
 
-        restaurents.forEach(async restaurent => {
+        for (const restaurent of restaurents) {
             await this.restaurentService.create(restaurent);
-        });
+        }
+        this.logger.log("Restaurents initialized.");
     }
 
     /**
      * Initialize the clients.
      */
-    private initClients() {
-        this.initData.clients.forEach(client => {
-            this.clientService.signup(client);
-        });
+    private async initClients() {
+        for (const client of this.initData.clients) {
+            // Catch the http exception i
+            await this.clientService.signup(client).catch(error => {
+                // this.logger.error(error.message);
+            });
+        }
+        this.logger.log("Clients initialized.");
     }
 
     /**
      * Initialize the employes.
      */
-    private initEmployes() {
-        this.initData.employes.forEach(employe => {
-            this.employeService.signup(employe);
-        });
+    private async initEmployes() {
+        for (const employe of this.initData.employes) {
+            await this.employeService.signup(employe).catch(error => {
+                // this.logger.error(error.message);
+            });
+        }
+        this.logger.log("Employes initialized.");
     }
 
 }
