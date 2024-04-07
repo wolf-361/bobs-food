@@ -53,10 +53,10 @@ export class ClientComponent {
   });
 
   creditCardForm: FormGroup = new FormGroup({
-    titulaireCarteCredit: new FormControl('', [ Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
-    numeroCarteCredit: new FormControl('', [Validators.pattern(/^[0-9]{16}$/)]),
-    dateExpiration: new FormControl('', [Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
-    cvcCarteCredit: new FormControl('', [Validators.pattern(/^[0-9]{3}$/)]),
+    titulaireCarteCredit: new FormControl('', [requiredIfFormTouched, Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
+    numeroCarteCredit: new FormControl('', [requiredIfFormTouched, Validators.pattern(/^[0-9]{16}$/)]),
+    dateExpiration: new FormControl('', [requiredIfFormTouched, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
+    cvcCarteCredit: new FormControl('', [requiredIfFormTouched, Validators.pattern(/^[0-9]{3}$/)]),
   });
 
   stepperOrientation: Observable<StepperOrientation>;
@@ -154,5 +154,12 @@ function confirmPasswordValidator(controlName: string): ValidatorFn {
     // Return if the confirm password control is not empty. And if the password and confirm password controls values are the same
     const forbidden = control.value !== password;
     return password && forbidden ? { mismatch: true } : null;
+  };
+}
+
+function requiredIfFormTouched(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    // Return true if any of the controls in the form group is touched
+    return control.parent?.touched ? Validators.required(control) : null;
   };
 }
