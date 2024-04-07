@@ -29,4 +29,13 @@ export class Commande {
     @OneToOne(() => Paiement)
     @JoinColumn()
     paiement: Paiement;
+
+    constructor(type: TypeCommande, total: number, date: Date, items: Item[], client: Client, paiement: Paiement) {
+        this.type = type;
+        this.total = total;
+        this.date = date;
+        this.items = items;
+        this.client = client;
+        this.paiement = paiement;
+    }
 }
