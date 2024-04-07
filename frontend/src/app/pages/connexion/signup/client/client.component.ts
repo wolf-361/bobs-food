@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,10 @@ import { ApiService } from '../../../../services/api/api.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { LoginResponse } from '../../../../services/auth/login.response';
+import { MatStepperModule } from '@angular/material/stepper';
+import { STEPPER_GLOBAL_OPTIONS, StepperOrientation } from '@angular/cdk/stepper';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-client',
@@ -23,26 +27,50 @@ import { LoginResponse } from '../../../../services/auth/login.response';
     MatButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatStepperModule
+  ],
+  providers: [
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: {showError: true},
+    },
   ],
   templateUrl: './client.component.html',
   styleUrl: './client.component.scss'
 })
 export class ClientComponent {
   signupForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    courriel: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/), Validators.minLength(6), Validators.maxLength(20)]),
+    confirmPassword: new FormControl('', [Validators.required, confirmPasswordValidator('password')]),
   });
 
-  
+  clientInfoForm: FormGroup = new FormGroup({
+    prenom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+    nom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+    adresse: new FormControl('', [Validators.required]),
+  });
+
+  creditCardForm: FormGroup = new FormGroup({
+    titulaireCarteCredit: new FormControl('', [ Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
+    numeroCarteCredit: new FormControl('', [Validators.pattern(/^[0-9]{16}$/)]),
+    dateExpiration: new FormControl('', [Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
+    cvcCarteCredit: new FormControl('', [Validators.pattern(/^[0-9]{3}$/)]),
+  });
+
+  stepperOrientation: Observable<StepperOrientation>;
 
   constructor(
     private api: ApiService,
     private auth: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    breakpointObserver: BreakpointObserver
   ) { 
-    
+    this.stepperOrientation = breakpointObserver
+      .observe('(min-width: 800px)')
+      .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
   }
 
   /**
@@ -50,15 +78,28 @@ export class ClientComponent {
  * @returns {Object} The form controls
  * @example form['email'].value
  */
-  get form(): { [key: string]: AbstractControl } {
+  get signup(): { [key: string]: AbstractControl } {
     return this.signupForm.controls;
   }
 
+  get clientInfo(): { [key: string]: AbstractControl } {
+    return this.clientInfoForm.controls;
+  }
+
+  get creditCard(): { [key: string]: AbstractControl } {
+    return this.creditCardForm.controls;
+  }
+
+  verifier() {
+    
+  }
 
   onSubmit() {
     if (!this.signupForm.valid) {
       return;
     }
+
+    console.log(this.signupForm.value);
 
     // TODO: signup
   }
@@ -95,4 +136,17 @@ export class ClientComponent {
       this.snackBar.open('Erreur interne du serveur', 'Fermer', { duration: 5000 });
     }
   }
+
+}
+
+
+function confirmPasswordValidator(controlName: string): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    // Get the password control
+    const password = control.root.get(controlName)?.value;
+
+    // Return if the confirm password control is not empty. And if the password and confirm password controls values are the same
+    const forbidden = control.value !== password;
+    return password && forbidden ? { mismatch: true } : null;
+  };
 }
