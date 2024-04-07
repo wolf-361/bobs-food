@@ -10,6 +10,34 @@
     gap: 3rem;
 }
 
+mat-stepper {
+    width: 100%;
+    min-height: 100%;
+
+    button {
+        max-width: 150px;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    min-height: calc($page-height - 48px - 48px - 72px - 24px); // 48px for each tab-group + 72px for the stepper + 24px for the padding
+}
+
+.mat-mdc-form-field {
+    margin-top: 16px;
+  }
+
 form {
     display: flex;
     flex-direction: column;

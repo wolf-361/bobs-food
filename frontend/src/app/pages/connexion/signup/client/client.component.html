@@ -1,20 +1,116 @@
-<h1>Créer un compte</h1>
-<form [formGroup]="this.signupForm" (ngSubmit)="this.onSubmit()" novalisate>
-    <mat-form-field appearance="outline">
-        <mat-label>Entrer votre adresse email</mat-label>
-        <input matInput type="email" required placeholder="Adresse email" formControlName="email" autocomplete="email"
-            required>
-        <mat-error *ngIf="form['email'].errors?.['required']">Ce champ est obligatoire</mat-error>
-        <mat-error *ngIf="form['email'].errors?.['email']">Adresse email invalide</mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Entrer votre mot de passe</mat-label>
-        <input matInput type="password" required placeholder="Mot de passe" formControlName="password"
-            autocomplete="current-password" required>
-        <mat-error *ngIf="form['password'].errors?.['required']">Ce champ est obligatoire</mat-error>
-        <mat-error *ngIf="form['password'].errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</mat-error>
-        <mat-error *ngIf="form['password'].errors?.['maxlength']">Le mot de passe doit contenir au plus 20 caractères</mat-error>
-        <mat-error *ngIf="form['password'].errors?.['pattern']">Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule et un chiffre</mat-error>
-    </mat-form-field>
+<mat-stepper #stepper linear="true" [orientation]="(stepperOrientation | async)!">
+    <h1>Créer un compte</h1>
+    <mat-step [stepControl]="this.signupForm" errorMessage="Courriel et mot de passe requis">
+        <ng-template matStepLabel>Créer un compte</ng-template>
+        <div class="step">
+            <form [formGroup]="this.signupForm" novalisate>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer votre adresse email</mat-label>
+                    <input matInput type="email" required placeholder="Adresse email" formControlName="courriel"
+                        autocomplete="email" required>
+                    <mat-error *ngIf="signup['courriel'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                    <mat-error *ngIf="signup['courriel'].errors?.['email']">Adresse email invalide</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer votre mot de passe</mat-label>
+                    <input matInput type="password" required placeholder="Mot de passe" formControlName="password"
+                        autocomplete="current-password" required>
+                    <mat-error *ngIf="signup['password'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                    <mat-error *ngIf="signup['password'].errors?.['minlength']">Le mot de passe doit contenir au moins 6
+                        caractères</mat-error>
+                    <mat-error *ngIf="signup['password'].errors?.['maxlength']">Le mot de passe doit contenir au plus 20
+                        caractères</mat-error>
+                    <mat-error *ngIf="signup['password'].errors?.['pattern']">Le mot de passe doit contenir au moins une
+                        lettre majuscule, une lettre minuscule et un chiffre</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Confirmer votre mot de passe</mat-label>
+                    <input matInput type="password" required placeholder="Confirmer le mot de passe"
+                        formControlName="confirmPassword" autocomplete="current-password" required>
+                    <mat-error *ngIf="signup['confirmPassword'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
+                    <mat-error *ngIf="signup['confirmPassword'].errors?.['mismatch']">Les mots de passe ne correspondent
+                    </mat-error>
+                </mat-form-field>
+            </form>
+            <button mat-raised-button color="primary" matStepperNext
+                [disabled]="!this.signupForm.dirty ||this.signupForm.invalid">Continuer</button>
+        </div>
+    </mat-step>
+    <mat-step [stepControl]="this.clientInfoForm" errorMessage="Entres vos informations personelles">
+        <ng-template matStepLabel>Informations personnelles</ng-template>
+        <div class="step">
+            <form [formGroup]="this.clientInfoForm" (ngSubmit)="this.onSubmit()" novalidate>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer votre prénom</mat-label>
+                    <input matInput required placeholder="Prénom" formControlName="prenom" autocomplete="given-name"
+                        required>
+                    <mat-error *ngIf="clientInfo['prenom'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer votre nom</mat-label>
+                    <input matInput required placeholder="Nom" formControlName="nom" autocomplete="family-name"
+                        required>
+                    <mat-error *ngIf="clientInfo['nom'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer votre Adresse</mat-label>
+                    <input matInput required placeholder="Adresse" formControlName="adresse"
+                        autocomplete="address-line1" required>
+                    <mat-error *ngIf="clientInfo['adresse'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                </mat-form-field>
+            </form>
+            <div class="buttons">
+                <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
+                <button mat-raised-button color="primary" matStepperNext (click)="this.verifier()"
+                    [disabled]="!this.clientInfoForm.dirty ||this.clientInfoForm.invalid">Vérifier</button>
+            </div>
+        </div>
+    </mat-step>
+    <mat-step [stepControl]="this.creditCardForm" optional>
+        <ng-template matStepLabel>Carte de crédit</ng-template>
+        <div class="step">
+            <form [formGroup]="this.creditCardForm" (ngSubmit)="this.onSubmit()" novalidate>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
+                    <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
+                        autocomplete="cc-name">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
+                    <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
+                        autocomplete="cc-number">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
+                    <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
+                        autocomplete="cc-exp">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
+                    <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
+                        autocomplete="cc-csc">
+                </mat-form-field>
+            </form>
+            <div class="buttons">
+                <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
+                <button mat-raised-button color="primary" matStepperNext>Continuer</button>
+            </div>
+        </div>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Vérification</ng-template>
+        <div class="step">
+            <p>Confirmer les informations suivantes:</p>
+            <!-- TODO -->
+
+            <div>
+                <button mat-button matStepperPrevious>Retour</button>
+                <button mat-button (click)="stepper.reset()">Réinitialiser</button>
+            </div>
+        </div>
+
+    </mat-step>
+
     <button mat-raised-button color="primary" type="submit">Se connecter</button>
-</form>
+</mat-stepper>

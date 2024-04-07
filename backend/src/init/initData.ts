@@ -22,16 +22,16 @@ export class InitData {
 
     private createClients(): ClientSignUpDto[] {
         return [
-            new ClientSignUpDto("john.doe@example.com", true, "Doe", "John", "123 Rue de Paris", "john123pwd", "john123pwd"),
-            new ClientSignUpDto("emma.smith@example.com", true, "Smith", "Emma", "456 Avenue des Lilas", "emma456pwd", "emma456pwd"),
-            new ClientSignUpDto("michael.johnson@example.com", true, "Johnson", "Michael", "789 Boulevard Saint-Michel", "michael789pwd", "michael789pwd"),
-            new ClientSignUpDto("olivia.williams@example.com", true, "Williams", "Olivia", "1010 Rue de la Paix", "olivia101pwd", "olivia101pwd"),
-            new ClientSignUpDto("james.brown@example.com", true, "Brown", "James", "1111 Avenue du Soleil", "james111pwd", "james111pwd"),
-            new ClientSignUpDto("sophia.jones@example.com", true, "Jones", "Sophia", "1212 Boulevard des Arts", "sophia121pwd", "sophia121pwd"),
-            new ClientSignUpDto("daniel.garcia@example.com", true, "Garcia", "Daniel", "1313 Rue de la Liberté", "daniel131pwd", "daniel131pwd"),
-            new ClientSignUpDto("isabella.miller@example.com", true, "Miller", "Isabella", "1414 Avenue de la République", "isabella141pwd", "isabella141pwd"),
-            new ClientSignUpDto("alexander.davis@example.com", true, "Davis", "Alexander", "1515 Boulevard de la Victoire", "alexander151pwd", "alexander151pwd"),
-            new ClientSignUpDto("mia.rodriguez@example.com", true, "Rodriguez", "Mia", "1616 Rue de l'Espoir", "mia161pwd", "mia161pwd")
+            new ClientSignUpDto("john.doe@example.com", true, "Doe", "John", "123 Rue de Paris", "john123pwd", "john123pwd", "John Doe", "1234567890123456", "12/25", "123"),
+            new ClientSignUpDto("emma.smith@example.com", true, "Smith", "Emma", "456 Avenue des Lilas", "emma456pwd", "emma456pwd", "Emma Smith", "2345678901234567", "10/24", "456"),
+            new ClientSignUpDto("michael.johnson@example.com", true, "Johnson", "Michael", "789 Boulevard Saint-Michel", "michael789pwd", "michael789pwd", "Michael Johnson", "3456789012345678", "06/23", "789"),
+            new ClientSignUpDto("olivia.williams@example.com", true, "Williams", "Olivia", "1010 Rue de la Paix", "olivia101pwd", "olivia101pwd", "Olivia Williams", "4567890123456789", "09/22", "987"),
+            new ClientSignUpDto("james.brown@example.com", true, "Brown", "James", "1111 Avenue du Soleil", "james111pwd", "james111pwd", "James Brown", "5678901234567890", "08/21", "654"),
+            new ClientSignUpDto("sophia.jones@example.com", true, "Jones", "Sophia", "1212 Boulevard des Arts", "sophia121pwd", "sophia121pwd", "Sophia Jones", "6789012345678901", "07/20", "321"),
+            new ClientSignUpDto("daniel.garcia@example.com", true, "Garcia", "Daniel", "1313 Rue de la Liberté", "daniel131pwd", "daniel131pwd", "Daniel Garcia", "7890123456789012", "05/19", "789"),
+            new ClientSignUpDto("isabella.miller@example.com", true, "Miller", "Isabella", "1414 Avenue de la République", "isabella141pwd", "isabella141pwd", "Isabella Miller", "8901234567890123", "04/18", "456"),
+            new ClientSignUpDto("alexander.davis@example.com", true, "Davis", "Alexander", "1515 Boulevard de la Victoire", "alexander151pwd", "alexander151pwd", "Alexander Davis", "9012345678901234", "03/17", "123"),
+            new ClientSignUpDto("mia.rodriguez@example.com", true, "Rodriguez", "Mia", "1616 Rue de l'Espoir", "mia161pwd", "mia161pwd", "Mia Rodriguez", "0123456789012345", "02/16", "789")
         ];
     }
 
