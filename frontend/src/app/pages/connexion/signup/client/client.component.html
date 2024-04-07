@@ -7,7 +7,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer votre adresse email</mat-label>
                     <input matInput type="email" required placeholder="Adresse email" formControlName="courriel"
-                        autocomplete="email" required>
+                        autocomplete="email" required autofocus>
                     <mat-error *ngIf="signup['courriel'].errors?.['required']">Ce champ est obligatoire</mat-error>
                     <mat-error *ngIf="signup['courriel'].errors?.['email']">Adresse email invalide</mat-error>
                 </mat-form-field>
@@ -26,7 +26,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Confirmer votre mot de passe</mat-label>
                     <input matInput type="password" required placeholder="Confirmer le mot de passe"
-                        formControlName="confirmPassword" autocomplete="current-password" required>
+                        formControlName="confirmPassword" autocomplete="current-password" required autofocus>
                     <mat-error *ngIf="signup['confirmPassword'].errors?.['required']">Ce champ est
                         obligatoire</mat-error>
                     <mat-error *ngIf="signup['confirmPassword'].errors?.['mismatch']">Les mots de passe ne correspondent
@@ -78,25 +78,29 @@
                     <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
                     <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
                         autocomplete="cc-name">
+                    <mat-error *ngIf="creditCard['titulaireCarteCredit'].errors?.['required']">Ce champ est obligatoire</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
                     <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
                         autocomplete="cc-number">
+                    <mat-error *ngIf="creditCard['numeroCarteCredit'].errors?.['required']">Ce champ est obligatoire</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
                     <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
                         autocomplete="cc-exp">
+                    <mat-error *ngIf="creditCard['dateExpiration'].errors?.['required']">Ce champ est obligatoire</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
                     <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
                         autocomplete="cc-csc">
+                    <mat-error *ngIf="creditCard['cvcCarteCredit'].errors?.['required']">Ce champ est obligatoire</mat-error>
                 </mat-form-field>
                 <div class="buttons">
                     <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
-                    <button mat-raised-button color="primary" matStepperNext>Vérifier</button>
+                    <button mat-raised-button color="primary" matStepperNext [disabled]="this.creditCardForm.invalid">Vérifier</button>
                 </div>
             </form>
         </div>
