@@ -10,5 +10,6 @@ import { Commande } from './entities/commande.entity';
   ],
   controllers: [CommandeController],
   providers: [CommandeService],
+  exports: [CommandeService]
 })
 export class CommandeModule {}

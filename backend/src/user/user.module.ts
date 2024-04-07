@@ -18,5 +18,9 @@ import { AuthModule } from 'src/auth/auth.module';
       EmployeService, 
       ClientService
     ],
+    exports: [
+      EmployeService, 
+      ClientService
+    ]
   })
 export class UserModule {}
