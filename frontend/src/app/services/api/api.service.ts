@@ -9,6 +9,7 @@ import { Item } from '../../dto/item/item';
 import { Employe } from '../../dto/user/employe';
 import { Client } from '../../dto/user/client';
 import { LoginResponse } from '../auth/login.response';
+import { ItemCategory } from '../../dto/item/item-categorie';
 
 @Injectable({
   providedIn: 'root'
@@ -85,7 +86,7 @@ export class ApiService {
     );
   }
 
-  getItemsByCategory(category: string): Observable<Item[]> {
+  getItemsByCategory(category: ItemCategory): Observable<Item[]> {
     return this.http.get<Item[]>(`${this.apiUrl}/item?categorie=${category}`).pipe(
       catchError(this.handleError),
       retry(3),
