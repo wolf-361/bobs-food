@@ -1,7 +1,7 @@
 @import "src/styles/constant.scss";
 
 :host {
-    height: $page-height;
+    min-height: $page-height;
 }
 
 mat-toolbar {
@@ -9,3 +9,16 @@ mat-toolbar {
     gap: 1.5rem;
 }
 
+
+.categorie h2 {
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+ 
+.categorie-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
