@@ -10,10 +10,12 @@
     @for (categorie of this.categories; track $index) {
         <div class="categorie">
             <h2>{{ categorie }}</h2>
-            <-- Show the category items -->
+            <div class="categorie-items">
+            <!-- Show the category items -->
             @for (item of this.getItems(categorie); track item.id) {
                 <app-item [item]="item" (click)="addItem(item)"></app-item>
             }
+            </div>
         </div>
     }
 </div>
