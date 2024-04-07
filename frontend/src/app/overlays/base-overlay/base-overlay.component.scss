@@ -7,4 +7,13 @@ mat-toolbar {
     // Top border radius
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    // Make the title and the close button on either side of the toolbar
+    justify-content: space-between;
+}
+
+.content {
+    padding: 1rem;
+    // Bottom border radius
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
