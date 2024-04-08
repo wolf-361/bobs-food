@@ -33,6 +33,11 @@ export class CommandeService {
     this.calculateTotal().subscribe(total => this.total = total);
   }
 
+  // Allow to subscribe to the items in the command
+  public get Items(): Observable<Item[]> {
+    return this.items.asObservable();
+  }
+
   // Allow to subscribe to if the item is in the command
   public isSelected(item: Item): Observable<boolean> {
     return this.items.asObservable().pipe(
