@@ -19,7 +19,7 @@ import { Client } from '../../../../dto/user/client';
 import { CreateClient } from '../../../../dto/user/create-client';
 
 @Component({
-  selector: 'app-client',
+  selector: 'app-client-signup',
   standalone: true,
   imports: [
     CommonModule,

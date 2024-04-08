@@ -13,7 +13,7 @@ import { AuthService } from '../../../../services/auth/auth.service';
 import { LoginResponse } from '../../../../services/auth/login.response';
 
 @Component({
-  selector: 'app-client',
+  selector: 'app-client-login',
   standalone: true,
   imports: [
     CommonModule,
