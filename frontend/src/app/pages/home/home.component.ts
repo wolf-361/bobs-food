@@ -13,6 +13,7 @@ import { CommandeService } from '../../services/commande/commande.service';
 import { ItemComponent } from '../../general/item/item.component';
 import { ItemCategory } from '../../dto/item/item-categorie';
 import { Item } from '../../dto/item/item';
+import { PanierComponent } from '../../general/panier/panier.component';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,8 @@ import { Item } from '../../dto/item/item';
     MatToolbar, 
     MatButtonModule, 
     MatIconModule,
-    ItemComponent
+    ItemComponent,
+    PanierComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

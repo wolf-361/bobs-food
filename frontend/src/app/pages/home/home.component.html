@@ -5,17 +5,23 @@
         <mat-icon iconPositionEnd>chevron_right</mat-icon>
     </button>
 </mat-toolbar>
-<div class="menu">
-    <!-- For every category of the menu -->
-    @for (categorie of this.categories; track $index) {
-        <div class="categorie">
-            <h2>{{ categorie }}</h2>
-            <div class="categorie-items">
-            <!-- Show the category items -->
-            @for (item of this.getItems(categorie); track item.id) {
-                <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
-            }
+<div>
+    <div class="menu">
+        <!-- For every category of the menu -->
+        @for (categorie of this.categories; track $index) {
+            <div class="categorie">
+                <h2>{{ categorie }}</h2>
+                <div class="categorie-items">
+                <!-- Show the category items -->
+                @for (item of this.getItems(categorie); track item.id) {
+                    <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
+                }
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
+    <div>
+        <app-panier></app-panier>
+    </div>
 </div>
+
