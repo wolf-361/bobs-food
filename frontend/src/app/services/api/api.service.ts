@@ -23,7 +23,7 @@ export class ApiService {
     private http: HttpClient,
     private logger: LoggerService
   ) { 
-    this.logger.api('API service started');
+    this.logger.api('API service started, using API URL: ' + this.apiUrl);
   }
 
   // Commande methods
