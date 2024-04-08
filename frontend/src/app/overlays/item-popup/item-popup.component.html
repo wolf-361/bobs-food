@@ -1,1 +1,6 @@
-<p>item-popup works!</p>
+<app-base-overlay>
+    <h1 title>{{item.nom}}</h1>
+    <p>{{item.description}}</p>
+    <p>{{item.prix}} $</p>
+    <button mat-raised-button (click)="this.addItem()"><mat-icon>add</mat-icon>Ajouter au panier</button>
+</app-base-overlay>

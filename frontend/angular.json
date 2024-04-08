@@ -73,7 +73,7 @@
               ]
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "local"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -83,6 +83,9 @@
             },
             "development": {
               "buildTarget": "frontend:build:development"
+            },
+            "local": {
+              "buildTarget": "frontend:build:local"
             }
           },
           "defaultConfiguration": "development"

@@ -1,4 +1,24 @@
+@import "src/styles/constant.scss";
+
+:host {
+    min-height: $page-height;
+}
+
 mat-toolbar {
     // Space elements 
     gap: 1.5rem;
+}
+
+
+.categorie h2 {
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+ 
+.categorie-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
 }

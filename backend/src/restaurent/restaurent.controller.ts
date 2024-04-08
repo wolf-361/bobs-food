@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { RestaurentService } from './restaurent.service';
 import { CreateRestaurentDto } from './dto/create-restaurent.dto';
 import { UpdateRestaurentDto } from './dto/update-restaurent.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('restaurent')
 @Controller('restaurent')
 export class RestaurentController {
   constructor(private readonly restaurentService: RestaurentService) {}

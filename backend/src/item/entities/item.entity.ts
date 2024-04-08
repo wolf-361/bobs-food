@@ -22,4 +22,12 @@ export class Item {
 
     @Column({ enum: ItemCategory, default: ItemCategory.AUTRE })
     categorie: ItemCategory;
+
+    constructor(nom: string, description: string, prix: number, image: string, categorie: ItemCategory) {
+        this.nom = nom;
+        this.description = description;
+        this.prix = prix;
+        this.image = image;
+        this.categorie = categorie;
+    }
 }

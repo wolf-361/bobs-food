@@ -15,7 +15,14 @@ export class ClientService {
     private authService: AuthService
   ) {}
 
-  signup(signupDto: ClientSignUpDto) {
+  async signup(signupDto: ClientSignUpDto): Promise<{ token: string, expiresIn: number, role: string }> {
+    // Check if the client already exists
+    await this.findOneByEmail(signupDto.courriel).then(client => {
+      if (client !== undefined && client !== null) {
+        throw new HttpException('Client already exists', HttpStatus.BAD_REQUEST);
+      }
+    });
+
     // Compare passwords
     if (signupDto.password !== signupDto.confirmPassword) {
       throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
@@ -25,10 +32,11 @@ export class ClientService {
     const { salt, hashedPassword } = this.authService.hashPassword(signupDto.password);
 
     // Create the client
-    return this.create(toCreateClientDto(signupDto, salt, hashedPassword));
+    const client = await this.create(toCreateClientDto(signupDto, salt, hashedPassword));
+    return this.authService.generateJwtToken(client);
   }
 
-  async login(loginDto: ClientLoginDto) {
+  async login(loginDto: ClientLoginDto): Promise<{ token: string, expiresIn: number, role: string }> {
     // Find the client
     const client = await this.findOneByEmail(loginDto.email);
 

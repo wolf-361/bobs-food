@@ -9,7 +9,7 @@ WORKDIR /app
 # Copy all the files from the current directory to the working directory
 COPY . .
 
-# Install all the dependencies and Generate the build of the application
+# Install all the dependencies and Generate the build of the application (dev)
 RUN yarn install && yarn build:dev
 
 # Second stage: serve the app

@@ -10,5 +10,4 @@ import { HeaderComponent } from './layout/header/header.component';
     imports: [RouterOutlet, HeaderComponent]
 })
 export class AppComponent {
-  title = 'frontend';
 }

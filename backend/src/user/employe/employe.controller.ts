@@ -4,8 +4,9 @@ import { CreateEmployeDto } from './dto/create-employe.dto';
 import { UpdateEmployeDto } from './dto/update-employe.dto';
 import { EmployeSignUpDto } from './dto/employe-sign-up-dto';
 import { EmployeLoginDto } from './dto/employe-login.dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('employe')
 export class EmployeController {
   constructor(private readonly employeService: EmployeService) {}

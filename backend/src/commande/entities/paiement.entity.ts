@@ -11,4 +11,9 @@ export class Paiement {
 
     @Column()
     montant: number;
+
+    constructor(type: TypePaiement, montant: number) {
+        this.type = type;
+        this.montant = montant;
+    }
 }

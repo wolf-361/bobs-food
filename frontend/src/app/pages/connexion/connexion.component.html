@@ -1,1 +1,12 @@
-<p>connexion works!</p>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel" fitInkBarToContent>
+    @for (link of links; track link) {
+        <a mat-tab-link
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [active]="activeLink == link"> {{link.label}} </a>
+    }
+</nav>
+
+<mat-tab-nav-panel #tabPanel>
+    <router-outlet></router-outlet>
+</mat-tab-nav-panel>

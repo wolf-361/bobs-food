@@ -1,0 +1,11 @@
+@import "src/styles/constant.scss";
+
+:host {
+    display: block;
+    height: calc($page-height - 48px);
+}
+
+mat-tab-group {
+    width: 100%;
+    min-height: 100%;
+}
