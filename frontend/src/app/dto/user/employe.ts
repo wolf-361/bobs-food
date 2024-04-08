@@ -5,8 +5,8 @@ export class Employe extends User {
     employeId: string;
     type: EmployeType;
 
-    constructor(id: string, nom: string, prenom: string, adresse: string, salt: string, hashedPassword: string, employeId: string, type: EmployeType) {
-        super(id, nom, prenom, adresse, salt, hashedPassword);
+    constructor(nom: string, prenom: string, adresse: string, employeId: string, type: EmployeType, id?: string) {
+        super(nom, prenom, adresse, id);
         this.employeId = employeId;
         this.type = type;
     }

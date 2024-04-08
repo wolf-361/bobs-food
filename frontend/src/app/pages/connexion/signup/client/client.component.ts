@@ -15,6 +15,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { STEPPER_GLOBAL_OPTIONS, StepperOrientation } from '@angular/cdk/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map, Observable } from 'rxjs';
+import { Client } from '../../../../dto/user/client';
+import { CreateClient } from '../../../../dto/user/create-client';
 
 @Component({
   selector: 'app-client',
@@ -53,13 +55,14 @@ export class ClientComponent {
   });
 
   creditCardForm: FormGroup = new FormGroup({
-    titulaireCarteCredit: new FormControl('', [requiredIfFormTouched, Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
-    numeroCarteCredit: new FormControl('', [requiredIfFormTouched, Validators.pattern(/^[0-9]{16}$/)]),
-    dateExpiration: new FormControl('', [requiredIfFormTouched, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
-    cvcCarteCredit: new FormControl('', [requiredIfFormTouched, Validators.pattern(/^[0-9]{3}$/)]),
+    titulaireCarteCredit: new FormControl('', [Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
+    numeroCarteCredit: new FormControl('', [Validators.pattern(/^[0-9]{16}$/)]),
+    dateExpiration: new FormControl('', [Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
+    cvcCarteCredit: new FormControl('', [Validators.pattern(/^[0-9]{3}$/)]),
   });
 
   stepperOrientation: Observable<StepperOrientation>;
+  client?: CreateClient;
 
   constructor(
     private api: ApiService,
@@ -90,24 +93,114 @@ export class ClientComponent {
     return this.creditCardForm.controls;
   }
 
-  verifierSignupForm() {
+  // Vérifier si le client est déjà inscrit
+  verifierSignup() {
+    if (!this.signupForm.valid) {
+      this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
+      return;
+    }
+
+    // Vérifier si le client est déjà inscrit
+    this.api.getClient(this.signupForm.value.courriel).subscribe(
+      (response) => {
+        // Si le client n'est pas inscrit, on affiche un message de succès
+        if (response === null) {
+          return
+        }
+        // Si le client est déjà inscrit, on affiche un message d'erreur
+        this.snackBar.open('Le client est déjà inscrit', 'Fermer', { duration: 5000 });
+      },
+    );
   }
 
-  verifierClientInfoForm() {
+  verifierClientInfo() {
+    if (!this.clientInfoForm.valid) {
+      this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
+      return;
+    }
   }
 
-  verifierCreditCardForm() {
+  verifierCreditCard() {
+    if (!this.creditCardForm.valid) {
+      this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
+      return;
+    }
+
+    // Vérifier que si un champs as été touché, les autres champs sont remplis (note le nom peut être vide si on prend le nom et prénom du client (mettre case à cocher))
+    if (this.creditCardForm.touched) {
+      // Si un champs est rempli, tous les champs doivent être remplis
+      if (this.creditCardForm.value.titulaireCarteCredit != '' || this.creditCardForm.value.numeroCarteCredit != '' || this.creditCardForm.value.dateExpiration != '' || this.creditCardForm.value.cvcCarteCredit != '') {
+        if (!this.creditCardForm.value.titulaireCarteCredit || !this.creditCardForm.value.numeroCarteCredit || !this.creditCardForm.value.dateExpiration || !this.creditCardForm.value.cvcCarteCredit) {
+          this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
+          return;
+        }
+      }
+    }
   }
 
   verifier() {
-    // TODO: Vérifier le client pour que le client puisse confirmer son inscription
+    if (!this.signupForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
+      return;
+    }
+
+    let titulaireCarteCredit: string | null;
+    let numeroCarteCredit: string | null;
+    let dateExpiration: string | null;
+    let cvcCarteCredit: string | null;
+
+    // Si la carte de crédit n'est pas valide (un champs autre que nom vide), on ne l'inclut pas dans le client
+    if (this.creditCardForm.value.numeroCarteCredit && this.creditCardForm.value.dateExpiration && this.creditCardForm.value.cvcCarteCredit) {
+      // Si le titulaire de la carte n'est pas spécifié, on prend le nom et prénom du client
+      if (!this.creditCardForm.value.titulaireCarteCredit) {
+        this.creditCardForm.value.titulaireCarteCredit = this.clientInfoForm.value.prenom + ' ' + this.clientInfoForm.value.nom;
+      }
+
+      const date = this.creditCardForm.value.dateExpiration.split('/');
+
+      this.client = {
+        courriel: this.signupForm.value.courriel,
+        prenom: this.clientInfoForm.value.prenom,
+        nom: this.clientInfoForm.value.nom,
+        estInscrit: true,
+        adresse: this.clientInfoForm.value.adresse,
+        password: this.signupForm.value.password,
+        confirmPassword: this.signupForm.value.confirmPassword,
+        titulaireCarteCredit: this.creditCardForm.value.titulaireCarteCredit,
+        numeroCarteCredit: this.creditCardForm.value.numeroCarteCredit,
+        dateExpirationCarteCredit: this.creditCardForm.value.dateExpiration,
+        cvcCarteCredit: this.creditCardForm.value.cvcCarteCredit,
+      };
+    } else {
+      this.client = {
+        courriel: this.signupForm.value.courriel,
+        prenom: this.clientInfoForm.value.prenom,
+        nom: this.clientInfoForm.value.nom,
+        estInscrit: true,
+        adresse: this.clientInfoForm.value.adresse,
+        password: this.signupForm.value.password,
+        confirmPassword: this.signupForm.value.confirmPassword,
+      };
+    }
   }
 
   onSubmit() {
-    if (!this.signupForm.valid) {
+    if (!this.signupForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
       return;
     }
-    // TODO: signup
+    
+    this.verifier(); // Vérifier les informations du client (etre certain que le client est fait )
+
+    if (!this.client) {
+      return;
+    }
+
+    // Inscrire le client
+    this.api.signupClient(this.client).subscribe({
+      next: (response: LoginResponse) => this.handleSignupSuccess(response),
+      error: (error: HttpErrorResponse) => this.handleSignupError(error)
+    });
+
+
   }
 
   /**
@@ -154,12 +247,5 @@ function confirmPasswordValidator(controlName: string): ValidatorFn {
     // Return if the confirm password control is not empty. And if the password and confirm password controls values are the same
     const forbidden = control.value !== password;
     return password && forbidden ? { mismatch: true } : null;
-  };
-}
-
-function requiredIfFormTouched(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    // Return true if any of the controls in the form group is touched
-    return control.parent?.touched ? Validators.required(control) : null;
   };
 }

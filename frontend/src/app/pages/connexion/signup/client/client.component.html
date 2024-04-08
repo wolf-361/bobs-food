@@ -3,7 +3,7 @@
     <mat-step [stepControl]="this.signupForm" errorMessage="Courriel et mot de passe requis">
         <ng-template matStepLabel>Créer un compte</ng-template>
         <div class="step">
-            <form [formGroup]="this.signupForm" novalisate>
+            <form [formGroup]="this.signupForm" (ngSubmit)="verifierSignup()" novalisate>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer votre adresse email</mat-label>
                     <input matInput type="email" required placeholder="Adresse email" formControlName="courriel"
@@ -43,7 +43,7 @@
     <mat-step [stepControl]="this.clientInfoForm" errorMessage="Entres vos informations personelles">
         <ng-template matStepLabel>Informations personnelles</ng-template>
         <div class="step">
-            <form [formGroup]="this.clientInfoForm" (ngSubmit)="this.onSubmit()" novalidate>
+            <form [formGroup]="this.clientInfoForm" (ngSubmit)="this.verifierClientInfo()" novalidate>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer votre prénom</mat-label>
                     <input matInput required placeholder="Prénom" formControlName="prenom" autocomplete="given-name"
@@ -73,30 +73,34 @@
     <mat-step [stepControl]="this.creditCardForm" optional>
         <ng-template matStepLabel>Carte de crédit</ng-template>
         <div class="step">
-            <form [formGroup]="this.creditCardForm" (ngSubmit)="this.onSubmit()" novalidate>
+            <form [formGroup]="this.creditCardForm" (ngSubmit)="verifierCreditCard(); this.verifier()" novalidate>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
                     <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
                         autocomplete="cc-name">
-                    <mat-error *ngIf="creditCard['titulaireCarteCredit'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                    <mat-error *ngIf="creditCard['titulaireCarteCredit'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
                     <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
                         autocomplete="cc-number">
-                    <mat-error *ngIf="creditCard['numeroCarteCredit'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                    <mat-error *ngIf="creditCard['numeroCarteCredit'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
                     <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
                         autocomplete="cc-exp">
-                    <mat-error *ngIf="creditCard['dateExpiration'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                    <mat-error *ngIf="creditCard['dateExpiration'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
                     <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
                         autocomplete="cc-csc">
-                    <mat-error *ngIf="creditCard['cvcCarteCredit'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                    <mat-error *ngIf="creditCard['cvcCarteCredit'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
                 </mat-form-field>
                 <div class="buttons">
                     <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
@@ -109,7 +113,21 @@
         <ng-template matStepLabel>Vérification</ng-template>
         <div class="step">
             <p>Confirmer les informations suivantes:</p>
-            <!-- TODO -->
+            <ul>
+                <li><b>Adresse email:</b> {{client?.courriel}}</li>
+                <li><b>Prénom:</b> {{client?.prenom}}</li>
+                <li><b>Nom:</b> {{client?.nom}}</li>
+                <li><b>Adresse:</b> {{client?.adresse}}</li>
+                <span
+                    *ngIf="client?.titulaireCarteCredit && client?.numeroCarteCredit && client?.dateExpirationCarteCredit && client?.cvcCarteCredit">
+                    <li><b>Titulaire de la carte de crédit:</b> {{client?.titulaireCarteCredit}}</li>
+                    <li><b>Numéro de carte de crédit:</b> {{client?.numeroCarteCredit}}</li>
+                    <li><b>Date d'expiration:</b> {{client?.dateExpirationCarteCredit}}</li>
+                    <li><b>Code de sécurité:</b> {{client?.cvcCarteCredit}}</li>
+                </span>
+            </ul>
+
+            <button mat-raised-button color="primary" (click)="onSubmit()">Confirmer</button>
 
             <div>
                 <button mat-button matStepperPrevious>Retour</button>

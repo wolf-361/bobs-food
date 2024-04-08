@@ -10,6 +10,8 @@ import { Employe } from '../../dto/user/employe';
 import { Client } from '../../dto/user/client';
 import { LoginResponse } from '../auth/login.response';
 import { ItemCategory } from '../../dto/item/item-categorie';
+import { CreateClient } from '../../dto/user/create-client';
+import { CreateEmploye } from '../../dto/user/create-employe';
 
 @Injectable({
   providedIn: 'root'
@@ -124,7 +126,7 @@ export class ApiService {
     );
   }
 
-  signupEmploye(employe: Employe): Observable<LoginResponse> {
+  signupEmploye(employe: CreateEmploye): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/employe/signup`, employe).pipe(
       catchError(this.handleError),
       retry(3)
@@ -153,7 +155,7 @@ export class ApiService {
     );
   }
 
-  signupClient(client: Client): Observable<LoginResponse> {
+  signupClient(client: CreateClient): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/client/signup`, client).pipe(
       catchError(this.handleError),
       retry(3)
