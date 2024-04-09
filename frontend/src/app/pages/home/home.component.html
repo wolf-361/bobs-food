@@ -8,6 +8,7 @@
     </button>
 </mat-toolbar>
 <div class="page">
+    @if (!this.montrerPanierMobile){
     <div class="menu">
         <!-- For every category of the menu -->
         @for (categorie of this.categories; track $index) {
@@ -22,7 +23,8 @@
         </div>
         }
     </div>
-    @if (!this.isMobile) {
+    }
+    @if (!this.isMobile || this.montrerPanierMobile) {
     <div class="commande">
         <div class="panier">
             <app-panier></app-panier>
@@ -38,10 +40,10 @@
         <mat-icon iconPositionEnd>chevron_left</mat-icon>
     </button>
     } @else {
-        <button mat-stroked-button color="primary"  (click)="this.montrerPanierMobile = true">
-            Panier
-            <mat-icon iconPositionEnd>shopping_cart</mat-icon>
-        </button>
+    <button mat-stroked-button color="primary" (click)="this.montrerPanierMobile = true">
+        Panier
+        <mat-icon iconPositionEnd>shopping_cart</mat-icon>
+    </button>
     }
     <button mat-stroked-button color="accent" [disabled]="this.isPanierVide">
         Commander
