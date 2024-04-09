@@ -13,7 +13,12 @@ async function bootstrap() {
     await initService.init();
   }
 
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:4200', '/wolf-361\.ca$/'], // Allow 'http://localhost:4200' and any subdomain of 'wolf-361.ca'
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Accept',
+  });
+
   app.setGlobalPrefix('api');
 
   if (configService.isLocalOrDev) {
