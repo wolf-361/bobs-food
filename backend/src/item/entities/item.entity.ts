@@ -23,6 +23,10 @@ export class Item {
     @Column({ enum: ItemCategory, default: ItemCategory.AUTRE })
     categorie: ItemCategory;
 
+    @ManyToMany(() => Commande, { cascade: true })
+    @JoinTable()
+    commandes: Commande[];
+
     constructor(nom: string, description: string, prix: number, image: string, categorie: ItemCategory) {
         this.nom = nom;
         this.description = description;

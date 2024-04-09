@@ -20,7 +20,7 @@ export class Commande {
 
     @ManyToMany(() => Item, { cascade: true })
     @JoinTable()
-    items: Item[];
+    items: { item: Item, quantity: number }[];
 
     @ManyToOne(() => Client)
     @JoinTable()
@@ -30,7 +30,7 @@ export class Commande {
     @JoinColumn()
     paiement: Paiement;
 
-    constructor(type: TypeCommande, total: number, date: Date, items: Item[], client: Client, paiement: Paiement) {
+    constructor(type: TypeCommande, total: number, date: Date, items: { item: Item, quantity: number }[], client: Client, paiement: Paiement) {
         this.type = type;
         this.total = total;
         this.date = date;
