@@ -16,6 +16,12 @@ mat-toolbar {
     padding: 1.5rem;
 }
 
+.menu {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
 .panier {
     display: flex;
     min-width: 300px;
@@ -27,12 +33,6 @@ mat-toolbar {
     flex-direction: column;
 }
 
-.categorie h2 {
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
-}
- 
 .categorie-items {
     display: flex;
     flex-wrap: wrap;

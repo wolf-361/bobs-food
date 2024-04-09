@@ -16,6 +16,7 @@ import { Item } from '../../dto/item/item';
 import { PanierComponent } from '../../general/panier/panier.component';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,8 @@ import { Router } from '@angular/router';
     MatButtonModule, 
     MatIconModule,
     ItemComponent,
-    PanierComponent
+    PanierComponent,
+    MatExpansionModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -37,6 +39,9 @@ export class HomeComponent extends BaseOverlayController{
   isMobile = false;
   isPanierVide = true;
   montrerPanierMobile = false;
+  categorieSelectionner: number = 0;
+
+  // Pourrais faire un dictionnaire des descriptions des categories
 
 
   constructor(

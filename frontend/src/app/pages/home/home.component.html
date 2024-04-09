@@ -9,20 +9,23 @@
 </mat-toolbar>
 <div class="page">
     @if (!this.montrerPanierMobile){
-    <div class="menu">
+    <mat-accordion class="menu">
         <!-- For every category of the menu -->
         @for (categorie of this.categories; track $index) {
-        <div class="categorie">
-            <h2>{{ categorie }}</h2>
-            <div class="categorie-items">
-                <!-- Show the category items -->
-                @for (item of this.getItems(categorie); track item.id) {
-                <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
-                }
-            </div>
-        </div>
+        <mat-expansion-panel [expanded]="categorieSelectionner === $index" (opened)="categorieSelectionner = $index"
+            hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ categorie }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <!-- Show the category items -->
+            @for (item of this.getItems(categorie); track item.id) {
+            <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
+            }
+        </mat-expansion-panel>
         }
-    </div>
+    </mat-accordion>
     }
     @if (!this.isMobile || this.montrerPanierMobile) {
     <div class="commande">
