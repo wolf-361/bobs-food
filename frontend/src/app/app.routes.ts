@@ -17,7 +17,7 @@ export const routes: Routes = [
         ]
     },
     { path: 'commander', component: CommandeComponent },
-    { path: 'employees', component: EmployeComponent },
+    { path: 'employer', component: EmployeComponent },
     { path: 'panier', component: PanierComponent },
     { path: '**', redirectTo: '' }
 ];
