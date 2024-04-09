@@ -72,7 +72,7 @@ export class AuthService {
     return localStorage.getItem('role') as UserRole;
   }
 
-  public hasRole(neededRole: any) {
+  public hasRole(neededRole: string) {
     return this.Role === neededRole;
   }
 }
