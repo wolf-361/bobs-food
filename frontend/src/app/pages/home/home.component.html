@@ -32,11 +32,18 @@
 </div>
 @if (this.isMobile) {
 <mat-toolbar class="mat-elevation-z2" id="mobileCommandeMenu">
-    <button mat-stroked-button color="primary">
-        Panier
-        <mat-icon iconPositionEnd>shopping_cart</mat-icon>
+    @if (this.montrerPanierMobile) {
+    <button mat-stroked-button color="primary" (click)="this.montrerPanierMobile = false">
+        <span>Retour</span>
+        <mat-icon iconPositionEnd>chevron_left</mat-icon>
     </button>
-    <button mat-stroked-button color="accent" (click)="commander()" [disabled]="this.isPanierVide">
+    } @else {
+        <button mat-stroked-button color="primary"  (click)="this.montrerPanierMobile = true">
+            Panier
+            <mat-icon iconPositionEnd>shopping_cart</mat-icon>
+        </button>
+    }
+    <button mat-stroked-button color="accent" [disabled]="this.isPanierVide">
         Commander
     </button>
 </mat-toolbar>

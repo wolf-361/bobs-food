@@ -36,6 +36,7 @@ export class HomeComponent extends BaseOverlayController{
   menu: Map<ItemCategory, Item[]> = new Map<ItemCategory, Item[]>();
   isMobile = false;
   isPanierVide = true;
+  montrerPanierMobile = false;
 
 
   constructor(
