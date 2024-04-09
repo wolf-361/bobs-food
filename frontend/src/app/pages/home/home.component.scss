@@ -9,6 +9,18 @@ mat-toolbar {
     gap: 1.5rem;
 }
 
+.page  {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+.panier {
+    display: flex;
+    min-width: 300px;
+    max-width: 50%;
+}
 
 .categorie h2 {
     font-weight: bold;
@@ -21,4 +33,20 @@ mat-toolbar {
     flex-wrap: wrap;
     gap: 1.5rem;
     justify-content: center;
+}
+
+// Stick mobile command menu to the bottom
+#mobileCommandeMenu {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+    justify-content: space-between;
+}
+
+// Medium-large screen
+@media screen and (max-width: 1024px) {
+    .panier {
+        min-width: 200px;
+    }
 }

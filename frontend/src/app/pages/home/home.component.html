@@ -1,27 +1,43 @@
 <mat-toolbar style="background-color: transparent;" class="mat-elevation-z2">
+    @if (!isMobile) {
     <span>Votre commande</span>
+    }
     <button mat-stroked-button color="primary" (click)="open()">
-        <span>Choisissez un type de commande</span>
+        <span>Choisir un type de commande</span>
         <mat-icon iconPositionEnd>chevron_right</mat-icon>
     </button>
 </mat-toolbar>
-<div>
+<div class="page">
     <div class="menu">
         <!-- For every category of the menu -->
         @for (categorie of this.categories; track $index) {
-            <div class="categorie">
-                <h2>{{ categorie }}</h2>
-                <div class="categorie-items">
+        <div class="categorie">
+            <h2>{{ categorie }}</h2>
+            <div class="categorie-items">
                 <!-- Show the category items -->
                 @for (item of this.getItems(categorie); track item.id) {
-                    <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
+                <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
                 }
-                </div>
             </div>
+        </div>
         }
     </div>
-    <div>
-        <app-panier></app-panier>
+    @if (!this.isMobile) {
+    <div class="commande">
+        <div class="panier">
+            <app-panier></app-panier>
+        </div>
     </div>
+    }
 </div>
-
+@if (this.isMobile) {
+<mat-toolbar class="mat-elevation-z2" id="mobileCommandeMenu">
+    <button mat-stroked-button color="primary">
+        Panier
+        <mat-icon iconPositionEnd>shopping_cart</mat-icon>
+    </button>
+    <button mat-stroked-button color="accent" (click)="commander()" [disabled]="this.isPanierVide">
+        Commander
+    </button>
+</mat-toolbar>
+}

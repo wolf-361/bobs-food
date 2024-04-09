@@ -14,6 +14,8 @@ import { ItemComponent } from '../../general/item/item.component';
 import { ItemCategory } from '../../dto/item/item-categorie';
 import { Item } from '../../dto/item/item';
 import { PanierComponent } from '../../general/panier/panier.component';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -32,13 +34,17 @@ export class HomeComponent extends BaseOverlayController{
   restaurent!: Restaurent;
   // Dictionary of categories and their items
   menu: Map<ItemCategory, Item[]> = new Map<ItemCategory, Item[]>();
+  isMobile = false;
+  isPanierVide = true;
 
 
   constructor(
     private injector: Injector,
     private parentOverlay: Overlay,
     private restaurentService: RestaurentService,
-    private commande: CommandeService
+    private commande: CommandeService,
+    private breakpointObserver: BreakpointObserver,
+    private router: Router
   ) {
     super(parentOverlay);
 
@@ -49,6 +55,18 @@ export class HomeComponent extends BaseOverlayController{
       this.restaurent = restaurent;
       this.loadMenu();
     });
+
+    // Listen to the screen size
+    this.breakpointObserver.observe('(max-width: 600px)').subscribe(result => {
+      this.isMobile = result.matches;
+    });
+
+    // Subscribe to the items in the command to know if the panier is vide
+    this.commande.Items.subscribe(items => this.isPanierVide = items.length === 0);
+  }
+
+  commander() {
+    this.router.navigate(['/commander']);
   }
 
   addItem(item: Item) {
