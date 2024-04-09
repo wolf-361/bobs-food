@@ -1,5 +1,7 @@
 @import "src/styles/constant.scss";
 
 :host {
+    display: block;
     height: $page-height;
+    width: 100vw;
 }
