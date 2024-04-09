@@ -32,4 +32,13 @@ export const roleGuard: CanActivateFn = (route, state) => {
     router.navigate(['/auth/login']);
     return false;
   }
+
+  // Check if the user has the needed role
+  if (authService.hasRole(neededRole)) {
+    return true;
+  }
+
+  // Redirect to the login page
+  router.navigate(['/auth/login']);
+  return false;
 };
