@@ -1,5 +1,6 @@
-$page-height: calc(100vh - var(--mat-toolbar-standard-height));
-
+$mobile-menu-height: var(--mat-toolbar-standard-height);
 @media screen and (max-width: 600px) {
-    $page-height: calc(100vh - var(--mat-toolbar-mobile-height));
+    $mobile-menu-height: var(--mat-toolbar-mobile-height);
 }
+
+$page-height: calc(100vh - $mobile-menu-height);

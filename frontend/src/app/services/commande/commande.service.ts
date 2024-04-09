@@ -19,7 +19,7 @@ export class CommandeService {
   private type?: TypeCommande;
   private total: number;
   private date?: Date;
-  private items: BehaviorSubject<Item[]>; // Items in the command
+  private items: BehaviorSubject<{ item: Item, quantite: number }[]>;
   private client?: Client;
   private paiement?: Paiement;
 
@@ -28,15 +28,20 @@ export class CommandeService {
     private api: ApiService,
     private logger: LoggerService
   ) {
-    this.items = new BehaviorSubject<Item[]>([]);
+    this.items = new BehaviorSubject<{ item: Item, quantite: number }[]>([]);
     this.total = 0;
     this.calculateTotal().subscribe(total => this.total = total);
+  }
+
+  // Allow to subscribe to the items in the command
+  public get Items(): Observable<{ item: Item, quantite: number }[]> {
+    return this.items.asObservable();
   }
 
   // Allow to subscribe to if the item is in the command
   public isSelected(item: Item): Observable<boolean> {
     return this.items.asObservable().pipe(
-      map(items => items.some(i => i.id === item.id))
+      map(items => items.some(i => i.item.id === item.id))
     );
   }
 
@@ -52,7 +57,7 @@ export class CommandeService {
    */
   private calculateTotal(): Observable<number> {
     return this.items.asObservable().pipe(
-      map(items => items.reduce((acc, item) => acc + item.prix, 0))
+      map(items => items.reduce((acc, i) => acc + i.item.prix * i.quantite, 0))
     );
   }
 
@@ -75,14 +80,42 @@ export class CommandeService {
    * Add an item to the command
    */
   public addItem(item: Item): void {
-    this.items.next([...this.items.value, item]);
+    // Check if the item is already in the command
+    const items = this.items.value;
+    const index = items.findIndex(i => i.item.id === item.id);
+
+    // If it is, increment the quantity
+    if (index !== -1) {
+      items[index].quantite++;
+    } else {
+      // Otherwise, add it
+      items.push({ item, quantite: 1 });
+    }
+
+    // Update the items
+    this.items.next(items);
   }
 
   /**
    * Remove an item from the command
    */
   public removeItem(item: Item): void {
-    this.items.next(this.items.value.filter(i => i.id !== item.id));
+    // Check if the item is in the command
+    const items = this.items.value;
+    const index = items.findIndex(i => i.item.id === item.id);
+
+    // If it is, decrement the quantity
+    if (index !== -1) {
+      items[index].quantite--;
+
+      // If the quantity is 0, remove the item
+      if (items[index].quantite === 0) {
+        items.splice(index, 1);
+      }
+
+      // Update the items
+      this.items.next(items);
+    }
   }
 
   /**

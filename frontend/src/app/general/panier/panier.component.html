@@ -1,0 +1,11 @@
+<div>
+    <!-- Unpack item and quantity from items -->
+    @for (pack of this.items; track pack.item.id;) {
+        <p>{{ pack.item.nom }} : {{ pack.quantite }}</p>
+
+    }
+    @empty {
+        <p>Le panier est vide</p>
+    }
+</div>
+<button mat-raised-button color="primary" (click)="commander()" [disabled]="this.isVide">Commander</button>

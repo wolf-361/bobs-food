@@ -1,3 +1,10 @@
+:host {
+    // Make the header sticky
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
 .spacer {
     flex: 1;
 }

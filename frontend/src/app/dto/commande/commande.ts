@@ -8,11 +8,11 @@ export class Commande {
     type: TypeCommande;
     total: number;
     date: Date;
-    items: Item[];
+    items: { item: Item, quantite: number }[];
     client?: Client;
     paiement: Paiement;
 
-    constructor(type: TypeCommande, total: number, date: Date, items: Item[], paiement: Paiement, id?: number, client?: Client) {
+    constructor(type: TypeCommande, total: number, date: Date, items: { item: Item, quantite: number }[], paiement: Paiement, id?: number, client?: Client) {
         this.id = id;
         this.type = type;
         this.total = total;

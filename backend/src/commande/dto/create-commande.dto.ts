@@ -17,6 +17,6 @@ export class CreateCommandeDto {
     @IsDate()
     date: Date;
 
-    @ApiProperty({ type: [CreateItemDto], description: 'Les items de la commande'})
-    items: Item[];
+    @ApiProperty({ example: [{ item: new CreateItemDto(), quantity: 2 }], description: 'Les items de la commande'})
+    items: { item: Item, quantity: number }[];
 }

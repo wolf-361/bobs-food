@@ -1,21 +1,55 @@
 <mat-toolbar style="background-color: transparent;" class="mat-elevation-z2">
+    @if (!isMobile) {
     <span>Votre commande</span>
+    }
     <button mat-stroked-button color="primary" (click)="open()">
-        <span>Choisissez un type de commande</span>
+        <span>Choisir un type de commande</span>
         <mat-icon iconPositionEnd>chevron_right</mat-icon>
     </button>
 </mat-toolbar>
-<div class="menu">
-    <!-- For every category of the menu -->
-    @for (categorie of this.categories; track $index) {
-        <div class="categorie">
-            <h2>{{ categorie }}</h2>
-            <div class="categorie-items">
+<div class="page">
+    @if (!this.montrerPanierMobile){
+    <mat-accordion class="menu">
+        <!-- For every category of the menu -->
+        @for (categorie of this.categories; track $index) {
+        <mat-expansion-panel [expanded]="categorieSelectionner === $index" (opened)="categorieSelectionner = $index"
+            hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ categorie }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
             <!-- Show the category items -->
             @for (item of this.getItems(categorie); track item.id) {
-                <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
+            <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
             }
-            </div>
+        </mat-expansion-panel>
+        }
+    </mat-accordion>
+    }
+    @if (!this.isMobile || this.montrerPanierMobile) {
+    <div class="commande">
+        <div class="panier">
+            <app-panier></app-panier>
         </div>
+    </div>
     }
 </div>
+@if (this.isMobile) {
+<mat-toolbar class="mat-elevation-z2" id="mobileCommandeMenu">
+    @if (this.montrerPanierMobile) {
+    <button mat-stroked-button color="primary" (click)="this.montrerPanierMobile = false">
+        <span>Retour</span>
+        <mat-icon iconPositionEnd>chevron_left</mat-icon>
+    </button>
+    } @else {
+    <button mat-stroked-button color="primary" (click)="this.montrerPanierMobile = true">
+        Panier
+        <mat-icon iconPositionEnd>shopping_cart</mat-icon>
+    </button>
+    }
+    <button mat-stroked-button color="accent" [disabled]="this.isPanierVide">
+        Commander
+    </button>
+</mat-toolbar>
+}

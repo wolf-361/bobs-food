@@ -5,6 +5,7 @@ import { UpdateEmployeDto } from './dto/update-employe.dto';
 import { EmployeSignUpDto } from './dto/employe-sign-up-dto';
 import { EmployeLoginDto } from './dto/employe-login.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles/roles.decorator';
 
 @ApiTags('user')
 @Controller('employe')
@@ -12,6 +13,7 @@ export class EmployeController {
   constructor(private readonly employeService: EmployeService) {}
 
   @Post('signup')
+  @Roles(['gestionnaire', 'admin', 'proprietaire'])
   signup(@Body() signupDto: EmployeSignUpDto) {
     return this.employeService.signup(signupDto);
   }
@@ -23,26 +25,31 @@ export class EmployeController {
 
   @Get()
   @ApiOperation({ summary: 'Get the current user (logged in)' })
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
   getSelf(@Request() req) {
     return this.findOne(req.user.id);
   }
 
   @Get('all')
+  @Roles(['gestionnaire', 'admin', 'proprietaire'])
   findAll() {
     return this.employeService.findAll();
   }
 
   @Get(':id')
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
   findOne(@Param('id') id: string) {
     return this.employeService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
   update(@Param('id') id: string, @Body() updateEmployeDto: UpdateEmployeDto) {
     return this.employeService.update(id, updateEmployeDto);
   }
 
   @Delete(':id')
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
   remove(@Param('id') id: string) {
     return this.employeService.remove(id);
   }
