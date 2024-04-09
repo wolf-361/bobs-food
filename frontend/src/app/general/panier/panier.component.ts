@@ -10,7 +10,7 @@ import { Item } from '../../dto/item/item';
   standalone: true,
   imports: [
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   templateUrl: './panier.component.html',
   styleUrl: './panier.component.scss'

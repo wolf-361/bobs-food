@@ -20,6 +20,11 @@ mat-toolbar {
     display: flex;
     min-width: 300px;
     max-width: 50%;
+    // Le fixer à droite pour que même si on scroll, il reste à droite
+    position: sticky;
+    top: $mobile-menu-height;
+    right: 0;
+    flex-direction: column;
 }
 
 .categorie h2 {
