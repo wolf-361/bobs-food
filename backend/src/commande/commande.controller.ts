@@ -16,6 +16,7 @@ export class CommandeController {
   }
 
   @Get()
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
   findAll() {
     return this.commandeService.findAll();
   }
