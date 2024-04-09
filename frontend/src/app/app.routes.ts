@@ -6,6 +6,10 @@ import { PanierComponent } from './general/panier/panier.component';
 import { LoginComponent } from './pages/connexion/login/login.component';
 import { SignupComponent } from './pages/connexion/signup/signup.component';
 import { CommandeComponent } from './pages/commande/commande.component';
+import { CreationEmployeComponent } from './pages/employe/creation-employe/creation-employe.component';
+import { roleGuard } from './guards/role/role.guard';
+import { ModifierCommandeComponent } from './pages/employe/modifier-commande/modifier-commande.component';
+import { ModifierMenuComponent } from './pages/employe/modifier-menu/modifier-menu.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -17,7 +21,11 @@ export const routes: Routes = [
         ]
     },
     { path: 'commander', component: CommandeComponent },
-    { path: 'employer', component: EmployeComponent },
+    { path: 'employer', component: EmployeComponent, children: [
+        { path: 'create', component: CreationEmployeComponent, canActivate: [roleGuard], data: { role: 'gestionnaire, admin, proprietaire' } },
+        { path: 'modify-command', component: ModifierCommandeComponent, canActivate: [roleGuard], data: { role: 'employe'} },
+        { path: 'modify-menu', component: ModifierMenuComponent, canActivate: [roleGuard], data: { role: 'gestionnaire, admin, proprietaire'} },
+    ], canActivate: [roleGuard], data: { role: 'employe, gestionnaire, admin, proprietaire'}},
     { path: 'panier', component: PanierComponent },
     { path: '**', redirectTo: '' }
 ];

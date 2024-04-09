@@ -6,7 +6,6 @@ import { LoggerService } from '../logger/logger.service';
   providedIn: 'root'
 })
 export class AuthService {
-
   constructor(
     private logger: LoggerService
   ) { }
@@ -71,5 +70,9 @@ export class AuthService {
    */
   public get Role(): UserRole {
     return localStorage.getItem('role') as UserRole;
+  }
+
+  public hasRole(neededRole: any) {
+    return this.Role === neededRole;
   }
 }
