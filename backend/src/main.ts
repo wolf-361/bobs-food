@@ -9,9 +9,7 @@ async function bootstrap() {
 
   // Get the init service and initialize the database.
   const initService = app.get<InitService>(InitService);
-  if (!await initService.isDbInitialized()) {
-    await initService.init();
-  }
+  await initService.init();
 
   app.enableCors({
     origin: ['http://localhost:4200', '^(https?:\/\/)?(?:[\w-]+\.)?wolf-361\.ca\/.*$'], // Allow 'http://localhost:4200' and any subdomain of 'wolf-361.ca'

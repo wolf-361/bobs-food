@@ -22,6 +22,13 @@ mat-toolbar {
     flex-grow: 1;
 }
 
+.category-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
 .panier {
     display: flex;
     min-width: 300px;
@@ -31,13 +38,6 @@ mat-toolbar {
     top: $mobile-menu-height;
     right: 0;
     flex-direction: column;
-}
-
-.categorie-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: center;
 }
 
 // Stick mobile command menu to the bottom

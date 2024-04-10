@@ -27,7 +27,9 @@ export class ItemPopupComponent {
     private command: CommandeService
   ) {
     this.item = item;
-    this.command.isSelected(this.item).subscribe((isSelected: boolean) => this.isDansCommande = isSelected);
+    this.command.Items.subscribe(items => {
+      this.isDansCommande = items.some(i => i.item.id === this.item.id);
+    });
    }
 
    addItem() {

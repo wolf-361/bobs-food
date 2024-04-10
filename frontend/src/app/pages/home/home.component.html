@@ -20,9 +20,11 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <!-- Show the category items -->
-            @for (item of this.getItems(categorie); track item.id) {
-            <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
-            }
+            <div class="category-items">
+                @for (item of this.getItems(categorie); track item.id) {
+                    <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
+                    }
+            </div>
         </mat-expansion-panel>
         }
     </mat-accordion>

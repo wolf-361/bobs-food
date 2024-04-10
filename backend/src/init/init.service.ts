@@ -40,26 +40,18 @@ export class InitService {
         await this.initItems();
         await this.initRestaurents();
         await this.initCommandes();
-    }
-
-    async isDbInitialized(): Promise<boolean> {
-        this.logger.log("Checking if the database is already initialized...");
-        // Check if all the items are in the database.
-        return await this.itemService.findAll().then(items => {
-            return items.length >= this.initData.items.length - 1; // To be sure that the database is initialized.
-        });
-    }     
+    }    
         
 
     /**
      * Initialize the commandes.
      */
     private initCommandes() {
-        
+        // TODO
     }
 
     /**
-     * Initialize the items.
+     * Initialize or update the items.
      */
     private async initItems() {
         for (const item of this.initData.items) {
@@ -72,6 +64,12 @@ export class InitService {
      * Initialize the restaurents.
      */
     private async initRestaurents() {
+        // If there are already restaurents in the database, we don't initialize them.
+        if (await this.restaurentService.findAll().then(restaurents => restaurents.length) > 0) {
+            this.logger.log("Restaurents already initialized.");
+            return;
+        }
+
         const itemIds = await this.itemService.findAll().then(items => {
             return items.map(item => item.id);
         });
@@ -92,6 +90,12 @@ export class InitService {
      * Initialize the clients.
      */
     private async initClients() {
+        // If there are already clients in the database, we don't initialize them.
+        if (await this.clientService.findAll().then(clients => clients.length) > 0) {
+            this.logger.log("Clients already initialized.");
+            return;
+        }
+
         for (const client of this.initData.clients) {
             // Catch the http exception i
             await this.clientService.signup(client).catch(error => {
@@ -105,6 +109,12 @@ export class InitService {
      * Initialize the employes.
      */
     private async initEmployes() {
+        // If there are already employes in the database, we don't initialize them.
+        if (await this.employeService.findAll().then(employes => employes.length) > 0) {
+            this.logger.log("Employes already initialized.");
+            return;
+        }
+
         for (const employe of this.initData.employes) {
             await this.employeService.signup(employe).catch(error => {
                 // this.logger.error(error.message);
