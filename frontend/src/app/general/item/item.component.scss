@@ -39,6 +39,10 @@ mat-card-title {
     right: 0;
     gap: 1rem;
     padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
 }
 
 img {
