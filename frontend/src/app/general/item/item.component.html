@@ -9,7 +9,7 @@
     <mat-card-content>
         <img [src]="item.image" [alt]="item.description" />
     </mat-card-content>
-    @if (this.mouseOver) {
+    @if (this.isMouseOver) {
     <div class="fabs">
         @if (this.isDansCommande) {
         <button mat-fab color="warn" (click)="removeFromCart()">

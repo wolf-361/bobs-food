@@ -38,13 +38,6 @@ export class CommandeService {
     return this.items.asObservable();
   }
 
-  // Allow to subscribe to if the item is in the command
-  public isSelected(item: Item): Observable<boolean> {
-    return this.items.asObservable().pipe(
-      map(items => items.some(i => i.item.id === item.id))
-    );
-  }
-
   /**
    * Set the type of the command
    */

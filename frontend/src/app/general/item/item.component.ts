@@ -25,7 +25,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class ItemComponent extends BaseOverlayController {
   @ViewChild(BaseOverlayComponent) overlayComponent!: BaseOverlayComponent;
   @Input({ required: true }) item!: Item;
-  mouseOver: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private mouseOver: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isMouseOver: boolean = false;
   isDansCommande: boolean = false; // Permet d'afficher l'option de suppression du panier
 
   @HostListener('mouseenter')
@@ -54,19 +55,13 @@ export class ItemComponent extends BaseOverlayController {
     private commande: CommandeService
   ) {
     super(parentOverlay);
-    this.mouseOver.subscribe(this.onHover);
+    // Check if the mouse is over the item
+    this.mouseOver.subscribe((isMouseOver: boolean) => this.isMouseOver = isMouseOver);
 
     // Check if the item is in the cart
-    this.commande.isSelected(this.item).subscribe((isSelected: boolean) => this.isDansCommande = isSelected);
-  }
-
-  onHover(isHovered: boolean) {
-    if (!isHovered) {
-      return;
-    }
-
-    // TODO: Faire apparaitre l'options d'ajout au panier
-    console.log('Item hovered');
+    this.commande.Items.subscribe(items => {
+      this.isDansCommande = items.findIndex(i => i.item.id === this.item.id) !== -1;
+    });
   }
 
   addToCart() {
