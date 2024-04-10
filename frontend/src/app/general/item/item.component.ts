@@ -38,8 +38,13 @@ export class ItemComponent extends BaseOverlayController {
     this.mouseOver.next(false);
   }
 
-  @HostListener('click')
-  onClick() {
+  @HostListener('click', ['$event'])
+  onClick(event: MouseEvent) {
+    // Check if the click is on the fabs (parent div class is .fabs)
+    if ((event.target as HTMLElement).closest('.fabs')) {
+      return;
+    }
+
     this.open();
   }
 

@@ -32,6 +32,15 @@ mat-card-title {
     flex-wrap: wrap;
 }
 
+.fabs {
+    // Align to the bottom right corner of the card
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+}
 
 img {
     width: 100%;

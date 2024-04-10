@@ -1,7 +1,7 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title class="title">
-            {{ item.nom }} 
+            {{ item.nom }}
             <b>{{ item.prix }} $</b>
         </mat-card-title>
         <mat-card-subtitle>{{ item.description }}</mat-card-subtitle>
@@ -9,8 +9,16 @@
     <mat-card-content>
         <img [src]="item.image" [alt]="item.description" />
     </mat-card-content>
-    <mat-card-actions align="end">
-        <button mat-button>LIKE</button>
-        <button mat-button>SHARE</button>
-    </mat-card-actions>
+    @if (this.mouseOver) {
+    <div class="fabs">
+        @if (this.isDansCommande) {
+        <button mat-fab color="warn" (click)="removeFromCart()">
+            <mat-icon>remove</mat-icon>
+        </button>
+        }
+        <button mat-mini-fab color="accent" (click)="addToCart()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    }
 </mat-card>
