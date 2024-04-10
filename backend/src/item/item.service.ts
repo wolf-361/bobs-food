@@ -16,7 +16,7 @@ export class ItemService {
     // Create a new item if it does not exist
     const possibleItem = await this.itemRepository.findOne({ where: { nom: createItemDto.nom } });
     if (possibleItem !== undefined && possibleItem !== null) {
-      return possibleItem;
+      return this.itemRepository.update(possibleItem.id, createItemDto)
     }
 
     return this.itemRepository.save(createItemDto);
