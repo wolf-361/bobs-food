@@ -9,16 +9,16 @@
     <mat-card-content>
         <img [src]="item.image" [alt]="item.description" />
         @if (this.isMouseOver) {
-            <div class="fabs">
-                @if (this.isDansCommande) {
-                <button mat-mini-fab color="warn" (click)="removeFromCart()">
-                    <mat-icon>remove</mat-icon>
-                </button>
-                }
-                <button mat-mini-fab color="accent" (click)="addToCart()">
-                    <mat-icon>add</mat-icon>
-                </button>
-            </div>
+        <div class="fabs">
+            @if (this.isDansCommande) {
+            <button mat-mini-fab color="warn" (click)="removeFromCart()">
+                <mat-icon>remove</mat-icon>
+            </button>
+            }
+            <button mat-mini-fab color="accent" (click)="addToCart()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
         }
     </mat-card-content>
 </mat-card>
