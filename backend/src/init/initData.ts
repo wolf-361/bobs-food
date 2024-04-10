@@ -70,7 +70,7 @@ export class InitData {
             new Item('Poutine Italienne', 'Frites, fromage en grains, sauce tomate, pepperoni', 9.99, 'poutine_italienne.jpg', ItemCategory.POUTINE),
             new Item('Poutine BBQ', 'Frites, fromage en grains, sauce BBQ, oignons caramélisés', 10.99, 'poutine_bbq.jpg', ItemCategory.POUTINE),
             new Item('Poutine Bacon', 'Frites, fromage en grains, sauce brune, bacon', 9.99, 'poutine_bacon.jpg', ItemCategory.POUTINE),
-            new Item('Poutine Mexicaine', 'Frites, fromage en grains, salsa, jalapeños', 11.99, 'poutine_mexicaine.jpg', ItemCategory.POUTINE),
+            new Item('Poutine Mexicaine', 'Frites, fromage en grains, salsa, jalapeños', 11.99, 'assets/items/poutine/mexicaine.png', ItemCategory.POUTINE),
             new Item('Poutine Chicken Ranch', 'Frites, poulet grillé, fromage en grains, sauce ranch', 12.99, 'poutine_chicken_ranch.jpg', ItemCategory.POUTINE),
             new Item('Poutine Forestière', 'Frites, fromage en grains, champignons, oignons, sauce champignon', 11.99, 'poutine_forestiere.jpg', ItemCategory.POUTINE),
             new Item('Poutine Gourmet', 'Frites, fromage en grains, bœuf braisé, sauce au vin rouge', 13.99, 'poutine_gourmet.jpg', ItemCategory.POUTINE),

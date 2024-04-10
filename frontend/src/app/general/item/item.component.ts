@@ -7,11 +7,18 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { BaseOverlayComponent } from '../../overlays/base-overlay/base-overlay.component';
 import { ItemPopupComponent } from '../../overlays/item-popup/item-popup.component';
 import { CommandeService } from '../../services/commande/commande.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-item',
   standalone: true,
-  imports: [],
+  imports: [
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule
+  ],
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss'
 })
