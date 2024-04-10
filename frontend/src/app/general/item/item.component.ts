@@ -41,8 +41,8 @@ export class ItemComponent extends BaseOverlayController {
 
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent) {
-    // Check if the click is on the fabs (parent div class is .fabs)
-    if ((event.target as HTMLElement).closest('.fabs')) {
+    // Check if the click is on .mat-mdc-button-touch-target
+    if ((event.target as HTMLElement).classList.contains('mat-mdc-button-touch-target')) {
       return;
     }
 
