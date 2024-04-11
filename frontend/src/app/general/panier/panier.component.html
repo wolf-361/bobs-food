@@ -1,6 +1,7 @@
 <div>
     <!-- Unpack item and quantity from items -->
     @for (pack of this.items; track pack.item.id;) {
+        <mat-icon>{{ this.getIcon(pack.item.categorie) }}</mat-icon>
         <p>{{ pack.item.nom }} : {{ pack.quantite }}</p>
 
     }
