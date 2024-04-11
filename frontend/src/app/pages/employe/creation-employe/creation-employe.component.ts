@@ -19,6 +19,9 @@ import {StepperOrientation} from "@angular/cdk/stepper";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
+import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
+import {MatOption, MatSelect} from "@angular/material/select";
+import {disableVersionCheck} from "@angular/cli/src/utilities/environment-options";
 
 @Component({
   selector: 'app-creation-employe',
@@ -36,6 +39,10 @@ import {MatTooltip} from "@angular/material/tooltip";
     AsyncPipe,
     MatIcon,
     MatTooltip,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    MatSelect,
+    MatOption,
   ],
   templateUrl: './creation-employe.component.html',
   styleUrl: './creation-employe.component.scss'
@@ -79,8 +86,12 @@ export class CreationEmployeComponent {
   }
 
   onSubmit() {
-    // Create a new employe if not already created
+    if (this.firstFormGroup.valid && this.secondFormGroup.valid) {
+      console.log('Employe created');
+      //TODO: Call the API to create the employe
+    }
   }
+
 
   generateIdentifiant() {
     // Generate an identifiant for the employe based on the first and last name
@@ -97,12 +108,9 @@ export class CreationEmployeComponent {
       const numRandomId = 8-(nomId.length + prenomId.length);
       const randomId = Math.floor(Math.random() * Math.pow(10, numRandomId)).toString().padStart(numRandomId, '0');
 
-      // Set the identifiant to the generated value
-      this.firstFormGroup.controls['identifiant'].setValue(
-        nomId +
-        prenomId +
-        randomId
-      );
+      // Set the generated id
+      this.firstFormGroup.controls['identifiant'].patchValue(nomId + prenomId + randomId, {emitEvent: false});
+
     }
 
   }

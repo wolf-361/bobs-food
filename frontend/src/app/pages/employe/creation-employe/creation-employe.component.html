@@ -43,11 +43,9 @@
           <mat-error *ngIf="firstFormGroup.get('identifiant')?.errors?.['required']">
             Ce champ est obligatoire</mat-error>
 
-          <!-- Bouton pour générer un identifiant -->
           <button mat-icon-button matSuffix matTooltip="Générer un identifiant aléatoire" (click)="generateIdentifiant()">
             <mat-icon>shuffle</mat-icon>
           </button>
-
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -78,13 +76,14 @@
             correspondent pas</mat-error>
         </mat-form-field>
 
-        <!-- Boutons Radio pour le choix du Role -->
-        <mat-radio-group formControlName="role" required>
-          <mat-radio-button value="Propriétaire">Propriétaire</mat-radio-button>
-          <mat-radio-button value="Employé">Employé</mat-radio-button>
-
+        <mat-form-field appearance="outline">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="role" required>
+            <mat-option value="admin">Admin</mat-option>
+            <mat-option value="user">User</mat-option>
+          </mat-select>
           <mat-error *ngIf="firstFormGroup.get('role')?.errors?.['required']">Ce champ est obligatoire</mat-error>
-        </mat-radio-group>
+        </mat-form-field>
 
         <div class="buttons">
           <button mat-raised-button color="primary" matStepperPrevious>Back</button>
