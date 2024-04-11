@@ -43,7 +43,7 @@
           <mat-error *ngIf="firstFormGroup.get('identifiant')?.errors?.['required']">
             Ce champ est obligatoire</mat-error>
 
-          <button mat-icon-button matSuffix matTooltip="Générer un identifiant aléatoire" (click)="generateIdentifiant()">
+          <button type="button" mat-icon-button matSuffix matTooltip="Générer un identifiant aléatoire" (click)="generateIdentifiant()">
             <mat-icon>shuffle</mat-icon>
           </button>
         </mat-form-field>
