@@ -2,7 +2,7 @@
     <!-- Restaurent selectionner et option pour le changer -->
 
 </div>
-<div>
+<div class="items">
     <!-- Menu selectionner et option pour le changer -->
     @for (packed of this.items; track $index) {
         <app-toggle-item [item]="packed.item" [isSelected]="packed.isSelected" (toggle)="toggleItemSelection($event)"></app-toggle-item>

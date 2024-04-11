@@ -2,6 +2,6 @@
 
 :host {
     display: block;
-    height: $page-height;
+    min-height: $page-height;
     width: 100vw;
 }
