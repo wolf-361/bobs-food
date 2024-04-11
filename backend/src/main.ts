@@ -12,7 +12,7 @@ async function bootstrap() {
   await initService.init();
 
   app.enableCors({
-    origin: ['http://localhost:4200', 'https://bobs-food.wolf-361.ca/', 'https://dev-bobs-food.wolf-361.ca'],
+    origin: ['http://localhost:4200', 'https://bobs-food.wolf-361.ca', 'https://dev-bobs-food.wolf-361.ca'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept, Authorization',
   });
