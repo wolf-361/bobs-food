@@ -12,9 +12,9 @@ async function bootstrap() {
   await initService.init();
 
   app.enableCors({
-    origin: ['http://localhost:4200', '^(https?:\/\/)?(?:[\w-]+\.)?wolf-361\.ca\/.*$'], // Allow 'http://localhost:4200' and any subdomain of 'wolf-361.ca'
+    origin: ['http://localhost:4200', 'https://bobs-food.wolf-361.ca/', 'https://dev-bobs-food.wolf-361.ca'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Accept',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
   });
 
   app.setGlobalPrefix('api');
