@@ -1,1 +1,10 @@
-<p>modifier-menu works!</p>
+<div>
+    <!-- Restaurent selectionner et option pour le changer -->
+
+</div>
+<div>
+    <!-- Menu selectionner et option pour le changer -->
+    @for (packed of this.items; track $index) {
+        <app-item [item]="packed.item"></app-item>
+    }
+</div>
