@@ -79,13 +79,32 @@ export class CreationEmployeComponent {
   }
 
   onSubmit() {
-
+    // Create a new employe if not already created
   }
 
   generateIdentifiant() {
-    // Generate a random number and letters for the identifier of 8 characters
-    const randomString = Math.random().toString(36).substring(2, 10);
-    this.firstFormGroup.controls.identifiant.setValue(randomString);
+    // Generate an identifiant for the employe based on the first and last name
+    if (this.secondFormGroup.controls['nom'].value && this.secondFormGroup.controls['prenom'].value) {
+      // Generate a random id based on the last name
+      const numNomId = 1 + Math.floor(Math.random() * 3);
+      const nomId = this.secondFormGroup.controls['nom'].value.slice(0, numNomId).toUpperCase();
+
+      // Generate a random id based on the first name
+      const numPrenomId = 1 + Math.floor(Math.random() * 3);
+      const prenomId = this.secondFormGroup.controls['prenom'].value.slice(0, numPrenomId).toUpperCase();
+
+      // Generate a random id based on the remaining characters
+      const numRandomId = 8-(nomId.length + prenomId.length);
+      const randomId = Math.floor(Math.random() * Math.pow(10, numRandomId)).toString().padStart(numRandomId, '0');
+
+      // Set the identifiant to the generated value
+      this.firstFormGroup.controls['identifiant'].setValue(
+        nomId +
+        prenomId +
+        randomId
+      );
+    }
+
   }
 }
 

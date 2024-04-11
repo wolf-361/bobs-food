@@ -1,4 +1,39 @@
 <mat-stepper #stepper linear="true" [orientation]="(stepperOrientation | async)!">
+  <mat-step [stepControl]="this.secondFormGroup">
+    <div class="step">
+      <ng-template matStepLabel>Informations personnelles</ng-template>
+      <form [formGroup]="secondFormGroup" novalidate>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre prénom" formControlName="prenom" required>
+          <mat-error *ngIf="secondFormGroup.get('prenom')?.errors?.['required']">
+            Le prénom est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre nom" formControlName="nom" required>
+          <mat-error *ngIf="secondFormGroup.get('nom')?.errors?.['required']">
+            Le nom est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre adresse" formControlName="adresse" required>
+          <mat-error *ngIf="secondFormGroup.get('adresse')?.errors?.['required']">
+            Le nom est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <div class="buttons">
+          <button mat-raised-button color="primary" matStepperNext [disabled]="secondFormGroup.invalid || secondFormGroup.pending">Continuer</button>
+        </div>
+
+      </form>
+    </div>
+  </mat-step>
+
+
+
   <mat-step [stepControl]="this.firstFormGroup">
     <ng-template matStepLabel>Créer un compte</ng-template>
     <div class="step">
@@ -52,48 +87,13 @@
         </mat-radio-group>
 
         <div class="buttons">
+          <button mat-raised-button color="primary" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" matStepperNext
           [disabled]="firstFormGroup.invalid || firstFormGroup.pending">Continuer</button>
         </div>
       </form>
     </div>
   </mat-step>
-
-
-  <mat-step>
-    <div class="step">
-      <ng-template matStepLabel>Informations personnelles</ng-template>
-      <form [formGroup]="secondFormGroup" novalidate>
-        <mat-form-field appearance="outline">
-          <input matInput placeholder="Entrer votre prénom" formControlName="prenom" required>
-          <mat-error *ngIf="secondFormGroup.get('prenom')?.errors?.['required']">
-            Le prénom est obligatoire
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <input matInput placeholder="Entrer votre nom" formControlName="nom" required>
-          <mat-error *ngIf="secondFormGroup.get('nom')?.errors?.['required']">
-            Le nom est obligatoire
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <input matInput placeholder="Entrer votre adresse" formControlName="adresse" required>
-          <mat-error *ngIf="secondFormGroup.get('adresse')?.errors?.['required']">
-            Le nom est obligatoire
-          </mat-error>
-        </mat-form-field>
-
-        <div class="buttons">
-          <button mat-raised-button color="primary" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" matStepperNext [disabled]="secondFormGroup.invalid || secondFormGroup.pending">Continuer</button>
-        </div>
-
-      </form>
-    </div>
-  </mat-step>
-
 
   <mat-step>
     <div class="step">
