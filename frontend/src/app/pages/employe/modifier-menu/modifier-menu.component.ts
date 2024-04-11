@@ -3,13 +3,13 @@ import { BehaviorSubject } from 'rxjs';
 import { Restaurent } from '../../../dto/restaurent/restaurent';
 import { ApiService } from '../../../services/api/api.service';
 import { Item } from '../../../dto/item/item';
-import { ItemComponent } from '../../../general/item/item.component';
+import { ToggleItemComponent } from '../../../general/item/toggle-item/toggle-item.component'
 
 @Component({
   selector: 'app-modifier-menu',
   standalone: true,
   imports: [
-    ItemComponent
+    ToggleItemComponent,
   ],
   templateUrl: './modifier-menu.component.html',
   styleUrl: './modifier-menu.component.scss'
@@ -34,7 +34,8 @@ export class ModifierMenuComponent {
       api.getItems().subscribe((items) => {
         // If the items are in the selected restaurent, put them as selected
         this._items.next(items.map((item) => {
-          return { item: item, isSelected: this.restaurent.menu.includes(item) };
+          const isSelected = this.restaurent.menu.some((i) => i.id === item.id);
+          return { item, isSelected };
         }));
       });
     });

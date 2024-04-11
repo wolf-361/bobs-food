@@ -5,6 +5,6 @@
 <div>
     <!-- Menu selectionner et option pour le changer -->
     @for (packed of this.items; track $index) {
-        <app-item [item]="packed.item"></app-item>
+        <app-toggle-item [item]="packed.item" [isSelected]="packed.isSelected" (toggle)="toggleItemSelection($event)"></app-toggle-item>
     }
 </div>

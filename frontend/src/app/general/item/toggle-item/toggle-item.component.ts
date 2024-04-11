@@ -16,16 +16,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class ToggleItemComponent implements OnDestroy {
   @Input({ required: true }) item!: Item;
   @Input({ required: true }) isSelected!: boolean;
-  @Output() toggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+  toggled: boolean = false;
+  @Output() toggle = new EventEmitter<Item>();
 
   constructor() { 
-    this.toggle.asObservable().subscribe((value: boolean) => {
-      this.isSelected = value;
+    this.toggle.asObservable().subscribe(() => {
+      this.toggled = !this.toggled;
     });
   }
 
   toggleSelection() {
-    this.toggle.emit(!this.isSelected);
+    this.toggle.emit(this.item);
   }
 
   ngOnDestroy() {
