@@ -22,7 +22,7 @@
             <!-- Show the category items -->
             <div class="category-items">
                 @for (item of this.getItems(categorie); track item.id) {
-                    <app-item [item]="item" (onAddToCart)="addItem" (onRemoveFromCart)="removeItem"></app-item>
+                    <app-item [item]="item"></app-item>
                     }
             </div>
         </mat-expansion-panel>
