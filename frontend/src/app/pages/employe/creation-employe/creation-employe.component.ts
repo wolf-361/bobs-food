@@ -17,6 +17,8 @@ import {AsyncPipe, NgIf} from "@angular/common";
 import {map, Observable} from "rxjs";
 import {StepperOrientation} from "@angular/cdk/stepper";
 import {BreakpointObserver} from "@angular/cdk/layout";
+import {MatIcon} from "@angular/material/icon";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-creation-employe',
@@ -32,15 +34,26 @@ import {BreakpointObserver} from "@angular/cdk/layout";
     MatRadioGroup,
     NgIf,
     AsyncPipe,
+    MatIcon,
+    MatTooltip,
   ],
   templateUrl: './creation-employe.component.html',
   styleUrl: './creation-employe.component.scss'
 })
 
 export class CreationEmployeComponent {
+
+  /*
+  * employeId = employeId;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresse = adresse;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.type = type;
+        * */
   firstFormGroup = this.fb.group({
-    nom: new FormControl('', [Validators.required]),
-    prenom: new FormControl('', [Validators.required]),
+    identifiant: new FormControl('', [Validators.required]),
     courriel: new FormControl('', [Validators.required, Validators.email]),
     motDePasse: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/), Validators.minLength(6), Validators.maxLength(20)]),
     confirmationMotDePasse: new FormControl('', [Validators.required, confirmPasswordValidator('motDePasse')]),
@@ -49,11 +62,9 @@ export class CreationEmployeComponent {
 
 
   secondFormGroup = this.fb.group({
+    nom: new FormControl('', [Validators.required]),
+    prenom: new FormControl('', [Validators.required]),
     adresse: ['', Validators.required],
-    ville: ['', Validators.required],
-    codePostal: ['', Validators.required],
-    province: ['', Validators.required],
-    pays: ['', Validators.required],
   });
 
   stepperOrientation: Observable<StepperOrientation>;
@@ -67,6 +78,15 @@ export class CreationEmployeComponent {
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
   }
 
+  onSubmit() {
+
+  }
+
+  generateIdentifiant() {
+    // Generate a random number and letters for the identifier of 8 characters
+    const randomString = Math.random().toString(36).substring(2, 10);
+    this.firstFormGroup.controls.identifiant.setValue(randomString);
+  }
 }
 
 // Fonction for the password confirmation validator

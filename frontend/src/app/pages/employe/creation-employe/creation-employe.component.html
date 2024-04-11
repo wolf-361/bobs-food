@@ -4,17 +4,15 @@
     <div class="step">
       <form [formGroup]="firstFormGroup" novalidate>
         <mat-form-field appearance="outline">
-          <input matInput placeholder="Entrer votre prénom" formControlName="prenom" required>
-          <mat-error *ngIf="firstFormGroup.get('prenom')?.errors?.['required']">
-            Le prénom est obligatoire
-          </mat-error>
-        </mat-form-field>
+          <input matInput placeholder="Entrer votre identifiant" formControlName="identifiant" required>
+          <mat-error *ngIf="firstFormGroup.get('identifiant')?.errors?.['required']">
+            Ce champ est obligatoire</mat-error>
 
-        <mat-form-field appearance="outline">
-          <input matInput placeholder="Entrer votre nom" formControlName="nom" required>
-          <mat-error *ngIf="firstFormGroup.get('nom')?.errors?.['required']">
-            Le nom est obligatoire
-          </mat-error>
+          <!-- Bouton pour générer un identifiant -->
+          <button mat-icon-button matSuffix matTooltip="Générer un identifiant aléatoire" (click)="generateIdentifiant()">
+            <mat-icon>shuffle</mat-icon>
+          </button>
+
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -47,8 +45,8 @@
 
         <!-- Boutons Radio pour le choix du Role -->
         <mat-radio-group formControlName="role" required>
-          <mat-radio-button value="ROLE_ADMIN">Propriétaire</mat-radio-button>
-          <mat-radio-button value="ROLE_USER">Employé</mat-radio-button>
+          <mat-radio-button value="Propriétaire">Propriétaire</mat-radio-button>
+          <mat-radio-button value="Employé">Employé</mat-radio-button>
 
           <mat-error *ngIf="firstFormGroup.get('role')?.errors?.['required']">Ce champ est obligatoire</mat-error>
         </mat-radio-group>
@@ -58,19 +56,61 @@
           [disabled]="firstFormGroup.invalid || firstFormGroup.pending">Continuer</button>
         </div>
       </form>
-
     </div>
-
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup">
-    <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Remplir les informations personnelles</ng-template>
 
 
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+  <mat-step>
+    <div class="step">
+      <ng-template matStepLabel>Informations personnelles</ng-template>
+      <form [formGroup]="secondFormGroup" novalidate>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre prénom" formControlName="prenom" required>
+          <mat-error *ngIf="secondFormGroup.get('prenom')?.errors?.['required']">
+            Le prénom est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre nom" formControlName="nom" required>
+          <mat-error *ngIf="secondFormGroup.get('nom')?.errors?.['required']">
+            Le nom est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre adresse" formControlName="adresse" required>
+          <mat-error *ngIf="secondFormGroup.get('adresse')?.errors?.['required']">
+            Le nom est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <div class="buttons">
+          <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" matStepperNext [disabled]="secondFormGroup.invalid || secondFormGroup.pending">Continuer</button>
+        </div>
+
+      </form>
+    </div>
+  </mat-step>
+
+
+  <mat-step>
+    <div class="step">
+      <ng-template matStepLabel>Vérification</ng-template>
+      <p>Confirmer les informations suivantes:</p>
+      <ul>
+        <li><strong>Identifiant:</strong> {{ firstFormGroup.value.identifiant }}</li>
+        <li><strong>Email:</strong> {{ firstFormGroup.value.courriel }}</li>
+        <li><strong>Role:</strong> {{ firstFormGroup.value.role }}</li>
+        <li><strong>Prénom:</strong> {{ secondFormGroup.value.prenom }}</li>
+        <li><strong>Nom:</strong> {{ secondFormGroup.value.nom }}</li>
+        <li><strong>Adresse:</strong> {{ secondFormGroup.value.adresse }}</li>
+      </ul>
+      <div class="buttons">
+        <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+        <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
       </div>
-    </form>
+    </div>
   </mat-step>
 </mat-stepper>
