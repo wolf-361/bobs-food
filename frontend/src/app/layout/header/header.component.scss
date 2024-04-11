@@ -9,6 +9,11 @@
     flex: 1;
 }
 
+.menu {
+    display: flex;
+    gap: 1rem;
+}
+
 .mobile-menu {
     display: flex;
     flex-direction: column;
