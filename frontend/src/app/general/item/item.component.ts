@@ -10,6 +10,7 @@ import { CommandeService } from '../../services/commande/commande.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { BaseItemComponent } from './base-item/base-item.component';
 
 @Component({
   selector: 'app-item',
@@ -17,7 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     MatCardModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    BaseItemComponent
   ],
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss'

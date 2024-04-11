@@ -1,24 +1,14 @@
-<mat-card>
-    <mat-card-header>
-        <mat-card-title class="title">
-            {{ item.nom }}
-            <b>{{ item.prix }} $</b>
-        </mat-card-title>
-        <mat-card-subtitle>{{ item.description }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <img [src]="item.image" [alt]="item.description" />
-        @if (this.isMouseOver) {
-        <div class="fabs">
-            @if (this.isDansCommande) {
-            <button mat-mini-fab color="warn" (click)="removeFromCart()">
-                <mat-icon>remove</mat-icon>
-            </button>
-            }
-            <button mat-mini-fab color="accent" (click)="addToCart()">
-                <mat-icon>add</mat-icon>
-            </button>
-        </div>
+<app-base-item [item]="item">
+    @if (this.isMouseOver) {
+    <div class="fabs" content>
+        @if (this.isDansCommande) {
+        <button mat-mini-fab color="warn" (click)="removeFromCart()">
+            <mat-icon>remove</mat-icon>
+        </button>
         }
-    </mat-card-content>
-</mat-card>
+        <button mat-mini-fab color="accent" (click)="addToCart()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    }
+</app-base-item>
