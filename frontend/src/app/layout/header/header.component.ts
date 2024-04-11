@@ -6,6 +6,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth/auth.service';
+import { EmployeType } from '../../dto/user/employe-type';
 
 @Component({
   selector: 'app-header',
@@ -51,6 +52,10 @@ export class HeaderComponent implements OnDestroy {
 
   isLoggedIn() {
     return this.auth.IsAuthenticated;
+  }
+
+  isEmployer() {
+    return this.auth.isEmploye();
   }
 
   logout() {
