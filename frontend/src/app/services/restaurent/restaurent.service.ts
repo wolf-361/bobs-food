@@ -3,6 +3,7 @@ import { Restaurent } from '../../dto/restaurent/restaurent';
 import { ApiService } from '../api/api.service';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { Item } from '../../dto/item/item';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,10 @@ export class RestaurentService {
   constructor(
     private api: ApiService,
     private auth: AuthService
-  ) { 
+  ) {
     this._restaurent = new BehaviorSubject<Restaurent>({} as Restaurent);
 
+    // Now that we have the items, we can get the restaurent
     if (this.restaurentId !== '') {
       this.api.getRestaurent(this.restaurentId).subscribe((restaurent) => {
         this._restaurent.next(restaurent);
@@ -25,11 +27,10 @@ export class RestaurentService {
       this.api.getRestaurents().pipe(
         map((restaurents) => restaurents[0])
       ).subscribe((restaurent) => {
-        this._restaurent.next(restaurent);
         this.restaurent = restaurent;
       });
     }
-    
+
     this.prefix = this.auth.Role
   }
 
