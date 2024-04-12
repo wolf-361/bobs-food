@@ -2,7 +2,7 @@
 
 :host {
     display: block;
-    height: calc($page-height - 48px);
+    min-height: calc($page-height - 48px);
 }
 
 mat-tab-group {

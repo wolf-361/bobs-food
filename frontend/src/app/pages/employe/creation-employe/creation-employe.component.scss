@@ -1,4 +1,7 @@
+@import "src/styles/constant.scss";
+
 :host {
+  min-height: calc($page-height - 48px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -8,8 +11,8 @@
 }
 
 mat-stepper {
-  width: 100%;
-  min-height: 100%;
+  width: 100vw;
+  min-height: calc($page-height - 48px);
 
   button {
     max-width: 150px;
@@ -23,6 +26,7 @@ mat-stepper {
 }
 
 .step {
+  min-height: calc($page-height - 48px - 48px - 72px - 24px); // 48px for each tab-group + 72px for the stepper + 24px for the padding
   display: flex;
   flex-direction: column;
   justify-content: center;
