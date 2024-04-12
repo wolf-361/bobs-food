@@ -3,6 +3,7 @@ import { TypeCommande } from "../entities/type-commande";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsEnum, IsNumber } from "class-validator";
 import { CreateItemDto } from "src/item/dto/create-item.dto";
+import { ItemCommande } from "../entities/item-commande.entity";
 
 export class CreateCommandeDto {
     @ApiProperty({ example: TypeCommande.LIVRAISON, enum: TypeCommande, description: 'Type de la commande'})
@@ -17,10 +18,10 @@ export class CreateCommandeDto {
     @IsDate()
     date: Date;
 
-    @ApiProperty({ example: [{ item: new CreateItemDto(), quantity: 2 }], description: 'Les items de la commande'})
-    items: { item: Item, quantity: number }[];
+    @ApiProperty({ type: [CreateItemDto], description: 'Items de la commande'})
+    items: ItemCommande[];
 
-    constructor(type: TypeCommande, date: Date, items: { item: Item, quantity: number }[]) {
+    constructor(type: TypeCommande, date: Date, items: ItemCommande[]) {
         this.type = type;
         this.date = date;
         this.items = items;
