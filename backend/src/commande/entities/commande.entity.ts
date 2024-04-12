@@ -35,11 +35,11 @@ export class Commande {
     @JoinColumn()
     paiement: Paiement;
 
-    constructor(type: TypeCommande, total: number, date: Date, items: { item: Item, quantity: number }[], client: Client, paiement: Paiement) {
+    constructor(type: TypeCommande, total: number, date: Date, items: ItemCommande[], client: Client, paiement: Paiement) {
         this.type = type;
         this.total = total;
         this.date = date;
-        this.items = items?.map(item => new ItemCommande(item.item, item.quantity));
+        this.items = items;
         this.client = client;
         this.paiement = paiement;
     }

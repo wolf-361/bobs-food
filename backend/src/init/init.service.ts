@@ -8,6 +8,7 @@ import { InitData } from './initData';
 import { CreateRestaurentDto } from 'src/restaurent/dto/create-restaurent.dto';
 import { CreateCommandeDto } from 'src/commande/dto/create-commande.dto';
 import { TypeCommande } from 'src/commande/entities/type-commande';
+import { ItemCommande } from 'src/commande/entities/item-commande.entity';
 
 /**
  * The InitService class is a service that is used to initialize the bd with some data. 
@@ -48,12 +49,9 @@ export class InitService {
         const items = await this.itemService.findAll().then(items => items.slice(0, 6));
         const commandes: CreateCommandeDto[] = [
             new CreateCommandeDto(TypeCommande.LIVRAISON, new Date(), [
-                { item: items[0], quantity: 1 },
-                { item: items[1], quantity: 2 },
-                { item: items[2], quantity: 1 },
-                { item: items[3], quantity: 3 },
-                { item: items[4], quantity: 1 },
-                { item: items[5], quantity: 2 },
+                new ItemCommande(items[0], 2),
+                new ItemCommande(items[1], 1),
+                new ItemCommande(items[2], 3),
             ]),
         ];
         

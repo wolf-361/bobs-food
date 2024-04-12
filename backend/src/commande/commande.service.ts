@@ -12,7 +12,7 @@ export class CommandeService {
     @InjectRepository(Commande) private commandeRepository: Repository<Commande>
   ) {}
 
-  create(createCommandeDto: CreateCommandeDto) {
+  async create(createCommandeDto: CreateCommandeDto) {
     return this.commandeRepository.save(createCommandeDto);
   }
 
