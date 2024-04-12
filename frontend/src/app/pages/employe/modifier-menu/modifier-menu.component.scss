@@ -1,10 +1,10 @@
 :host {
-    display: block;
+    display: flex;
     width: 100vw;
 }
 
 .items {
-    width: 100vw;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
