@@ -48,6 +48,11 @@ export class InitService {
      */
     private initCommandes() {
         // TODO
+        const commandes: Commande[] = [null];
+        
+        for (const commande of commandes) {
+            this.commandeService.create(commande);
+        }
     }
 
     /**
