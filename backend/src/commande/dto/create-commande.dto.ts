@@ -20,10 +20,14 @@ export class CreateCommandeDto {
     @ApiProperty({ example: [{ item: new CreateItemDto(), quantity: 2 }], description: 'Les items de la commande'})
     items: { item: Item, quantity: number }[];
 
-    constructor(type: TypeCommande, total: number, date: Date, items: { item: Item, quantity: number }[]) {
+    constructor(type: TypeCommande, date: Date, items: { item: Item, quantity: number }[]) {
         this.type = type;
-        this.total = total;
         this.date = date;
         this.items = items;
+        // Calculate the total of the commande
+        this.total = 0;
+        for (const item of items) {
+            this.total += item.item.prix * item.quantity;
+        }
     }
 }

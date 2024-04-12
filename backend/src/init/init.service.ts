@@ -1,16 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandeService } from 'src/commande/commande.service';
-import { Commande } from 'src/commande/entities/commande.entity';
-import { Item } from 'src/item/entities/item.entity';
 import { ItemService } from 'src/item/item.service';
-import { Restaurent } from 'src/restaurent/entities/restaurent.entity';
 import { RestaurentService } from 'src/restaurent/restaurent.service';
 import { ClientService } from 'src/user/client/client.service';
-import { Client } from 'src/user/client/entities/client.entity';
 import { EmployeService } from 'src/user/employe/employe.service';
-import { Employe } from 'src/user/employe/entities/employe.entity';
 import { InitData } from './initData';
 import { CreateRestaurentDto } from 'src/restaurent/dto/create-restaurent.dto';
+import { CreateCommandeDto } from 'src/commande/dto/create-commande.dto';
+import { TypeCommande } from 'src/commande/entities/type-commande';
 
 /**
  * The InitService class is a service that is used to initialize the bd with some data. 
@@ -47,12 +44,17 @@ export class InitService {
      * Initialize the commandes.
      */
     private initCommandes() {
-        // TODO
-        const commandes: Commande[] = [null];
+        const commandes: CreateCommandeDto[] = [
+            new CreateCommandeDto(TypeCommande.LIVRAISON, new Date(), [
+                { item: this.initData.items[0], quantity: 2 },
+                { item: this.initData.items[1], quantity: 1 }
+            ]),
+        ];
         
         for (const commande of commandes) {
             this.commandeService.create(commande);
         }
+        this.logger.log("Commandes initialized.");
     }
 
     /**
