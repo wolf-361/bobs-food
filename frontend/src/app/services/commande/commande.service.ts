@@ -8,6 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import { ApiService } from '../api/api.service';
 import { LoggerService } from '../logger/logger.service';
 import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
+import { ItemCommande } from '../../dto/commande/item-commande';
 
 /**
  * Service permettant de monter une commande
@@ -19,7 +20,7 @@ export class CommandeService {
   private type?: TypeCommande;
   private total: number;
   private date?: Date;
-  private items: BehaviorSubject<{ item: Item, quantite: number }[]>;
+  private items: BehaviorSubject<ItemCommande[]>;
   private client?: Client;
   private paiement?: Paiement;
 
@@ -28,13 +29,13 @@ export class CommandeService {
     private api: ApiService,
     private logger: LoggerService
   ) {
-    this.items = new BehaviorSubject<{ item: Item, quantite: number }[]>([]);
+    this.items = new BehaviorSubject<ItemCommande[]>([]);
     this.total = 0;
     this.calculateTotal().subscribe(total => this.total = total);
   }
 
   // Allow to subscribe to the items in the command
-  public get Items(): Observable<{ item: Item, quantite: number }[]> {
+  public get Items(): Observable<ItemCommande[]> {
     return this.items.asObservable();
   }
 

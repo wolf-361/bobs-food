@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { Item } from '../../dto/item/item';
+import { ItemCommande } from '../../dto/commande/item-commande';
 
 @Component({
   selector: 'app-panier',
@@ -17,7 +18,7 @@ import { Item } from '../../dto/item/item';
 })
 export class PanierComponent {
   isVide: boolean = true;
-  items: { item: Item, quantite: number }[] = [];
+  items: ItemCommande[] = [];
 
   constructor(
     private commande: CommandeService,

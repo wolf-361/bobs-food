@@ -1,5 +1,6 @@
 import { Item } from "../item/item";
 import { Client } from "../user/client";
+import { ItemCommande } from "./item-commande";
 import { Paiement } from "./paiement";
 import { TypeCommande } from "./type-commande";
 
@@ -8,11 +9,11 @@ export class Commande {
     type: TypeCommande;
     total: number;
     date: Date;
-    items: { item: Item, quantite: number }[];
+    items: ItemCommande[];
     client?: Client;
     paiement: Paiement;
 
-    constructor(type: TypeCommande, total: number, date: Date, items: { item: Item, quantite: number }[], paiement: Paiement, id?: number, client?: Client) {
+    constructor(type: TypeCommande, total: number, date: Date, items: ItemCommande[], paiement: Paiement, id?: number, client?: Client) {
         this.id = id;
         this.type = type;
         this.total = total;
