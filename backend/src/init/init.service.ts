@@ -53,17 +53,6 @@ export class InitService {
                 new ItemCommande(items[1], 1),
                 new ItemCommande(items[2], 3),
             ]),
-            new CreateCommandeDto(TypeCommande.SUR_PLACE, new Date(), [
-                { item: items[3], quantity: 4 },
-                { item: items[4], quantity: 2 },
-                { item: items[5], quantity: 1 }
-            ]),
-
-            new CreateCommandeDto(TypeCommande.LIVRAISON, new Date(), [
-                { item: items[6], quantity: 1 },
-                { item: items[7], quantity: 2 },
-                { item: items[8], quantity: 3 }
-            ])
         ];
 
         for (const commande of commandes) {
