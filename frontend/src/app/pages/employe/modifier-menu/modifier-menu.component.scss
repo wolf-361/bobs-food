@@ -1,10 +1,11 @@
 :host {
     display: flex;
-    width: 100vw;
+    width: 100%;
 }
 
 .items {
-    width: 100%;
+    width: calc(100% - 3rem);
+    padding: 1.5rem;
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
