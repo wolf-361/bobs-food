@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { env } from 'process';
 import { Commande } from 'src/commande/entities/commande.entity';
+import { ItemCommande } from 'src/commande/entities/item-commande.entity';
 import { Paiement } from 'src/commande/entities/paiement.entity';
 import { Item } from 'src/item/entities/item.entity';
 import { Restaurent } from 'src/restaurent/entities/restaurent.entity';
@@ -79,6 +80,7 @@ export class ConfigService {
                 Client,
                 Employe,
                 Commande,
+                ItemCommande,
                 Paiement,
                 Item,
                 Restaurent

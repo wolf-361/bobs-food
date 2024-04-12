@@ -43,11 +43,17 @@ export class InitService {
     /**
      * Initialize the commandes.
      */
-    private initCommandes() {
+    private async initCommandes() {
+        // Get the 6 first items from the database.
+        const items = await this.itemService.findAll().then(items => items.slice(0, 6));
         const commandes: CreateCommandeDto[] = [
             new CreateCommandeDto(TypeCommande.LIVRAISON, new Date(), [
-                { item: this.initData.items[0], quantity: 2 },
-                { item: this.initData.items[1], quantity: 1 }
+                { item: items[0], quantity: 1 },
+                { item: items[1], quantity: 2 },
+                { item: items[2], quantity: 1 },
+                { item: items[3], quantity: 3 },
+                { item: items[4], quantity: 1 },
+                { item: items[5], quantity: 2 },
             ]),
         ];
         
