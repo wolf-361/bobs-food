@@ -8,6 +8,7 @@ import { InitData } from './initData';
 import { CreateRestaurentDto } from 'src/restaurent/dto/create-restaurent.dto';
 import { CreateCommandeDto } from 'src/commande/dto/create-commande.dto';
 import { TypeCommande } from 'src/commande/entities/type-commande';
+import {Item} from "../item/entities/item.entity";
 
 /**
  * The InitService class is a service that is used to initialize the bd with some data. 
@@ -43,16 +44,45 @@ export class InitService {
     /**
      * Initialize the commandes.
      */
-    private initCommandes() {
+    private async initCommandes() {
+
+        // If there are already commandes in the database, we don't initialize them.
+        if (await this.commandeService.findAll().then(commandes => commandes.length) > 0) {
+            this.logger.log("Commandes already initialized.");
+            return;
+        }
+
+        // We get the items from the database.
+        let items = await this.itemService.findAll();
+
+        // If there are no items in the database, we don't initialize the commandes.
+        if(items.length == 0) {
+            this.logger.log("No items found.");
+            return;
+        }
+
+        // We create a commande with the items.
         const commandes: CreateCommandeDto[] = [
             new CreateCommandeDto(TypeCommande.LIVRAISON, new Date(), [
-                { item: this.initData.items[0], quantity: 2 },
-                { item: this.initData.items[1], quantity: 1 }
+                { item: items[0], quantity: 2 },
+                { item: items[1], quantity: 1 },
+                { item: items[2], quantity: 3 }
             ]),
+            new CreateCommandeDto(TypeCommande.SUR_PLACE, new Date(), [
+                { item: items[3], quantity: 4 },
+                { item: items[4], quantity: 2 },
+                { item: items[5], quantity: 1 }
+            ]),
+
+            new CreateCommandeDto(TypeCommande.LIVRAISON, new Date(), [
+                { item: items[6], quantity: 1 },
+                { item: items[7], quantity: 2 },
+                { item: items[8], quantity: 3 }
+            ])
         ];
-        
+
         for (const commande of commandes) {
-            this.commandeService.create(commande);
+            await this.commandeService.create(commande);
         }
         this.logger.log("Commandes initialized.");
     }
