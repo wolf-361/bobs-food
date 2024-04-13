@@ -150,13 +150,17 @@ export class ModifierMenuComponent {
     this.restaurent.menu = originalMenu;
     this.api.patchRestaurent(this.restaurent.id, this.restaurent).subscribe({
       next: (restaurent) => {
-        const snackBarRef = this.snackBar.open('Changements annulés', 'Rétablir', {
+        const snackBarRef = this.snackBar.open('Changements annulés', '', {
           duration: 5000
         });
 
-        snackBarRef.onAction().subscribe(() => {
-          this.save();
-        });
+        // Update selected items
+        this._items.next(this.allItems.map((item) => {
+          return {
+            item: item,
+            isSelected: (restaurent.menu.findIndex((i) => i.id === item.id) !== -1)
+          };
+        }));  
       },
       error: this.onError
     });
