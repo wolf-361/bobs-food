@@ -17,7 +17,7 @@ mat-toolbar {
     padding: 0 1rem;
     position: sticky;
     gap: 2rem;
-    top: $mobile-menu-height;
+    top: var(--mat-toolbar-standard-height);
     z-index: 100;
     background-color: var(--mat-stepper-container-color);
 
@@ -38,8 +38,22 @@ mat-toolbar {
     justify-content: center;
 }
 
+.mobile-save-section {
+    width: 100%;
+    display: flex;
+    padding: 0.5rem 0;
+    justify-content: center;
+    gap: 1rem;
+    position: sticky;
+    bottom: 0;
+    background-color: var(--mat-stepper-container-color);
+}
+
 // Mobile
 @media (max-width: 600px) {
+    mat-toolbar {
+        top: var(--mat-toolbar-mobile-height);
+    }
 
     mat-toolbar mat-form-field {
         width: 90%;

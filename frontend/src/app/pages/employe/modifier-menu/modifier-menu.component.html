@@ -4,19 +4,25 @@
         <mat-label>Selectionne un Restaurent</mat-label>
         <!-- Start with selected restaurent, and on change with changeSelectedrestaurent-->
         <mat-select [(value)]="restaurent.id" (selectionChange)="changeSelectedRestaurent($event)">
-          @for (restaurent of restaurents; track restaurent.id) {
+            @for (restaurent of restaurents; track restaurent.id) {
             <mat-option [value]="restaurent.id">{{ restaurent.adresse }}</mat-option>
-          }
+            }
         </mat-select>
-      </mat-form-field>
+    </mat-form-field>
     <!-- Bouton pour sauvegarder les modifications -->
     @if (!this.isMobile) {
-        <button mat-raised-button color="primary" (click)="save()" [disabled]="!this.isChanged">Sauvegarder</button>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="!this.isChanged">Sauvegarder</button>
     }
 </mat-toolbar>
 <div class="items">
     <!-- Menu selectionner et option pour le changer -->
     @for (packed of this.items; track $index) {
-        <app-toggle-item [item]="packed.item" [isSelected]="packed.isSelected" (toggle)="toggleItemSelection($event)"></app-toggle-item>
+    <app-toggle-item [item]="packed.item" [isSelected]="packed.isSelected"
+        (toggle)="toggleItemSelection($event)"></app-toggle-item>
     }
 </div>
+@if (this.isMobile) {
+<div class="mobile-save-section">
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="!this.isChanged">Sauvegarder</button>
+</div>
+}
