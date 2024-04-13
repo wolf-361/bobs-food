@@ -9,6 +9,10 @@
           }
         </mat-select>
       </mat-form-field>
+    <!-- Bouton pour sauvegarder les modifications -->
+    @if (!this.isMobile) {
+        <button mat-raised-button color="primary" (click)="save()" [disabled]="!this.isChanged">Sauvegarder</button>
+    }
 </mat-toolbar>
 <div class="items">
     <!-- Menu selectionner et option pour le changer -->
@@ -16,4 +20,3 @@
         <app-toggle-item [item]="packed.item" [isSelected]="packed.isSelected" (toggle)="toggleItemSelection($event)"></app-toggle-item>
     }
 </div>
-mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align

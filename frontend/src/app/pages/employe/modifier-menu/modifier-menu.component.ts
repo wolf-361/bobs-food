@@ -12,6 +12,7 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RestaurentService } from '../../../services/restaurent/restaurent.service';
 import { LoggerService } from '../../../services/logger/logger.service';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-modifier-menu',
@@ -34,12 +35,16 @@ export class ModifierMenuComponent {
   restaurent!: Restaurent;
   items!: { item: Item, isSelected: boolean }[];
   restaurents!: Restaurent[];
+  isMobile = false;
+  isChanged = false;
 
   constructor(
     private api: ApiService,
     private restaurentService: RestaurentService,
     private snackBar: MatSnackBar,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private breakpointObserver: BreakpointObserver,
+
   ) {
     // Initialize the restaurent and items
     this._items = new BehaviorSubject<{ item: Item, isSelected: boolean }[]>([]);
@@ -69,15 +74,24 @@ export class ModifierMenuComponent {
         }));
       });
     });
+
+    // Subscribe to the breakpoint observer
+    this.breakpointObserver.observe('(max-width: 600px)').subscribe(result => {
+      this.isMobile = result.matches;
+    });
+
+    // Check if the menu has been changed
+    this._items.subscribe((items) => {
+      // If the selected items are different from the restaurent's menu (somewhat ok)
+      this.isChanged = items.filter((i) => i.isSelected).length !== this.restaurent.menu.length;
+    });
   }
 
   changeSelectedRestaurent(selectedRestaurent: MatSelectChange) {
-    console.log(selectedRestaurent);
     const restaurent = this.restaurents.find((r) => r.id === selectedRestaurent.value);
     if (!restaurent) {
       return;
     }
-    console.log(restaurent);
     this.restaurentService.restaurent = restaurent;
   }
 
