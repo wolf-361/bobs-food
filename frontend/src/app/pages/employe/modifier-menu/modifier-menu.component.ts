@@ -8,7 +8,10 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { RestaurentService } from '../../../services/restaurent/restaurent.service';
+import { LoggerService } from '../../../services/logger/logger.service';
 
 @Component({
   selector: 'app-modifier-menu',
@@ -18,7 +21,9 @@ import { RestaurentService } from '../../../services/restaurent/restaurent.servi
     MatIconModule,
     MatToolbarModule,
     ToggleItemComponent,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSelectModule,
+    MatFormFieldModule
   ],
   templateUrl: './modifier-menu.component.html',
   styleUrl: './modifier-menu.component.scss'
@@ -28,17 +33,24 @@ export class ModifierMenuComponent {
   private _items!: BehaviorSubject<{ item: Item, isSelected: boolean }[]>;
   restaurent!: Restaurent;
   items!: { item: Item, isSelected: boolean }[];
+  restaurents!: Restaurent[];
 
   constructor(
     private api: ApiService,
     private restaurentService: RestaurentService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private logger: LoggerService
   ) {
     // Initialize the restaurent and items
     this._items = new BehaviorSubject<{ item: Item, isSelected: boolean }[]>([]);
 
     // Subscribe to the items
     this._items.subscribe((items) => this.items = items);
+
+    // Get all the restaurents
+    this.api.getRestaurents().subscribe((restaurents) => {
+      this.restaurents = restaurents;
+    });
 
     // Get all the items (for the admin to choose from)
     this.api.getItems().subscribe((items) => {
@@ -59,6 +71,17 @@ export class ModifierMenuComponent {
     });
   }
 
+  changeSelectedRestaurent(selectedRestaurent: MatSelectChange) {
+    console.log(selectedRestaurent);
+    const restaurent = this.restaurents.find((r) => r.id === selectedRestaurent.value);
+    if (!restaurent) {
+      return;
+    }
+    console.log(restaurent);
+    this.restaurentService.restaurent = restaurent;
+  }
+
+
   // Toggle the selection of an item
   toggleItemSelection(item: Item) {
     // Update the items list
@@ -68,46 +91,60 @@ export class ModifierMenuComponent {
     this._items.next(items);
   }
 
-  // Save the changes
+  /**
+   * Save the changes to the restaurent's menu
+   */
   save() {
     const originalMenu = this.restaurent.menu;
     this.restaurent.menu = this._items.getValue().filter((i) => i.isSelected).map((i) => i.item);
     this.api.patchRestaurent(this.restaurent.id, this.restaurent).subscribe({
+      next: (restaurent) => this.onSuccess(restaurent, originalMenu),
+      error: this.onError
+    });
+  }
+
+  private onSuccess(restaurent: Restaurent, originalMenu: Item[]) {
+    // Show a snackbar (allowing the user to undo the changes)
+    const snackBarRef = this.snackBar.open('Changements sauvegardés', 'Annuler', {
+      duration: 5000
+    });
+
+    // Undo the changes
+    snackBarRef.onAction().subscribe(() => {
+      this.onUndo(originalMenu);
+    });
+
+    // Update the restaurent
+    this.restaurentService.restaurent = restaurent;
+  }
+
+  private onError(error: any) {
+    const snackBarRef = this.snackBar.open('Erreur lors de la sauvegarde des changements', 'Réessayer', {
+      duration: 5000
+    });
+
+    // Retry
+    snackBarRef.onAction().subscribe(() => {
+      this.save();
+    });
+
+    // Log
+    this.logger.error('[ModifierMenuComponent] ' + error);
+  }
+
+  private onUndo(originalMenu: Item[]) {
+    this.restaurent.menu = originalMenu;
+    this.api.patchRestaurent(this.restaurent.id, this.restaurent).subscribe({
       next: (restaurent) => {
-        // Success
-        // Show a snackbar (allowing the user to undo the changes)
-        const snackBarRef = this.snackBar.open('Changes saved', 'Undo', {
+        const snackBarRef = this.snackBar.open('Changements annulés', 'Rétablir', {
           duration: 5000
         });
 
-        // Undo the changes
-        snackBarRef.onAction().subscribe(() => {
-          this.restaurent.menu = originalMenu;
-          this.api.patchRestaurent(this.restaurent.id, this.restaurent).subscribe({
-            next: (restaurent) => {
-              // Success
-            },
-            error: (error) => {
-              // Error
-            }
-          });
-        });
-
-        // Update the restaurent
-        this.restaurentService.restaurent = restaurent;
-      },
-      error: (error) => {
-        // Error
-        // Show a snackbar (allowing the user to retry)
-        const snackBarRef = this.snackBar.open('Error saving changes', 'Retry', {
-          duration: 5000
-        });
-
-        // Retry
         snackBarRef.onAction().subscribe(() => {
           this.save();
         });
-      }
+      },
+      error: this.onError
     });
   }
 }

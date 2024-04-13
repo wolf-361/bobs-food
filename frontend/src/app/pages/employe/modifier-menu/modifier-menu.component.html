@@ -1,6 +1,14 @@
 <mat-toolbar>
     <!-- Restaurent selectionner et option pour le changer -->
-    
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Selectionne un Restaurent</mat-label>
+        <!-- Start with selected restaurent, and on change with changeSelectedrestaurent-->
+        <mat-select [(value)]="restaurent.id" (selectionChange)="changeSelectedRestaurent($event)">
+          @for (restaurent of restaurents; track restaurent.id) {
+            <mat-option [value]="restaurent.id">{{ restaurent.adresse }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 </mat-toolbar>
 <div class="items">
     <!-- Menu selectionner et option pour le changer -->
@@ -8,3 +16,4 @@
         <app-toggle-item [item]="packed.item" [isSelected]="packed.isSelected" (toggle)="toggleItemSelection($event)"></app-toggle-item>
     }
 </div>
+mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align
