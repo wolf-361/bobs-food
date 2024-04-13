@@ -79,6 +79,20 @@ export class ApiService {
     );
   }
 
+  postRestaurent(restaurent: Restaurent): Observable<Restaurent> {
+    return this.http.post<Restaurent>(`${this.apiUrl}/restaurent`, restaurent).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  patchRestaurent(id: string, restaurent: Restaurent): Observable<Restaurent> {
+    return this.http.patch<Restaurent>(`${this.apiUrl}/restaurent/${id}`, restaurent).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
   // Item methods
   getItems(): Observable<Item[]> {
     return this.http.get<Item[]>(`${this.apiUrl}/item`).pipe(
