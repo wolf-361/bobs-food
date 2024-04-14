@@ -1,12 +1,13 @@
 import {Component} from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
-  Validators,
+  FormControl,
   FormsModule,
   ReactiveFormsModule,
-  FormControl,
+  ValidationErrors,
   ValidatorFn,
-  AbstractControl, ValidationErrors
+  Validators
 } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -21,7 +22,10 @@ import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {disableVersionCheck} from "@angular/cli/src/utilities/environment-options";
+import {ApiService} from "../../../services/api/api.service";
+import {CreateEmploye} from "../../../dto/user/create-employe";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {EmployeType} from "../../../dto/user/employe-type";
 
 @Component({
   selector: 'app-creation-employe',
@@ -75,9 +79,12 @@ export class CreationEmployeComponent {
   });
 
   stepperOrientation: Observable<StepperOrientation>;
+  employe?: CreateEmploye;
 
   constructor(
+    private api: ApiService,
     private fb: FormBuilder,
+    private snackBar: MatSnackBar,
     breakpointObserver: BreakpointObserver
   ) {
     this.stepperOrientation = breakpointObserver
@@ -85,12 +92,65 @@ export class CreationEmployeComponent {
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
   }
 
-  onSubmit() {
-    if (this.firstFormGroup.valid && this.secondFormGroup.valid) {
-      console.log('Employe created');
-      //TODO: Call the API to create the employe
+
+  verifierSecondFormGroup(){
+    if (!this.secondFormGroup.valid) {
+      this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
+      return;
     }
   }
+
+  verifierFirstFormGroup(){
+    if (!this.firstFormGroup.valid) {
+      this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
+      return;
+    }
+  }
+
+
+
+  onSubmit() {
+
+    if (!this.firstFormGroup.valid || !this.secondFormGroup.valid) {
+      return;
+    }
+
+    if(this.firstFormGroup.value.identifiant != null && this.firstFormGroup.value.motDePasse != null &&
+      this.firstFormGroup.value.confirmationMotDePasse != null && this.firstFormGroup.value.role != null &&
+      this.secondFormGroup.value.nom != null && this.secondFormGroup.value.prenom != null && this.secondFormGroup.value.adresse != null
+      && this.firstFormGroup.value.role != null) {
+
+      this.employe = {
+        employeId: this.firstFormGroup.value.identifiant,
+        nom: this.secondFormGroup.value.nom,
+        prenom: this.secondFormGroup.value.prenom,
+        adresse: this.secondFormGroup.value.adresse,
+        password: this.firstFormGroup.value.motDePasse,
+        confirmPassword: this.firstFormGroup.value.confirmationMotDePasse,
+        type: EmployeType.EMPLOYE, // TODO: Change this to the selected role
+      };
+
+      this.api.signupEmploye(this.employe).subscribe(
+        (response) => {
+          this.snackBar.open('Employé créé avec succès', 'Fermer', {duration: 5000});
+        },
+        (error) => {
+          this.snackBar.open('Erreur lors de la création de l\'employé', 'Fermer', {duration: 5000});
+        }
+      );
+
+      // Reset the form
+      this.firstFormGroup.reset();
+      this.secondFormGroup.reset();
+
+      // Reset page
+      // TODO: Reset page
+    }
+
+  }
+
+
+
 
 
   generateIdentifiant() {

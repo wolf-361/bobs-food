@@ -2,7 +2,7 @@
   <mat-step [stepControl]="this.secondFormGroup">
     <div class="step">
       <ng-template matStepLabel>Informations personnelles</ng-template>
-      <form [formGroup]="secondFormGroup" novalidate>
+      <form [formGroup]="secondFormGroup"  (ngSubmit)="verifierSecondFormGroup()" novalidate>
         <mat-form-field appearance="outline">
           <input matInput placeholder="Entrer votre prénom" formControlName="prenom" required>
           <mat-error *ngIf="secondFormGroup.get('prenom')?.errors?.['required']">
@@ -37,7 +37,7 @@
   <mat-step [stepControl]="this.firstFormGroup">
     <ng-template matStepLabel>Créer un compte</ng-template>
     <div class="step">
-      <form [formGroup]="firstFormGroup" novalidate>
+      <form [formGroup]="firstFormGroup" (ngSubmit)="verifierFirstFormGroup()" novalidate>
         <mat-form-field appearance="outline">
           <input matInput placeholder="Entrer votre identifiant" formControlName="identifiant" required>
           <mat-error *ngIf="firstFormGroup.get('identifiant')?.errors?.['required']">
