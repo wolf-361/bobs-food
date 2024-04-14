@@ -136,16 +136,16 @@ export class InitData {
             new Item('Mousse aux Fruits', 'Mousse aux fruits rouges, coulis de fruits', 5.99, 'assets/items/dessert/mousse_fruits.jpg', ItemCategory.DESSERT),
             
             // Boissons
-            new Item('Smoothie Vert Détox', 'Smoothie aux légumes verts, fruits frais', 5.99, 'smoothie_vert_detox.jpg', ItemCategory.BOISSON),
-            new Item('Mojito Frais', 'Cocktail mojito rafraîchissant', 8.99, 'mojito_frais.jpg', ItemCategory.BOISSON),
-            new Item('Café Frappé', 'Café glacé, lait, crème fouettée', 4.99, 'cafe_frappe.jpg', ItemCategory.BOISSON),
-            new Item('Thé Matcha Latte', 'Thé matcha, lait chaud, mousse de lait', 6.99, 'the_matcha_latte.jpg', ItemCategory.BOISSON),
-            new Item('Limonade Maison', 'Limonade fraîche maison', 3.99, 'limonade_maison.jpg', ItemCategory.BOISSON),
-            new Item('Smoothie Fraise-Banane', 'Smoothie rafraîchissant aux fraises et bananes', 4.99, 'smoothie_fraise_banane.jpg', ItemCategory.BOISSON),
-            new Item('Lait Frappé Vanille', 'Lait frappé à la vanille et chantilly', 5.99, 'lait_frappe_vanille.jpg', ItemCategory.BOISSON),
-            new Item('Cocktail Fruits Exotiques', 'Cocktail de fruits exotiques frais', 7.99, 'cocktail_fruits_exotiques.jpg', ItemCategory.BOISSON),
-            new Item('Eau Infusée aux Fruits', 'Eau fraîche infusée aux fruits de saison', 3.99, 'eau_infusee_fruits.jpg', ItemCategory.BOISSON),
-            new Item('Thé Chai Latte', 'Thé chai épicé avec lait et cannelle', 5.99, 'the_chai_latte.jpg', ItemCategory.BOISSON),
+            new Item('Smoothie Vert Détox', 'Smoothie aux légumes verts, fruits frais', 5.99, 'assets/items/boisson/smoothie_vert_detox.jpg', ItemCategory.BOISSON),
+            new Item('Mojito Frais', 'Cocktail mojito rafraîchissant', 8.99, 'assets/items/boisson/mojito_frais.jpg', ItemCategory.BOISSON),
+            new Item('Café Frappé', 'Café glacé, lait, crème fouettée', 4.99, 'assets/items/boisson/cafe_frappe.jpg', ItemCategory.BOISSON),
+            new Item('Thé Matcha Latte', 'Thé matcha, lait chaud, mousse de lait', 6.99, 'assets/items/boisson/the_matcha_latte.jpg', ItemCategory.BOISSON),
+            new Item('Limonade Maison', 'Limonade fraîche maison', 3.99, 'assets/items/boisson/limonade_maison.jpg', ItemCategory.BOISSON),
+            new Item('Smoothie Fraise-Banane', 'Smoothie rafraîchissant aux fraises et bananes', 4.99, 'assets/items/boisson/smoothie_fraise_banane.jpg', ItemCategory.BOISSON),
+            new Item('Lait Frappé Vanille', 'Lait frappé à la vanille et chantilly', 5.99, 'assets/items/boisson/lait_frappe_vanille.png', ItemCategory.BOISSON),
+            new Item('Cocktail Fruits Exotiques', 'Cocktail de fruits exotiques frais', 7.99, 'assets/items/boisson/cocktail_fruits_exotiques.jpg', ItemCategory.BOISSON),
+            new Item('Eau Infusée aux Fruits', 'Eau fraîche infusée aux fruits de saison', 3.99, 'assets/items/boisson/eau_infusee_fruits.jpg', ItemCategory.BOISSON),
+            new Item('Thé Chai Latte', 'Thé chai épicé avec lait et cannelle', 5.99, 'assets/items/boisson/the_chai_latte.jpeg', ItemCategory.BOISSON),
 
             // Autres
             new Item('Menu Enfant', 'Plat, boisson et dessert pour les enfants', 6.99, 'assets/items/autres/menu_enfant.jpg', ItemCategory.AUTRE),
