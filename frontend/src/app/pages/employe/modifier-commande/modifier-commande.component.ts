@@ -4,6 +4,7 @@ import { Commande } from '../../../dto/commande/commande';
 import { ApiService } from '../../../services/api/api.service';
 import {NgForOf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-modifier-commande',
@@ -23,16 +24,15 @@ import {MatButton} from "@angular/material/button";
 })
 export class ModifierCommandeComponent {
 
-  // Commandes list from API
+
+
   commandes: Commande[] = [];
 
-
-  constructor(
-    private api: ApiService
-  ) {
+  constructor(private api: ApiService) {
     this.api.getCommandes().subscribe((commandes: Commande[]) => {
       this.commandes = commandes;
     });
+
   }
 
   onEditCommande() {
