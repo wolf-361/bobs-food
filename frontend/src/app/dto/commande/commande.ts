@@ -1,4 +1,3 @@
-import { Item } from "../item/item";
 import { Client } from "../user/client";
 import { ItemCommande } from "./item-commande";
 import { Paiement } from "./paiement";

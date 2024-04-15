@@ -4,6 +4,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsEnum, IsNumber } from "class-validator";
 import { CreateItemDto } from "src/item/dto/create-item.dto";
 import { ItemCommande } from "../entities/item-commande.entity";
+import { Client } from "src/user/client/entities/client.entity";
+import { Paiement } from "../entities/paiement.entity";
 
 export class CreateCommandeDto {
     @ApiProperty({ example: TypeCommande.LIVRAISON, enum: TypeCommande, description: 'Type de la commande'})
@@ -21,14 +23,16 @@ export class CreateCommandeDto {
     @ApiProperty({ type: [CreateItemDto], description: 'Items de la commande'})
     items: ItemCommande[];
 
-    constructor(type: TypeCommande, date: Date, items: ItemCommande[]) {
-        this.type = type;
-        this.date = date;
-        this.items = items;
-        // Calculate the total of the commande
-        this.total = 0;
-        for (const item of items) {
-            this.total += item.item.prix * item.quantity;
-        }
+    @ApiProperty({ type: Client, description: 'Client de la commande'})
+    client: Client;
+
+    @ApiProperty({ type: Paiement, description: 'Paiement de la commande'})
+    paiement: Paiement;
+
+    // Partia constructor
+    constructor(partial: Partial<CreateCommandeDto>) {
+        Object.assign(this, partial);
+        // Recalculate the total of the commande.
+        this.total = this.items.reduce((total, item) => total + item.item.prix * item.quantity, 0);
     }
 }

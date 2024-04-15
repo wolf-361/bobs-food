@@ -19,7 +19,7 @@ export class Commande {
     @Column()
     date: Date;
 
-    @ManyToMany(() => ItemCommande, { cascade: true })
+    @ManyToMany(() => ItemCommande, { cascade: true, eager: true })
     @JoinTable({
         name: 'commande_items',
         joinColumn: { name: 'commande_id', referencedColumnName: 'id' },
@@ -27,11 +27,11 @@ export class Commande {
     })
     items: ItemCommande[];
 
-    @ManyToOne(() => Client)
+    @ManyToOne(() => Client, { eager: true })
     @JoinTable()
     client: Client
 
-    @OneToOne(() => Paiement)
+    @OneToOne(() => Paiement, { cascade: true, eager: true })
     @JoinColumn()
     paiement: Paiement;
 

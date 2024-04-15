@@ -9,6 +9,8 @@ import { CreateRestaurentDto } from 'src/restaurent/dto/create-restaurent.dto';
 import { CreateCommandeDto } from 'src/commande/dto/create-commande.dto';
 import { TypeCommande } from 'src/commande/entities/type-commande';
 import { ItemCommande } from 'src/commande/entities/item-commande.entity';
+import { TypePaiement } from 'src/commande/entities/type-paiement';
+import { Paiement } from 'src/commande/entities/paiement.entity';
 
 /**
  * The InitService class is a service that is used to initialize the bd with some data. 
@@ -45,14 +47,61 @@ export class InitService {
      * Initialize the commandes.
      */
     private async initCommandes() {
+        // If there are already commandes in the database, we don't initialize them.
+        if (await this.commandeService.findAll().then(commandes => commandes.length) > 0) {
+            this.logger.log("Commandes already initialized.");
+            return;
+        }
+
         // Get the 6 first items from the database.
-        const items = await this.itemService.findAll().then(items => items.slice(0, 6));
+        const items = await this.itemService.findAll().then(items => items.slice(0, 12));
+        const users = await this.clientService.findAll().then(users => users.slice(0, 4));
         const commandes: CreateCommandeDto[] = [
-            new CreateCommandeDto(TypeCommande.LIVRAISON, new Date(), [
-                new ItemCommande(items[0], 2),
-                new ItemCommande(items[1], 1),
-                new ItemCommande(items[2], 3),
-            ]),
+            new CreateCommandeDto({
+                type: TypeCommande.LIVRAISON,
+                date: new Date(),
+                items: [
+                    new ItemCommande(items[0], 2),
+                    new ItemCommande(items[1], 1),
+                    new ItemCommande(items[2], 3),
+                ],
+                client: users[0],
+                paiement: new Paiement(TypePaiement.CARTE, 100.15)
+            }),
+            new CreateCommandeDto({
+                type: TypeCommande.LIVRAISON,
+                date: new Date(),
+                items: [
+                    new ItemCommande(items[3], 2),
+                    new ItemCommande(items[4], 1),
+                    new ItemCommande(items[5], 3),
+                ],
+                client: users[1],
+                paiement: new Paiement(TypePaiement.ESPECE, 50.10)
+            }),
+            new CreateCommandeDto({
+                type: TypeCommande.LIVRAISON,
+                date: new Date(),
+                items: [
+                    new ItemCommande(items[6], 2),
+                    new ItemCommande(items[7], 1),
+                    new ItemCommande(items[8], 3),
+                ],
+                client: users[2],
+                paiement: new Paiement(TypePaiement.CHEQUE, 75.25)
+            }),
+            new CreateCommandeDto({
+                type: TypeCommande.LIVRAISON,
+                date: new Date(),
+                items: [
+                    new ItemCommande(items[9], 2),
+                    new ItemCommande(items[10], 1),
+                    new ItemCommande(items[11], 3),
+                ],
+                client: users[3],
+                paiement: new Paiement(TypePaiement.CARTE, 125.30)
+            })
+
         ];
 
         for (const commande of commandes) {
