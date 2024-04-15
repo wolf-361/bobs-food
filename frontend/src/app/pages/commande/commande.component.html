@@ -1,1 +1,105 @@
-<p>commande works!</p>
+<mat-stepper #stepper linear="true" [orientation]="(stepperOrientation | async)!">
+    <h1>Créer un compte client</h1>
+    <mat-step [stepControl]="this.livraisonForm" errorMessage="Courriel et mot de passe requis">
+        <ng-template matStepLabel>Options de livraison</ng-template>
+        <div class="step">
+            <form [formGroup]="livraisonForm" (ngSubmit)="verifierSignup()" novalidate>
+                <!-- Radio button group for choosing between option "a" and "b" -->
+                <mat-radio-group formControlName="choice" (change)="handleSelectionChange($event.value)" value="a">
+                    <mat-radio-button value="a">Livraison</mat-radio-button>
+                    <mat-radio-button value="b">Collecte</mat-radio-button>
+                  </mat-radio-group>
+              
+                <!-- Address input field -->
+                <ng-container *ngIf="selectedValue === 'a'">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Enter your Delivery Address</mat-label>
+                    <input matInput required placeholder="Address" formControlName="adresseLivraison" autocomplete="address-line1">
+                  </mat-form-field>
+                </ng-container>
+              
+                <ng-container *ngIf="selectedValue === 'b'">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Choisir un restaurent Bob's Food</mat-label>
+                    <mat-select formControlName="adresseLivraison">
+                      <mat-option *ngFor="let food of foods" [value]="food.adresse">{{food.adresse}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-container>
+
+                
+              
+                <div class="buttons">
+                  <button mat-raised-button color="primary" matStepperNext [disabled]="!livraisonForm.dirty || livraisonForm.invalid">Continue</button>
+                </div>
+              </form>
+        </div>
+    </mat-step>
+    <mat-step [stepControl]="this.clientInfoForm" errorMessage="Entres vos informations personelles">
+        <ng-template matStepLabel>Informations personnelles</ng-template>
+        <div class="step">
+            <form [formGroup]="this.clientInfoForm" (ngSubmit)="this.verifierClientInfo()" novalidate>
+                <mat-form-field appearance="outline">
+                    <mat-label>Nom de la commande</mat-label>
+                    <input matInput required placeholder="Nom" formControlName="prenom" autocomplete="given-name"
+                        required>
+                    <mat-error *ngIf="clientInfo['prenom'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                </mat-form-field>         
+
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer votre adresse email (optionnel)</mat-label>
+                    <input matInput type="email" placeholder="Adresse email" formControlName="courriel" autocomplete="email">
+                    <mat-error *ngIf="clientInfo['courriel'].errors?.['email']">Adresse email invalide</mat-error>
+                </mat-form-field>
+              
+                <div class="buttons">
+                    <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
+                    <button mat-raised-button color="primary" matStepperNext
+                        [disabled]="!this.clientInfoForm.dirty ||this.clientInfoForm.invalid">Continuer</button>
+                </div>
+            </form>
+        </div>
+    </mat-step>
+    <mat-step [stepControl]="this.creditCardForm">
+        <ng-template matStepLabel>Paiement</ng-template>
+        <div class="step">
+            <form [formGroup]="this.creditCardForm" (ngSubmit)="verifierCreditCard(); this.verifier()" novalidate>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
+                    <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
+                        autocomplete="cc-name">
+                    <mat-error *ngIf="creditCard['titulaireCarteCredit'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
+                    <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
+                        autocomplete="cc-number">
+                    <mat-error *ngIf="creditCard['numeroCarteCredit'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
+                    <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
+                        autocomplete="cc-exp">
+                    <mat-error *ngIf="creditCard['dateExpiration'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
+                    <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
+                        autocomplete="cc-csc">
+                    <mat-error *ngIf="creditCard['cvcCarteCredit'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
+                </mat-form-field>
+                <div class="buttons">
+                    <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
+                    <button mat-raised-button color="primary" matStepperNext [disabled]="this.creditCardForm.invalid">Vérifier</button>
+                </div>
+            </form>
+        </div>
+    </mat-step>
+    
+    <button mat-raised-button color="primary" type="submit">Se connecter</button>
+</mat-stepper>
