@@ -1,0 +1,61 @@
+@import "src/styles/constant.scss";
+
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
+}
+
+mat-toolbar {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    position: sticky;
+    gap: 2rem;
+    top: var(--mat-toolbar-standard-height);
+    z-index: 100;
+    background-color: var(--mat-stepper-container-color);
+
+    mat-form-field {
+        width: fit-content;
+        margin: .5rem 0;
+        min-width: 50%;
+        max-width: 100%;
+    }
+}
+
+.items {
+    width: calc(100% - 3rem);
+    padding: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.mobile-save-section {
+    width: 100%;
+    display: flex;
+    padding: 0.5rem 0;
+    justify-content: center;
+    gap: 1rem;
+    position: sticky;
+    bottom: 0;
+    background-color: var(--mat-stepper-container-color);
+}
+
+// Mobile
+@media (max-width: 600px) {
+    mat-toolbar {
+        top: var(--mat-toolbar-mobile-height);
+    }
+
+    mat-toolbar mat-form-field {
+        width: 90%;
+    }
+}

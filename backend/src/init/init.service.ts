@@ -130,14 +130,12 @@ export class InitService {
             return;
         }
 
-        const itemIds = await this.itemService.findAll().then(items => {
-            return items.map(item => item.id);
-        });
+        const items = await this.itemService.findAll().then(items => items);
 
         const restaurents: CreateRestaurentDto[] = [
-            new CreateRestaurentDto("123 Rue Principale, Trois-Rivières", itemIds),
-            new CreateRestaurentDto("456 Avenue Frontenac, Shawinigan", itemIds),
-            new CreateRestaurentDto("789 Rue des Forges, Trois-Rivières", itemIds)
+            new CreateRestaurentDto("123 Rue Principale, Trois-Rivières", items),
+            new CreateRestaurentDto("456 Avenue Frontenac, Shawinigan", items),
+            new CreateRestaurentDto("789 Rue des Forges, Trois-Rivières", items)
         ]
 
         for (const restaurent of restaurents) {

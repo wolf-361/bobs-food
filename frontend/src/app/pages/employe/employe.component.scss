@@ -2,15 +2,14 @@
 
 :host {
     display: block;
-    height: $page-height;
+    min-height: $page-height;
     width: 100vw;
+    max-width: 100%;
 }
 
-nav {
-    max-width: 100vw;
-}
-
-mat-tab-nav-panel {
-    width: 100vw;
-    min-height: 100%;
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
 }
