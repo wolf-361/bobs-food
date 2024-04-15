@@ -69,7 +69,7 @@ export class ModifierMenuComponent {
         this._items.next(this.allItems.map((item) => {
           return {
             item: item,
-            isSelected: (restaurent.menu.findIndex((i) => i.id === item.id) !== -1)
+            isSelected: (restaurent.menu?.findIndex((i) => i.id === item.id) !== -1)
           };
         }));
       });
@@ -82,6 +82,9 @@ export class ModifierMenuComponent {
 
     // Check if the menu has been changed
     this._items.subscribe((items) => {
+      if (!this.restaurent) {
+        return;
+      }
       // If the selected items are different from the restaurent's menu (somewhat ok)
       this.isChanged = items.filter((i) => i.isSelected).length !== this.restaurent.menu.length;
     });

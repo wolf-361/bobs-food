@@ -2,7 +2,7 @@
 <div class="commandes">
   <h2 class="title">Commandes en cours</h2>
   <div class="mat-card-container">
-    @for (commande of commandes; track commande.id) {
+    @for (commande of commandes; track commande?.id) {
     <mat-card>
       <mat-card-header>
         <mat-card-title>{{commande.client?.prenom + ' ' + commande.client?.nom}}</mat-card-title>
