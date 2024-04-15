@@ -1,17 +1,22 @@
 <!-- Afficher les commandes en cours en utilisant la méthode GET de api.service.ts -->
 <div class="commandes">
-  <h2>Commandes en cours</h2>
+  <h2 class="title">Commandes en cours</h2>
   <div class="mat-card-container">
-
-    <mat-card *ngFor="let commande of commandes">
+    @for (commande of commandes; track commande.id) {
+    <mat-card>
       <mat-card-header>
         <mat-card-title>{{commande.client?.prenom + ' ' + commande.client?.nom}}</mat-card-title>
-        <mat-card-subtitle>{{commande.date}}</mat-card-subtitle>
+        <mat-card-subtitle>{{commande.date | date:'short'}}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <h4>Plats commandés :</h4>
         <ul>
-          <li *ngFor="let plat of commande.items">{{plat.item.nom}}</li>
+          @for (plat of commande.items.slice(0, 3); track plat.id) {
+          <li>{{ plat.item.nom }}</li>
+          }
+          @if (commande.items.length > 3) {
+          <li>...</li>
+          }
         </ul>
       </mat-card-content>
       <mat-card-actions>
@@ -20,6 +25,6 @@
       </mat-card-actions>
 
     </mat-card>
+    }
   </div>
 </div>
-
