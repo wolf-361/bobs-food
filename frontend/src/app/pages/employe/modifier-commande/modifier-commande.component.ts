@@ -5,6 +5,8 @@ import { ApiService } from '../../../services/api/api.service';
 import {DatePipe, NgForOf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {Observable} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {DetailsCommandeComponent} from "./details-commande/details-commande.component";
 
 @Component({
   selector: 'app-modifier-commande',
@@ -26,14 +28,20 @@ import {Observable} from "rxjs";
 export class ModifierCommandeComponent {
   commandes: Commande[] = [];
 
-  constructor(private api: ApiService) {
+  constructor(private api: ApiService, public dialog: MatDialog) {
     this.api.getCommandes().subscribe((commandes: Commande[]) => {
       this.commandes = commandes;
     });
 
   }
 
-  onEditCommande() {
+  onEditCommande(commande: Commande) {
+    // Ouverture de la fenêtre de modification de la commande (Dialog)
+    let dialogRef = this.dialog.open(DetailsCommandeComponent, {
+      data: {
+        commande: commande
+      }
+    });
 
   }
 

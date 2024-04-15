@@ -1,0 +1,37 @@
+/* Pour aligner les boutons de suppression à droite */
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Pour espacer les éléments et les boutons de suppression */
+li + li {
+  margin-top: 10px;
+}
+
+button.addButton, button.removeButton{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
+}
+
+.removeButton:hover {
+  color: red;
+}
+
+.addButton:hover {
+  color: green;
+}
+
+.container {
+  padding: 20px;
+  color: white;
+}
+
+.flex {
+  padding: 5px;
+  display: flex;
+}

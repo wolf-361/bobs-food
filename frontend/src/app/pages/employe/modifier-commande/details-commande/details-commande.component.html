@@ -1,0 +1,25 @@
+<div class="container">
+  <h2>Modification de la commande de {{ data.commande.client?.prenom }} {{ data.commande.client?.nom }}</h2>
+  <p>Adresse: {{ data.commande.client?.adresse }}</p>
+
+  <h3>Articles de la commande:</h3>
+  <mat-list>
+    @for (item of data.commande.items.slice(0, 3); track item.id) {
+      <div class="flex">
+        <mat-list-item>{{ item.item.nom }} ({{ item.quantite }})</mat-list-item>
+        <div class="flex">
+          <button mat-icon-button class="addButton" (click)="onIncrease(item)">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-icon-button class="removeButton" (click)="onDecrease(item)">
+            <mat-icon>remove</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+  </mat-list>
+
+  <button mat-raised-button color="primary" (click)="onSave()">Enregistrer</button>
+  <button mat-raised-button color="warn" (click)="onClose()">Annuler</button>
+
+</div>
