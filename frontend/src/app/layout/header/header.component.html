@@ -7,10 +7,10 @@
 
     <!-- Menu items, if mobile -->
     <div *ngIf="showMobileMenu" class="mobile-menu" #mobileMenu>
-        <button mat-button routerLink="/">Commander</button>
-        @if (this.isEmployer()) {
-            <button mat-button routerLink="/employer/modify-command">Employées</button>
-        }
+        <button mat-button color="primary" routerLink="/">Commander</button>
+        
+        <button mat-button color="primary" routerLink="/employer/modify-command" *ngIf="isEmployer()">Employées</button>
+       
         <button mat-button color="primary" routerLink="/profile" *ngIf="isLoggedIn()">
             <mat-icon>account_circle</mat-icon>
             <span>Mon compte</span>
@@ -36,16 +36,16 @@
     } @else {
         <div class="menu">
             <button mat-button color="primary" routerLink="/">Commander</button>
+            
+            <button mat-button color="primary" routerLink="/employer/modify-command" *ngIf="isEmployer()">Employées</button>
+            
             <button mat-button color="primary" routerLink="/profile" *ngIf="isLoggedIn()">
                 <mat-icon>account_circle</mat-icon>
                 <span>Mon compte</span>
             </button>
         </div>
 
-        <button mat-button routerLink="/">Commander</button>
-        @if (this.isEmployer()) {
-            <button mat-button routerLink="/employer/modify-command">Employées</button>
-        }
+
         <span class="spacer"></span>
 
         @if (!isLoggedIn()) {
