@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Restaurent } from '../../dto/restaurent/restaurent';
 import { ApiService } from '../api/api.service';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Item } from '../../dto/item/item';
 
@@ -10,13 +10,13 @@ import { Item } from '../../dto/item/item';
 })
 export class RestaurentService {
   private prefix: string;
-  private _restaurent!: BehaviorSubject<Restaurent>;
+  private _restaurent!: Subject<Restaurent>;
 
   constructor(
     private api: ApiService,
     private auth: AuthService
   ) {
-    this._restaurent = new BehaviorSubject<Restaurent>({} as Restaurent);
+    this._restaurent = new Subject<Restaurent>();
 
     // Now that we have the items, we can get the restaurent
     if (this.restaurentId !== '') {
@@ -40,7 +40,11 @@ export class RestaurentService {
 
   public set restaurent(restaurent: Restaurent) {
     this._restaurent.next(restaurent); // Update the observable
-    localStorage.setItem(this.prefix + 'restaurentId', restaurent.id); // Update the local storage
+    this.restaurentId = restaurent.id; // Update the local storage
+  }
+
+  private set restaurentId(id: string) {
+    localStorage.setItem(this.prefix + 'restaurentId', id);
   }
 
   private get restaurentId(): string {

@@ -58,6 +58,10 @@ export class HomeComponent extends BaseOverlayController{
 
     // Get the restaurent
     this.restaurentService.restaurent.subscribe((restaurent: Restaurent) => {
+      if (!restaurent) {
+        return;
+      }
+      
       this.restaurent = restaurent;
       this.loadMenu();
     });
