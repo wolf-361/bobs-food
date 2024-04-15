@@ -10,6 +10,7 @@ import { CommandeService } from '../../services/commande/commande.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { BaseItemComponent } from './base-item/base-item.component';
 
 @Component({
@@ -30,6 +31,7 @@ export class ItemComponent extends BaseOverlayController {
   private mouseOver: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isMouseOver: boolean = false;
   isDansCommande: boolean = false; // Permet d'afficher l'option de suppression du panier
+  isMobile: boolean = false;
 
   @HostListener('mouseenter')
   onMouseEnter() {
@@ -54,7 +56,8 @@ export class ItemComponent extends BaseOverlayController {
   constructor(
     private injector: Injector,
     private parentOverlay: Overlay,
-    private commande: CommandeService
+    private commande: CommandeService,
+    private breakpointObserver: BreakpointObserver,
   ) {
     super(parentOverlay);
     // Check if the mouse is over the item
@@ -63,6 +66,11 @@ export class ItemComponent extends BaseOverlayController {
     // Check if the item is in the cart
     this.commande.Items.subscribe(items => {
       this.isDansCommande = items.findIndex(i => i.item.id === this.item.id) !== -1;
+    });
+
+    // Listen to the screen size
+    this.breakpointObserver.observe('(max-width: 600px)').subscribe(result => {
+      this.isMobile = result.matches;
     });
   }
 

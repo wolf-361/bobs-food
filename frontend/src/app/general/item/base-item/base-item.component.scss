@@ -16,6 +16,14 @@ mat-card {
 
 }
 
+mat-card-subtitle {
+    display: block;
+    max-width: calc(300px - 2rem); // 2rem = 2 * 1rem (padding on the sides
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 mat-card-content {
     display: flex;
     flex-direction: column;

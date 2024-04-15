@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { CommandeService } from '../../services/commande/commande.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
 import { Router } from '@angular/router';
 import { Item } from '../../dto/item/item';
+import { ItemCategory } from '../../dto/item/item-categorie';
 import { ItemCommande } from '../../dto/commande/item-commande';
 
 @Component({
@@ -12,12 +14,24 @@ import { ItemCommande } from '../../dto/commande/item-commande';
   imports: [
     MatIconModule,
     MatButtonModule,
+    MatListModule,
   ],
   templateUrl: './panier.component.html',
   styleUrl: './panier.component.scss'
 })
 export class PanierComponent {
   isVide: boolean = true;
+  categoryIcons: Map<ItemCategory, string> = new Map([
+    [ItemCategory.PIZZA, 'local_pizza'],
+    [ItemCategory.POUTINE, 'restaurant_menu'],
+    [ItemCategory.FRITE, 'fastfood'],
+    [ItemCategory.BURGER, 'hamburger'],
+    [ItemCategory.SANDWICH, 'sandwich'],
+    [ItemCategory.SALADE, 'salad'],
+    [ItemCategory.DESSERT, 'cake'],
+    [ItemCategory.BOISSON, 'local_drink'],
+    [ItemCategory.AUTRE, 'restaurant'],
+  ]);
   items: ItemCommande[] = [];
 
   constructor(
@@ -28,6 +42,15 @@ export class PanierComponent {
     this.commande.Items.subscribe(items => this.isVide = items.length === 0);
     // Subscribe to the items in the command
     this.commande.Items.subscribe(items => this.items = items);
+  }
+
+  /**
+   * Get the icon to display for the given category
+   * @param category The category of the item
+   * @returns The string of the icon to display
+   */
+  getIcon(category: ItemCategory): string {
+    return this.categoryIcons.get(category) || 'restaurant';
   }
 
   /**
