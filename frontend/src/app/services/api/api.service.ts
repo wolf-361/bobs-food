@@ -133,6 +133,13 @@ export class ApiService {
     );
   }
 
+  getCurrentEmploye(): Observable<Employe> {
+    return this.http.get<Employe>(`${this.apiUrl}/employe`).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
   loginEmploye(employeId: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/employe/login`, { employeId, password }).pipe(
       catchError(this.handleError),
@@ -142,6 +149,13 @@ export class ApiService {
 
   signupEmploye(employe: CreateEmploye): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/employe/signup`, employe).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  updateEmploye(employeId: string, employe: CreateEmploye): Observable<Employe> {
+    return this.http.patch<Employe>(`${this.apiUrl}/employe/${employeId}`, employe).pipe(
       catchError(this.handleError),
       retry(3)
     );
@@ -162,6 +176,13 @@ export class ApiService {
     );
   }
 
+  getCurrentClient(): Observable<Client> {
+    return this.http.get<Client>(`${this.apiUrl}/client`).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
   loginClient(courriel: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/client/login`, { courriel, password }).pipe(
       catchError(this.handleError),
@@ -171,6 +192,13 @@ export class ApiService {
 
   signupClient(client: CreateClient): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/client/signup`, client).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  updateClient(clientId: string, client: CreateClient): Observable<Client> {
+    return this.http.patch<Client>(`${this.apiUrl}/client/${clientId}`, client).pipe(
       catchError(this.handleError),
       retry(3)
     );

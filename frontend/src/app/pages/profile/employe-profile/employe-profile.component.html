@@ -1,0 +1,31 @@
+<h1>Modifier son profil</h1>
+<form [formGroup]="this.employerForm" (ngSubmit)="this.onSubmit()" novalidate>
+    <!-- Role and id can't be chenged -->
+    <mat-form-field appearance="outline">
+        <mat-label>Votre identification d'employer</mat-label>
+        <input matInput type="text" required placeholder="Identification d'employer" formControlName="employeId" readonly="true">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Votre role</mat-label>
+        <input matInput type="text" required placeholder="Role" formControlName="role" readonly="true">
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline">
+        <mat-label>Entrer votre nom</mat-label>
+        <input matInput type="text" required placeholder="Nom" formControlName="nom" autocomplete="name" required>
+        <mat-error *ngIf="form['nom'].errors?.['required']">Ce champ est obligatoire</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Entrer votre prénom</mat-label>
+        <input matInput type="text" required placeholder="Prénom" formControlName="prenom" autocomplete="firstname"
+            required>
+        <mat-error *ngIf="form['prenom'].errors?.['required']">Ce champ est obligatoire</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Entrer votre address</mat-label>
+        <input matInput type="text" required placeholder="Address" formControlName="adresse" autocomplete="address"
+            required>
+        <mat-error *ngIf="form['adresse'].errors?.['required']">Ce champ est obligatoire</mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Modifier</button>
+</form>
