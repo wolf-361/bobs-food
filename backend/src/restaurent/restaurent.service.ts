@@ -19,15 +19,7 @@ export class RestaurentService {
       return possibleRestaurent;
     }
 
-    // Get the item ids from the createRestaurentDto
-    const itemIds = createRestaurentDto.menu;
-
-    // Create a new restaurent
-    const restaurent = new Restaurent();
-    restaurent.adresse = createRestaurentDto.adresse;
-    restaurent.menu = await this.getItemsFromDto(itemIds);
-
-    return this.restaurentRepository.save(restaurent);
+    return this.restaurentRepository.save(createRestaurentDto);
   }
 
   findAll() {
@@ -39,15 +31,7 @@ export class RestaurentService {
   }
 
   async update(id: string, updateRestaurentDto: UpdateRestaurentDto) {
-    // Get the item ids from the updateRestaurentDto
-    const itemIds = updateRestaurentDto.menu;
-
-    // Create a new restaurent
-    const restaurent = new Restaurent();
-    restaurent.adresse = updateRestaurentDto.adresse;
-    restaurent.menu = await this.getItemsFromDto(itemIds);
-
-    return this.restaurentRepository.update(id, restaurent);
+    return this.restaurentRepository.save(updateRestaurentDto);
   }
 
   remove(id: string) {

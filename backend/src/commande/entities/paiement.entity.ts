@@ -9,7 +9,7 @@ export class Paiement {
     @Column({ type: 'enum', enum: TypePaiement })
     type: TypePaiement;
 
-    @Column()
+    @Column({ type: 'float' })
     montant: number;
 
     constructor(type: TypePaiement, montant: number) {

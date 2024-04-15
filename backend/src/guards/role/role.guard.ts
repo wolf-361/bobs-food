@@ -32,7 +32,12 @@ export class RoleGuard implements CanActivate {
     }
 
     // Get the user from the token
-    const payload = this.authService.verifyToken(token);
+    let payload;
+    try {
+      payload = this.authService.verifyToken(token);
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token');
+    }
 
     // Set the user in the request object for future use
     request.user = payload;

@@ -23,7 +23,7 @@ export const routes: Routes = [
     { path: 'commander', component: CommandeComponent },
     { path: 'employer', component: EmployeComponent, children: [
         { path: 'create', component: CreationEmployeComponent, canActivate: [roleGuard], data: { role: 'gestionnaire, admin, proprietaire' } },
-        { path: 'modify-command', component: ModifierCommandeComponent, canActivate: [roleGuard], data: { role: 'employe'} },
+        { path: 'modify-command', component: ModifierCommandeComponent, canActivate: [roleGuard], data: { role: 'employe, gestionnaire, admin, proprietaire'} },
         { path: 'modify-menu', component: ModifierMenuComponent, canActivate: [roleGuard], data: { role: 'gestionnaire, admin, proprietaire'} },
     ], canActivate: [roleGuard], data: { role: 'employe, gestionnaire, admin, proprietaire'}},
     { path: 'panier', component: PanierComponent },

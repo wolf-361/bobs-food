@@ -15,8 +15,8 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class EmployeComponent {
   links= [
-    { path: 'create', label: 'Créer un employer', roles: 'gestionnaire, admin, proprietaire'},
     { path: 'modify-command', label: 'Modifier une commande', roles: 'employe, gestionnaire, admin, proprietaire'},
+    { path: 'create', label: 'Créer un employer', roles: 'gestionnaire, admin, proprietaire'},
     { path: 'modify-menu', label: 'Modifier le menu', roles: 'gestionnaire, admin, proprietaire'}
   ];
   activeLink = this.links[0];

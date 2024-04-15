@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { UserRole } from '../../dto/user/user-role';
 import { LoggerService } from '../logger/logger.service';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { EmployeType } from '../../dto/user/employe-type';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
   constructor(
     private logger: LoggerService
-  ) { }
+  ) {
+   }
 
   /**
    * Get the token from the local storage
@@ -74,5 +78,14 @@ export class AuthService {
 
   public hasRole(neededRole: string) {
     return this.Role === neededRole;
+  }
+
+  public isEmploye(): boolean {
+    if (!this.IsAuthenticated || !this.Role) {
+      return false;
+    }
+
+    // If the user is one of the employe type
+    return Object.values(EmployeType).includes(this.Role as EmployeType);
   }
 }

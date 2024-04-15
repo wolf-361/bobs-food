@@ -1,1 +1,123 @@
-<p>creation-employe works!</p>
+<mat-stepper #stepper linear="true" [orientation]="(stepperOrientation | async)!">
+  <mat-step [stepControl]="this.firstFormGroup">
+    <div class="step">
+      <ng-template matStepLabel>Informations personnelles</ng-template>
+      <form [formGroup]="firstFormGroup" (ngSubmit)="verifierFirstFormGroup()" novalidate>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre prénom" formControlName="prenom" required>
+          <mat-error *ngIf="firstFormGroup.get('prenom')?.errors?.['required']">
+            Le prénom est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre nom" formControlName="nom" required>
+          <mat-error *ngIf="firstFormGroup.get('nom')?.errors?.['required']">
+            Le nom est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre adresse" formControlName="adresse" required>
+          <mat-error *ngIf="firstFormGroup.get('adresse')?.errors?.['required']">
+            Le nom est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <div class="buttons">
+          <button mat-raised-button color="primary" matStepperNext
+            [disabled]="firstFormGroup.invalid || firstFormGroup.pending">Continuer</button>
+        </div>
+
+      </form>
+    </div>
+  </mat-step>
+
+
+
+  <mat-step [stepControl]="this.secondFormGroup">
+    <ng-template matStepLabel>Créer un compte</ng-template>
+    <div class="step">
+      <form [formGroup]="secondFormGroup" (ngSubmit)="verifierSecondFormGroup()" novalidate>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre identifiant" formControlName="identifiant" required>
+          <mat-error *ngIf="secondFormGroup.get('identifiant')?.errors?.['required']">
+            Ce champ est obligatoire</mat-error>
+
+          <button type="button" mat-icon-button matSuffix matTooltip="Générer un identifiant aléatoire"
+            (click)="generateIdentifiant()">
+            <mat-icon>shuffle</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre email" formControlName="courriel" required>
+          <mat-error *ngIf="secondFormGroup.get('courriel')?.errors?.['required']">
+            L'email est obligatoire
+          </mat-error>
+          <mat-error *ngIf="secondFormGroup.get('courriel')?.errors?.['email']">
+            L'email n'est pas valide
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Entrer votre mot de passe" formControlName="motDePasse" required>
+          <mat-error *ngIf="secondFormGroup.get('motDePasse')?.errors?.['required']">Ce champ est
+            obligatoire</mat-error>
+          <mat-error *ngIf="secondFormGroup.get('motDePasse')?.errors?.['minlength']">Le mot de passe doit contenir au
+            moins 6
+            caractères</mat-error>
+          <mat-error *ngIf="secondFormGroup.get('motDePasse')?.errors?.['maxlength']">Le mot de passe doit contenir au
+            plus 20
+            caractères</mat-error>
+          <mat-error *ngIf="secondFormGroup.get('motDePasse')?.errors?.['pattern']">Le mot de passe doit contenir au
+            moins une
+            lettre majuscule, une lettre minuscule et un chiffre</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Confirmer votre mot de passe" formControlName="confirmationMotDePasse" required>
+          <mat-error *ngIf="secondFormGroup.get('confirmationMotDePasse')?.errors?.['required']">Ce champ est
+            obligatoire</mat-error>
+          <mat-error *ngIf="secondFormGroup.get('confirmationMotDePasse')?.errors?.['mismatch']">Les mots de passe ne
+            correspondent pas</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="role" required>
+            @for (role of roles; track $index) {
+            <mat-option [value]="role.key">{{ role.value }}</mat-option>
+            }
+          </mat-select>
+          <mat-error *ngIf="secondFormGroup.get('role')?.errors?.['required']">Ce champ est obligatoire</mat-error>
+        </mat-form-field>
+
+        <div class="buttons">
+          <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" matStepperNext
+            [disabled]="secondFormGroup.invalid || secondFormGroup.pending">Continuer</button>
+        </div>
+      </form>
+    </div>
+  </mat-step>
+
+  <mat-step>
+    <div class="step">
+      <ng-template matStepLabel>Vérification</ng-template>
+      <p>Confirmer les informations suivantes:</p>
+      <ul>
+        <li><strong>Prénom:</strong> {{ firstFormGroup.value.prenom }}</li>
+        <li><strong>Nom:</strong> {{ firstFormGroup.value.nom }}</li>
+        <li><strong>Adresse:</strong> {{ firstFormGroup.value.adresse }}</li>
+        <li><strong>Identifiant:</strong> {{ secondFormGroup.value.identifiant }}</li>
+        <li><strong>Email:</strong> {{ secondFormGroup.value.courriel }}</li>
+        <li><strong>Role:</strong> {{ getRole() }}</li>
+      </ul>
+      <div class="buttons">
+        <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+        <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+      </div>
+    </div>
+  </mat-step>
+</mat-stepper>

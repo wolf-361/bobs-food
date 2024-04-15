@@ -12,7 +12,7 @@ export class CommandeService {
     @InjectRepository(Commande) private commandeRepository: Repository<Commande>
   ) {}
 
-  create(createCommandeDto: CreateCommandeDto) {
+  async create(createCommandeDto: CreateCommandeDto) {
     return this.commandeRepository.save(createCommandeDto);
   }
 
@@ -21,7 +21,9 @@ export class CommandeService {
   }
 
   findOne(id: number) {
-    return this.commandeRepository.findOne({ where: { id } });
+    return this.commandeRepository.findOne({ 
+      where: { id },
+     });
   }
 
   update(id: number, updateCommandeDto: UpdateCommandeDto) {

@@ -8,6 +8,9 @@
     <!-- Menu items, if mobile -->
     <div *ngIf="showMobileMenu" class="mobile-menu" #mobileMenu>
         <button mat-button routerLink="/">Commander</button>
+        @if (this.isEmployer()) {
+            <button mat-button routerLink="/employer/modify-command">Employées</button>
+        }
         @if (!isLoggedIn()) {
             <button mat-button color="accent" routerLink="/auth/login" *ngIf="!isOnAuthPage()">
                 <mat-icon>account_circle</mat-icon>
@@ -28,6 +31,9 @@
         </button>
     } @else {
         <button mat-button routerLink="/">Commander</button>
+        @if (this.isEmployer()) {
+            <button mat-button routerLink="/employer/modify-command">Employées</button>
+        }
         <span class="spacer"></span>
         @if (!isLoggedIn()) {
             <button mat-button color="accent" routerLink="/auth/login"  *ngIf="!isOnAuthPage()">
