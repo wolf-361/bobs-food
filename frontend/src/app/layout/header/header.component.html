@@ -1,26 +1,30 @@
 <mat-toolbar>
-    <button mat-icon-button >
+    <button mat-icon-button>
         <img src="assets/bobicon.png" alt="App icon">
     </button>
     <span>Bob's food</span>
     <span class="spacer"></span>
-    
+
     <!-- Menu items, if mobile -->
     <div *ngIf="showMobileMenu" class="mobile-menu" #mobileMenu>
         <button mat-button routerLink="/">Commander</button>
         @if (this.isEmployer()) {
             <button mat-button routerLink="/employer/modify-command">Employées</button>
         }
+        <button mat-button color="primary" routerLink="/profile" *ngIf="isLoggedIn()">
+            <mat-icon>account_circle</mat-icon>
+            <span>Mon compte</span>
+        </button>
         @if (!isLoggedIn()) {
-            <button mat-button color="accent" routerLink="/auth/login" *ngIf="!isOnAuthPage()">
-                <mat-icon>account_circle</mat-icon>
-                <span>Se connecter</span>
-            </button>
+        <button mat-flat-button color="accent" routerLink="/auth/login" *ngIf="!isOnAuthPage()">
+            <mat-icon>account_circle</mat-icon>
+            <span>Se connecter</span>
+        </button>
         } @else {
-            <button mat-button color="accent" (click)="logout()">
-                <mat-icon>exit_to_app</mat-icon>
-                <span>Se déconnecter</span>
-            </button>
+        <button mat-flat-button color="accent" (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Se déconnecter</span>
+        </button>
         }
     </div>
 
@@ -30,22 +34,33 @@
             <mat-icon>menu</mat-icon>
         </button>
     } @else {
+        <div class="menu">
+            <button mat-button color="primary" routerLink="/">Commander</button>
+            <button mat-button color="primary" routerLink="/profile" *ngIf="isLoggedIn()">
+                <mat-icon>account_circle</mat-icon>
+                <span>Mon compte</span>
+            </button>
+        </div>
+
         <button mat-button routerLink="/">Commander</button>
         @if (this.isEmployer()) {
             <button mat-button routerLink="/employer/modify-command">Employées</button>
         }
         <span class="spacer"></span>
+
         @if (!isLoggedIn()) {
-            <button mat-button color="accent" routerLink="/auth/login"  *ngIf="!isOnAuthPage()">
-                <mat-icon>account_circle</mat-icon>
-                <span>Se connecter</span>
-            </button>
+        <button mat-flat-button color="accent" routerLink="/auth/login" *ngIf="!isOnAuthPage()">
+            <mat-icon>account_circle</mat-icon>
+            <span>Se connecter</span>
+        </button>
         } @else {
-            <button mat-button color="accent" (click)="logout()">
-                <mat-icon>exit_to_app</mat-icon>
-                <span>Se déconnecter</span>
-            </button>
+        <button mat-flat-button color="accent" (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Se déconnecter</span>
+        </button>
         }
     }
+
+
 
 </mat-toolbar>

@@ -11,7 +11,14 @@ import { EmployeType } from '../../dto/user/employe-type';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ MatIconModule, MatButtonModule, MatToolbarModule, RouterLink, RouterLinkActive, CommonModule ],
+  imports: [ 
+    MatIconModule, 
+    MatButtonModule, 
+    MatToolbarModule, 
+    RouterLink, 
+    RouterLinkActive, 
+    CommonModule
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
