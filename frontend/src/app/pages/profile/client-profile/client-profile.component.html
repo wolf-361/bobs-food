@@ -1,1 +1,74 @@
-<p>client-profile works!</p>
+<h1>Modifier son profil</h1>
+<form [formGroup]="this.clientForm" (ngSubmit)="this.onSubmit()" novalidate>
+    <!-- Role and id can't be chenged -->
+    <mat-form-field appearance="outline">
+        <mat-label>Entrer votre adresse email</mat-label>
+        <input matInput type="email" required placeholder="Adresse email" formControlName="courriel"
+            autocomplete="email" required autofocus>
+        <mat-error *ngIf="form['courriel'].errors?.['required']">Ce champ est obligatoire</mat-error>
+        <mat-error *ngIf="form['courriel'].errors?.['email']">Adresse email invalide</mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline">
+        <mat-label>Entrer votre prénom</mat-label>
+        <input matInput type="text" required placeholder="Prénom" formControlName="prenom" autocomplete="firstname"
+            required>
+        <mat-error *ngIf="form['prenom'].errors?.['required']">Ce champ est obligatoire</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Entrer votre nom</mat-label>
+        <input matInput type="text" required placeholder="Nom" formControlName="nom" autocomplete="name" required>
+        <mat-error *ngIf="form['nom'].errors?.['required']">Ce champ est obligatoire</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Entrer votre address</mat-label>
+        <input matInput type="text" required placeholder="Address" formControlName="adresse" autocomplete="address"
+            required>
+        <mat-error *ngIf="form['adresse'].errors?.['required']">Ce champ est obligatoire</mat-error>
+    </mat-form-field>
+    
+    <div class="credit">
+        <mat-checkbox formControlName="carteDeCredit" [checked]="this.carteDeCreditVisible" (change)="this.toggleCarteDeCredit()">
+            Carte de crédit
+        </mat-checkbox>
+    </div>
+
+    @if (this.carteDeCreditVisible) {
+        <mat-form-field appearance="outline">
+            <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
+            <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
+                autocomplete="cc-name">
+            <mat-error *ngIf="form['titulaireCarteCredit'].errors?.['required']">Ce champ est
+                obligatoire</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
+            <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
+                autocomplete="cc-number">
+            <mat-error *ngIf="form['numeroCarteCredit'].errors?.['required']">Ce champ est
+                obligatoire</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
+            <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
+                autocomplete="cc-exp">
+            <mat-error *ngIf="form['dateExpirationCarteCredit'].errors?.['required']">Ce champ est
+                obligatoire</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
+            <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
+                autocomplete="cc-csc">
+            <mat-error *ngIf="form['cvcCarteCredit'].errors?.['required']">Ce champ est
+                obligatoire</mat-error>
+        </mat-form-field>
+    }
+    <div class="btn-form">
+        <button mat-raised-button color="warn" type="button" (click)="this.onReset()">Annuler</button>
+        <button mat-raised-button color="primary" type="submit">Modifier</button>
+    </div>
+</form>
+<div class="btn-general">
+    <button mat-stroked-button color="primary" (click)="this.onChangePassword()">Changer mon mot de passe</button>
+    <button mat-stroked-button color="warn" (click)="this.onDelete()">Supprimer mon compte</button>
+</div>

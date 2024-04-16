@@ -35,12 +35,13 @@ export class ClientController {
     return this.remove(req.user.id);
   }
 
-  @Patch()
-  @ApiOperation({ summary: 'Update the current user (logged in)' })
+  @Patch('password')
+  @ApiOperation({ summary: 'Update the password of the current user (logged in)' })
   @Roles(['client'])
-  updateSelf(@Request() req, @Body() updateClientDto: UpdateClientDto) {
-    return this.update(req.user.id, updateClientDto);
+  updatePassword(@Request() req, @Body() password: string) {
+    return this.clientService.updatePassword(req.user.id, password);
   }
+
 
   @Get("all")
   @Roles(['gestionnaire', 'admin', 'proprietaire'])

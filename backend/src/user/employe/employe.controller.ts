@@ -37,6 +37,13 @@ export class EmployeController {
     return this.remove(req.user.id);
   }
 
+  @Patch('password')
+  @ApiOperation({ summary: 'Update the password of the current user (logged in)' })
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
+  updatePassword(@Request() req, @Body() password: string) {
+    return this.employeService.updatePassword(req.user.id, password);
+  }
+
   @Patch()
   @ApiOperation({ summary: 'Update the current user (logged in)' })
   @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])

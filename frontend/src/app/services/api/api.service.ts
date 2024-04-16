@@ -146,6 +146,13 @@ export class ApiService {
       retry(3)
     );
   }
+  
+  updateEmployePassword(employeId: string, password: string): Observable<Employe> {
+    return this.http.patch<Employe>(`${this.apiUrl}/employe/${employeId}/password`, { password }).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
 
   loginEmploye(employeId: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/employe/login`, { employeId, password }).pipe(
