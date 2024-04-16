@@ -30,6 +30,13 @@ export class EmployeController {
     return this.findOne(req.user.id);
   }
 
+  @Delete()
+  @ApiOperation({ summary: 'Delete the current user (logged in)' })
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
+  deleteSelf(@Request() req) {
+    return this.remove(req.user.id);
+  }
+
   @Get('all')
   @Roles(['gestionnaire', 'admin', 'proprietaire'])
   findAll() {

@@ -140,6 +140,13 @@ export class ApiService {
     );
   }
 
+  deleteCurrentEmploye(): Observable<Employe> {
+    return this.http.delete<Employe>(`${this.apiUrl}/employe`).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
   loginEmploye(employeId: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/employe/login`, { employeId, password }).pipe(
       catchError(this.handleError),
@@ -178,6 +185,13 @@ export class ApiService {
 
   getCurrentClient(): Observable<Client> {
     return this.http.get<Client>(`${this.apiUrl}/client`).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  deleteCurrentClient(): Observable<Client> {
+    return this.http.delete<Client>(`${this.apiUrl}/client`).pipe(
       catchError(this.handleError),
       retry(3)
     );

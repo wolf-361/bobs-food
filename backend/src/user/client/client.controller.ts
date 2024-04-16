@@ -28,6 +28,13 @@ export class ClientController {
     return this.findOne(req.user.id);
   }
 
+  @Delete()
+  @ApiOperation({ summary: 'Delete the current user (logged in)' })
+  @Roles(['client'])
+  deleteSelf(@Request() req) {
+    return this.remove(req.user.id);
+  }
+
   @Get("all")
   @Roles(['gestionnaire', 'admin', 'proprietaire'])
   @ApiOperation({ summary: 'Get all users' })

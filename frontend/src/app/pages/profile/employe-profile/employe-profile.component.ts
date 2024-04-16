@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { EmployeType } from '../../../dto/user/employe-type';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeleteComponent } from '../dialogs/confirm-delete/confirm-delete.component';
 
 @Component({
   selector: 'app-employe-profile',
@@ -42,7 +44,8 @@ export class EmployeProfileComponent {
   constructor(
     private api: ApiService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.api.getCurrentEmploye().subscribe({
       next: (employe) => {
@@ -64,9 +67,33 @@ export class EmployeProfileComponent {
   }
 
   onChangePassword() {
+    
   }
 
   onDelete() {
+    // Prevent initial focus on the close button
+    const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
+      width: '400px',
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.api.deleteCurrentEmploye().subscribe({
+          next: (employe) => {
+            this.snackBar.open('Compte supprimé', 'Fermer', {
+              duration: 5000
+            });
+            this.router.navigate(['/auth/login']);
+          },
+          error: (error) => {
+            this.snackBar.open('Erreur lors de la suppression du compte', 'Fermer', {
+              duration: 5000
+            });
+          }
+        });
+      }
+    });
 
   }
 
