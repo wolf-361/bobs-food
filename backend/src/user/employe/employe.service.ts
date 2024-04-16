@@ -74,6 +74,11 @@ export class EmployeService {
     return this.employeRepository.update({ id: id}, updateEmployeDto);
   }
 
+  updatePassword(id: string, password: string) {
+    const { salt, hashedPassword } = this.authService.hashPassword(password);
+    return this.employeRepository.update({ id: id }, { salt: salt, hashedPassword: hashedPassword });
+  }
+
   remove(id: string) {
     return this.employeRepository.delete({ id: id });
   }

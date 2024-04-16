@@ -35,6 +35,13 @@ export class ClientController {
     return this.remove(req.user.id);
   }
 
+  @Patch()
+  @ApiOperation({ summary: 'Update the current user (logged in)' })
+  @Roles(['client'])
+  updateSelf(@Request() req, @Body() updateClientDto: UpdateClientDto) {
+    return this.update(req.user.id, updateClientDto);
+  }
+
   @Get("all")
   @Roles(['gestionnaire', 'admin', 'proprietaire'])
   @ApiOperation({ summary: 'Get all users' })
