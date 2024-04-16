@@ -32,8 +32,8 @@ export class EmployeProfileComponent {
 
   employerForm: FormGroup = new FormGroup({
     // Disabled and readonly fields
-    employeId: new FormControl({value: '', disabled: true}),
-    role: new FormControl({value: '', disabled: true}),
+    employeId: new FormControl({ value: '', disabled: true }),
+    role: new FormControl({ value: '', disabled: true }),
     nom: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
     adresse: new FormControl('', [Validators.required])
@@ -43,7 +43,7 @@ export class EmployeProfileComponent {
     private api: ApiService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) { 
+  ) {
     this.api.getCurrentEmploye().subscribe({
       next: (employe) => {
         this.employer = employe;
@@ -63,11 +63,31 @@ export class EmployeProfileComponent {
     return this.employerForm.controls;
   }
 
+  onChangePassword() {
+  }
+
+  onDelete() {
+
+  }
+
+  onReset() {
+    this.employerForm.setValue({
+      employeId: this.employer.employeId,
+      role: this.employer.type,
+      nom: this.employer.nom,
+      prenom: this.employer.prenom,
+      adresse: this.employer.adresse
+    });
+    this.snackBar.open('Champs réinitialisés', 'Fermer', {
+      duration: 5000
+    });
+  }
+
   onSubmit() {
     if (!this.employerForm.valid) {
       return;
     }
-    
+
     // Check for empty or null values
     if (this.employerForm.value.nom === null || this.employerForm.value.nom === '') {
       this.snackBar.open('Le nom ne peut pas être vide', 'Fermer', {
@@ -92,8 +112,8 @@ export class EmployeProfileComponent {
 
     // Check if the form has been modified
     if (this.employerForm.value.nom === this.employer.nom &&
-        this.employerForm.value.prenom === this.employer.prenom &&
-        this.employerForm.value.adresse === this.employer.adresse) {
+      this.employerForm.value.prenom === this.employer.prenom &&
+      this.employerForm.value.adresse === this.employer.adresse) {
       this.snackBar.open('Aucune modification détectée', 'Fermer', {
         duration: 5000
       });
@@ -107,10 +127,10 @@ export class EmployeProfileComponent {
 
     // Update the employe
     this.api.updateEmploye(this.employer.employeId, this.employerForm.value).subscribe({
-      next: (employe) => {    
+      next: (employe) => {
         this.snackBar.open('Profil mis à jour', 'Fermer', {
           duration: 5000
-        });    
+        });
       },
       error: (error) => {
         this.snackBar.open('Erreur lors de la mise à jour du profil', 'Fermer', {

@@ -27,5 +27,12 @@
             required>
         <mat-error *ngIf="form['adresse'].errors?.['required']">Ce champ est obligatoire</mat-error>
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit">Modifier</button>
+    <div class="btn-form">
+        <button mat-raised-button color="warn" type="button" (click)="this.onReset()">Annuler</button>
+        <button mat-raised-button color="primary" type="submit">Modifier</button>
+    </div>
 </form>
+<div class="btn-general">
+    <button mat-stroked-button color="primary" (click)="this.onChangePassword()">Changer mon mot de passe</button>
+    <button mat-stroked-button color="warn" (click)="this.onDelete()">Supprimer mon compte</button>
+</div>
