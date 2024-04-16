@@ -1,10 +1,10 @@
 <div class="container">
-  <h2>Modification de la commande de {{ data.commande.client?.prenom }} {{ data.commande.client?.nom }}</h2>
-  <p>Adresse: {{ data.commande.client?.adresse }}</p>
+  <h2>Modification de la commande de {{ commande.client?.prenom }} {{ commande.client?.nom }}</h2>
+  <p>Adresse: {{ commande.client?.adresse }}</p>
 
   <h3>Articles de la commande:</h3>
   <mat-list>
-    @for (item of data.commande.items.slice(0, 3); track item.id) {
+    @for (item of commande.items.slice(0, 3); track item.id) {
       <div class="flex">
         <mat-list-item>{{ item.item.nom }} ({{ item.quantite }})</mat-list-item>
         <div class="flex">

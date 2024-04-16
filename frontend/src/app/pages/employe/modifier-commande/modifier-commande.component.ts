@@ -28,7 +28,10 @@ import {DetailsCommandeComponent} from "./details-commande/details-commande.comp
 export class ModifierCommandeComponent {
   commandes: Commande[] = [];
 
-  constructor(private api: ApiService, public dialog: MatDialog) {
+  constructor(
+    private api: ApiService, 
+    public dialog: MatDialog
+  ) {
     this.api.getCommandes().subscribe((commandes: Commande[]) => {
       this.commandes = commandes;
     });

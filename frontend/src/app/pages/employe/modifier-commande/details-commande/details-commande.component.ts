@@ -13,7 +13,7 @@ import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {MatIcon} from "@angular/material/icon";
 import {MatList, MatListItem, MatListOption, MatSelectionList} from "@angular/material/list";
 import {ItemCommande} from "../../../../dto/commande/item-commande";
-import {MatIconButton} from "@angular/material/button";
+import {MatButtonModule, MatIconButton} from "@angular/material/button";
 
 
 @Component({
@@ -32,18 +32,20 @@ import {MatIconButton} from "@angular/material/button";
     MatListOption,
     MatList,
     MatListItem,
-    MatIconButton
+    MatButtonModule
   ],
   templateUrl: './details-commande.component.html',
   styleUrl: './details-commande.component.scss'
 })
 export class DetailsCommandeComponent {
   selectedItem: any;
+  commande: Commande;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { commande: Commande }, public dialogRef: MatDialogRef<DetailsCommandeComponent>) {
-    console.log(data.commande.items.length);
-    console.log(data.commande.items[0].quantite); //Retourne undefined
-    console.log(data.commande.items[1].quantite); //Retourne undefined
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { commande: Commande }, 
+    public dialogRef: MatDialogRef<DetailsCommandeComponent>
+  ) {
+    this.commande = data.commande;
   }
 
   onClose() {
