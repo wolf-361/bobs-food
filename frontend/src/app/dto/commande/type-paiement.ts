@@ -1,5 +1,4 @@
 export enum TypePaiement {
-    CARTE = 'Carte',
-    ESPECE = 'Espèce',
-    CHEQUE = 'Chèque'
+    ENLIGNE = 'En ligne',
+    ENPERSONNE = 'En personne',
 }

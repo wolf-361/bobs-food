@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,18 +12,18 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { LoginResponse } from '../../services/auth/login.response';
 import { MatStepperModule } from '@angular/material/stepper';
-import { STEPPER_GLOBAL_OPTIONS, StepperOrientation } from '@angular/cdk/stepper';
+import { StepperOrientation } from '@angular/cdk/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map, Observable } from 'rxjs';
-import { Client } from '../../dto/user/client';
+import { PanierComponent } from '../../general/panier-items/panier.component';
 import { CreateClient } from '../../dto/user/create-client';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { Restaurent } from '../../dto/restaurent/restaurent';
 import { MatSelectModule } from '@angular/material/select';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
-
-
+import { CommandeService } from '../../services/commande/commande.service';
+import { Commande } from '../../dto/commande/commande';
 
 
 
@@ -41,14 +41,20 @@ import { MatListModule } from '@angular/material/list';
     MatStepperModule,
     MatRadioModule,
     MatSelectModule,
-    MatListModule
+    MatListModule,
+    PanierComponent
 ],
   templateUrl: './commande.component.html',
   styleUrl: './commande.component.scss'
 })
-export class CommandeComponent  {
-  selectedValue: string = 'a';
+export class CommandeComponent implements OnInit  {
+  commmande: Commande | undefined;
+  total: number = 0;
+  selectedValue: string = 'Livraison';
+  selectedValuePaiement: string = 'En ligne'
   value: string = ""
+
+  
   
 
   foods: Restaurent[] = [
@@ -69,19 +75,21 @@ export class CommandeComponent  {
 
 
   livraisonForm: FormGroup = new FormGroup({
+    typeLivraison: new FormControl('Livraison', [Validators.required]),
     adresseLivraison: new FormControl('', [Validators.required]),
   });
 
   clientInfoForm: FormGroup = new FormGroup({
-    prenom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
-    courriel: new FormControl('', [Validators.email]),
+    nom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+    courriel: new FormControl('', [Validators.required, Validators.email]),
   });
 
   creditCardForm: FormGroup = new FormGroup({
-    titulaireCarteCredit: new FormControl('', [Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
-    numeroCarteCredit: new FormControl('', [Validators.pattern(/^[0-9]{16}$/)]),
-    dateExpiration: new FormControl('', [Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
-    cvcCarteCredit: new FormControl('', [Validators.pattern(/^[0-9]{3}$/)]),
+    typePaiement: new FormControl('En ligne', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
+    titulaireCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
+    numeroCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{16}$/)]),
+    dateExpiration: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
+    cvcCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/)]),
   });
 
   stepperOrientation: Observable<StepperOrientation>;
@@ -93,6 +101,7 @@ export class CommandeComponent  {
     private router: Router,
     private snackBar: MatSnackBar,
     private changeDetectorRef: ChangeDetectorRef,
+    private commandeService: CommandeService,
     breakpointObserver: BreakpointObserver
   ) { 
     this.stepperOrientation = breakpointObserver
@@ -101,8 +110,22 @@ export class CommandeComponent  {
   }
 
   handleSelectionChange(value: string) {
+    if (value === 'a') {
+      this.livraisonForm.get('adresseLivraison')?.reset();
+    }
     this.selectedValue = value;
-    this.changeDetectorRef.detectChanges(); // Manually trigger change detection
+    this.changeDetectorRef.detectChanges(); 
+  }
+
+  handleSelectionChangePaiement(value: string) {
+    this.selectedValuePaiement = value;
+     this.changeDetectorRef.detectChanges(); 
+}
+
+  ngOnInit(): void {
+    this.commandeService.calculateTotal().subscribe(total => {
+      console.log('Total:', total);
+    });
   }
 
   /**
@@ -167,7 +190,7 @@ export class CommandeComponent  {
     }
   }
 
-  verifier() {
+  verifier() {  //  TODO, DOIT CHANGER POUR COMMANDE ET NON CLIENT
     if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
       return;
     }
@@ -191,7 +214,7 @@ export class CommandeComponent  {
         prenom: this.clientInfoForm.value.prenom,
         nom: this.clientInfoForm.value.nom,
         estInscrit: true,
-        adresse: this.clientInfoForm.value.adresse,
+        adresse: this.clientInfoForm.value.adresseLivraison,
         password: this.livraisonForm.value.password,
         confirmPassword: this.livraisonForm.value.confirmPassword,
         titulaireCarteCredit: this.creditCardForm.value.titulaireCarteCredit,
@@ -212,7 +235,7 @@ export class CommandeComponent  {
     }
   }
 
-  onSubmit() {
+  onSubmit() {  // TODO, DOIT CHANGER POUR COMMANDE ET NON CLIENT
     if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
       return;
     }
@@ -223,7 +246,7 @@ export class CommandeComponent  {
       return;
     }
 
-    // Inscrire le client
+    // Inscrire la commande
     this.api.signupClient(this.client).subscribe({
       next: (response: LoginResponse) => this.handleSignupSuccess(response),
       error: (error: HttpErrorResponse) => this.handleSignupError(error)
@@ -265,16 +288,4 @@ export class CommandeComponent  {
     }
   }
 
-}
-
-
-function confirmPasswordValidator(controlName: string): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    // Get the password control
-    const password = control.root.get(controlName)?.value;
-
-    // Return if the confirm password control is not empty. And if the password and confirm password controls values are the same
-    const forbidden = control.value !== password;
-    return password && forbidden ? { mismatch: true } : null;
-  };
 }

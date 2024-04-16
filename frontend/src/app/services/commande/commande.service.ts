@@ -17,7 +17,8 @@ import { ItemCommande } from '../../dto/commande/item-commande';
   providedIn: 'root'
 })
 export class CommandeService {
-  private type?: TypeCommande;
+ 
+  private TypeCommande?: TypeCommande;
   private total: number;
   private date?: Date;
   private items: BehaviorSubject<ItemCommande[]>;
@@ -42,14 +43,14 @@ export class CommandeService {
   /**
    * Set the type of the command
    */
-  public set Type(type: TypeCommande) {
-    this.type = type;
+  public set Type(TypeCommande: TypeCommande) {
+    this.TypeCommande = TypeCommande;
   }
 
   /**
    * Calculate the total of the command (ideally should be done on the server)
    */
-  private calculateTotal(): Observable<number> {
+  public calculateTotal(): Observable<number> {
     return this.items.asObservable().pipe(
       map(items => items.reduce((acc, i) => acc + i.item.prix * i.quantite, 0))
     );
@@ -130,7 +131,7 @@ export class CommandeService {
    * Submit the command to the server
    */
   public submit(): void {
-    if (!this.type) {
+    if (!this.TypeCommande) {
       throw new Error('Type is required');
     }
 
@@ -152,7 +153,7 @@ export class CommandeService {
 
     // Create the command
     const commande = new Commande(
-      this.type,
+      this.TypeCommande,
       this.total,
       this.date,
       this.items.value,
@@ -172,9 +173,4 @@ export class CommandeService {
     });
 
   }
-
-
-
-
-
 }

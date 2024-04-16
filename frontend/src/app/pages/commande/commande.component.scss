@@ -75,3 +75,14 @@ li {
     align-items: center;
     gap: 0.5rem;
 }
+
+.commande {
+    display: flex; /* Add flex display to .commande */
+    justify-content: center; /* Align items horizontally */
+    align-items: flex-start; /* Align items vertically */
+    gap: 3rem; /* Add gap between elements */
+}
+
+.panier {
+    flex: 3; /* Allow the panier div to expand */
+}
