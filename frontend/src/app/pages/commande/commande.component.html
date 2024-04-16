@@ -28,6 +28,7 @@
                   </mat-form-field>
                 </ng-container>
                 
+                
                 <div class="buttons">
                   <button mat-raised-button color="primary" matStepperNext [disabled]="!livraisonForm.dirty || livraisonForm.invalid">Continuer</button>
                 </div>
@@ -48,9 +49,16 @@
         <ng-template matStepLabel>Informations personnelles</ng-template>
         <div class="step">
             <form [formGroup]="this.clientInfoForm" (ngSubmit)="this.verifierClientInfo()" novalidate>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer votre prenom</mat-label>
+                    <input matInput required placeholder="Prenom" formControlName="prenom" autocomplete="given-name"
+                        required>
+                    <mat-error *ngIf="clientInfo['prenom'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                </mat-form-field>
                
                 <mat-form-field appearance="outline">
-                    <mat-label>Entrer votre nom de commande</mat-label>
+                    <mat-label>Entrer votre nom</mat-label>
                     <input matInput required placeholder="Nom" formControlName="nom" autocomplete="family-name"
                         required>
                     <mat-error *ngIf="clientInfo['nom'].errors?.['required']">Ce champ est obligatoire</mat-error>
@@ -78,7 +86,7 @@
         <ng-template matStepLabel>Paiement</ng-template>
         <div class="step">
             
-            <form [formGroup]="this.creditCardForm" (ngSubmit)="verifierCreditCard(); this.verifier()" novalidate>
+            <form [formGroup]="this.creditCardForm" (ngSubmit)="verifierCreditCard(); this.verifierClient()" novalidate>
 
 
 
@@ -122,10 +130,6 @@
                 <ng-container *ngIf="selectedValuePaiement === 'En personne'">
                     // TO DO
                 </ng-container>
-
-
-
-
                 
                 <div class="buttons">
                     <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
@@ -162,7 +166,8 @@
                 </div>
             </ul>
 
-            <button mat-raised-button color="primary" (click)="onSubmit()">Confirmer</button>
+            <button mat-raised-button color="primary" (click)="onSubmitClient()">Sauvgarder vos données localement</button>
+            <button mat-raised-button color="primary" (click)="onSubmitCommande()">Confirmer la commande</button>
 
             <div>
                 <button mat-button matStepperPrevious>Retour</button>
@@ -171,8 +176,3 @@
         </div>
 
     </mat-step>
-
-    
-    
-    <button mat-raised-button color="primary" type="submit">Se connecter</button>
-</mat-stepper>

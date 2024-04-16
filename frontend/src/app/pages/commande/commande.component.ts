@@ -24,6 +24,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { CommandeService } from '../../services/commande/commande.service';
 import { Commande } from '../../dto/commande/commande';
+import { TypeCommande } from '../../dto/commande/type-commande';
+import { ItemCommande } from '../../dto/commande/item-commande';
+import { TypePaiement } from '../../dto/commande/type-paiement';
 
 
 
@@ -48,10 +51,10 @@ import { Commande } from '../../dto/commande/commande';
   styleUrl: './commande.component.scss'
 })
 export class CommandeComponent implements OnInit  {
-  commmande: Commande | undefined;
+  commande: Commande | undefined;
   total: number = 0;
   selectedValue: string = 'Livraison';
-  selectedValuePaiement: string = 'En ligne'
+  selectedValuePaiement: string = ''
   value: string = ""
 
   
@@ -80,12 +83,13 @@ export class CommandeComponent implements OnInit  {
   });
 
   clientInfoForm: FormGroup = new FormGroup({
+    prenom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
     nom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
     courriel: new FormControl('', [Validators.required, Validators.email]),
   });
 
   creditCardForm: FormGroup = new FormGroup({
-    typePaiement: new FormControl('En ligne', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
+    typePaiement: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
     titulaireCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
     numeroCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{16}$/)]),
     dateExpiration: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
@@ -94,6 +98,7 @@ export class CommandeComponent implements OnInit  {
 
   stepperOrientation: Observable<StepperOrientation>;
   client?: CreateClient;
+
 
   constructor(
     private api: ApiService,
@@ -110,7 +115,7 @@ export class CommandeComponent implements OnInit  {
   }
 
   handleSelectionChange(value: string) {
-    if (value === 'a') {
+    if (value === 'Livraison') {
       this.livraisonForm.get('adresseLivraison')?.reset();
     }
     this.selectedValue = value;
@@ -122,11 +127,28 @@ export class CommandeComponent implements OnInit  {
      this.changeDetectorRef.detectChanges(); 
 }
 
-  ngOnInit(): void {
-    this.commandeService.calculateTotal().subscribe(total => {
-      console.log('Total:', total);
-    });
+ngOnInit(): void {
+  // Load client information from storage if available
+  const savedClientInfo = localStorage.getItem('clientInfo');
+  if (savedClientInfo) {
+    const clientInfo = JSON.parse(savedClientInfo);
+    this.clientInfoForm.patchValue(clientInfo);
   }
+}
+
+saveClientAndPaymentInfoToLocal(): void {
+  const clientAndPaymentInfo = {
+    client: this.clientInfoForm.value,
+    payment: this.creditCardForm.value
+  };
+  // Check if any of the form fields are empty
+  const isEmpty = Object.values(clientAndPaymentInfo.client).some(value => !value) ||
+                  Object.values(clientAndPaymentInfo.payment).some(value => !value);
+  // Save client and payment info only if it's not empty
+  if (!isEmpty) {
+    localStorage.setItem('clientAndPaymentInfo', JSON.stringify(clientAndPaymentInfo));
+  }
+}
 
   /**
  * Getter for easy access to form fields
@@ -190,7 +212,7 @@ export class CommandeComponent implements OnInit  {
     }
   }
 
-  verifier() {  //  TODO, DOIT CHANGER POUR COMMANDE ET NON CLIENT
+  verifierClient() {  //  TODO, DOIT CHANGER POUR COMMANDE ET NON CLIENT
     if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
       return;
     }
@@ -235,12 +257,86 @@ export class CommandeComponent implements OnInit  {
     }
   }
 
-  onSubmit() {  // TODO, DOIT CHANGER POUR COMMANDE ET NON CLIENT
+  verifierCommande(){
+    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
+      return;
+    }
+
+    let titulaireCarteCredit: string | null;
+    let numeroCarteCredit: string | null;
+    let dateExpiration: string | null;
+    let cvcCarteCredit: string | null;
+
+    // Si la carte de crédit n'est pas valide (un champs autre que nom vide), on ne l'inclut pas dans le client
+    if (this.creditCardForm.value.numeroCarteCredit && this.creditCardForm.value.dateExpiration && this.creditCardForm.value.cvcCarteCredit) {
+      // Si le titulaire de la carte n'est pas spécifié, on prend le nom et prénom du client
+      if (!this.creditCardForm.value.titulaireCarteCredit) {
+        this.creditCardForm.value.titulaireCarteCredit = this.clientInfoForm.value.prenom + ' ' + this.clientInfoForm.value.nom;
+      }
+
+      const date = this.creditCardForm.value.dateExpiration.split('/');
+
+      this.client = {
+        courriel: this.livraisonForm.value.courriel,
+        prenom: this.clientInfoForm.value.prenom,
+        nom: this.clientInfoForm.value.nom,
+        estInscrit: true,
+        adresse: this.clientInfoForm.value.adresseLivraison,
+        password: this.livraisonForm.value.password,
+        confirmPassword: this.livraisonForm.value.confirmPassword,
+        titulaireCarteCredit: this.creditCardForm.value.titulaireCarteCredit,
+        numeroCarteCredit: this.creditCardForm.value.numeroCarteCredit,
+        dateExpirationCarteCredit: this.creditCardForm.value.dateExpiration,
+        cvcCarteCredit: this.creditCardForm.value.cvcCarteCredit,
+      };
+    } else {
+      this.client = {
+        courriel: this.livraisonForm.value.courriel,
+        prenom: this.clientInfoForm.value.prenom,
+        nom: this.clientInfoForm.value.nom,
+        estInscrit: true,
+        adresse: this.clientInfoForm.value.adresse,
+        password: this.livraisonForm.value.password,
+        confirmPassword: this.livraisonForm.value.confirmPassword,
+      };
+    }
+
+    this.commande = {
+      type: this.livraisonForm.value.typeLivraison,
+      total: this.total,
+      date: this.creditCardForm.value.dateExpiration.split('/'),
+      items: [],
+      client: this.client,
+      paiement: {
+        id: 0,
+        type: TypePaiement.CARTE,
+        montant: 0
+      }
+    }
+  }
+
+  onSubmitClient() {
+    // Handle form submission
+    // After successful submission, save client and payment info to local storage
+    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
+      return;
+    }
+  
+    this.verifierClient();
+  
+    if (!this.client) {
+      return;
+    }
+    this.saveClientAndPaymentInfoToLocal();
+  }
+
+  
+  onSubmitCommande() {  // TODO, DOIT CHANGER POUR COMMANDE ET NON CLIENT
     if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
       return;
     }
     
-    this.verifier(); // Vérifier les informations du client (etre certain que le client est fait )
+    this.verifierCommande(); // Vérifier les informations du client (etre certain que le client est fait )
 
     if (!this.client) {
       return;
