@@ -16,7 +16,7 @@ import { StepperOrientation } from '@angular/cdk/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map, Observable } from 'rxjs';
 import { PanierComponent } from '../../general/panier-items/panier.component';
-import { CreateClient } from '../../dto/user/create-client';
+import { Client } from '../../dto/user/client';
 import { MatRadioModule } from '@angular/material/radio';
 import { Restaurent } from '../../dto/restaurent/restaurent';
 import { MatSelectModule } from '@angular/material/select';
@@ -51,11 +51,11 @@ import { TypePaiement } from '../../dto/commande/type-paiement';
   styleUrl: './commande.component.scss'
 })
 export class CommandeComponent implements OnInit  {
-  commande: Commande | undefined;
   total: number = 0;
   selectedValue: string = 'Livraison';
   selectedValuePaiement: string = ''
-  value: string = ""
+  value: string = '';
+  enteredAddress: string = '';
 
   
   
@@ -77,15 +77,17 @@ export class CommandeComponent implements OnInit  {
   
 
 
-  livraisonForm: FormGroup = new FormGroup({
-    typeLivraison: new FormControl('Livraison', [Validators.required]),
-    adresseLivraison: new FormControl('', [Validators.required]),
-  });
 
   clientInfoForm: FormGroup = new FormGroup({
     prenom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
     nom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
     courriel: new FormControl('', [Validators.required, Validators.email]),
+    adresseUser: new FormControl('', [Validators.required]),
+  });
+
+  livraisonForm: FormGroup = new FormGroup({
+    typeLivraison: new FormControl('Livraison', [Validators.required]),
+    adresseLivraison: new FormControl('', [Validators.required]),
   });
 
   creditCardForm: FormGroup = new FormGroup({
@@ -97,7 +99,8 @@ export class CommandeComponent implements OnInit  {
   });
 
   stepperOrientation: Observable<StepperOrientation>;
-  client?: CreateClient;
+  client?: Client;
+  commande?: Commande;
 
 
   constructor(
@@ -237,8 +240,6 @@ saveClientAndPaymentInfoToLocal(): void {
         nom: this.clientInfoForm.value.nom,
         estInscrit: true,
         adresse: this.clientInfoForm.value.adresseLivraison,
-        password: this.livraisonForm.value.password,
-        confirmPassword: this.livraisonForm.value.confirmPassword,
         titulaireCarteCredit: this.creditCardForm.value.titulaireCarteCredit,
         numeroCarteCredit: this.creditCardForm.value.numeroCarteCredit,
         dateExpirationCarteCredit: this.creditCardForm.value.dateExpiration,
@@ -251,8 +252,6 @@ saveClientAndPaymentInfoToLocal(): void {
         nom: this.clientInfoForm.value.nom,
         estInscrit: true,
         adresse: this.clientInfoForm.value.adresse,
-        password: this.livraisonForm.value.password,
-        confirmPassword: this.livraisonForm.value.confirmPassword,
       };
     }
   }
@@ -276,48 +275,22 @@ saveClientAndPaymentInfoToLocal(): void {
 
       const date = this.creditCardForm.value.dateExpiration.split('/');
 
-      this.client = {
-        courriel: this.livraisonForm.value.courriel,
-        prenom: this.clientInfoForm.value.prenom,
-        nom: this.clientInfoForm.value.nom,
-        estInscrit: true,
-        adresse: this.clientInfoForm.value.adresseLivraison,
-        password: this.livraisonForm.value.password,
-        confirmPassword: this.livraisonForm.value.confirmPassword,
-        titulaireCarteCredit: this.creditCardForm.value.titulaireCarteCredit,
-        numeroCarteCredit: this.creditCardForm.value.numeroCarteCredit,
-        dateExpirationCarteCredit: this.creditCardForm.value.dateExpiration,
-        cvcCarteCredit: this.creditCardForm.value.cvcCarteCredit,
-      };
-    } else {
-      this.client = {
-        courriel: this.livraisonForm.value.courriel,
-        prenom: this.clientInfoForm.value.prenom,
-        nom: this.clientInfoForm.value.nom,
-        estInscrit: true,
-        adresse: this.clientInfoForm.value.adresse,
-        password: this.livraisonForm.value.password,
-        confirmPassword: this.livraisonForm.value.confirmPassword,
-      };
-    }
-
-    this.commande = {
-      type: this.livraisonForm.value.typeLivraison,
-      total: this.total,
-      date: this.creditCardForm.value.dateExpiration.split('/'),
-      items: [],
-      client: this.client,
-      paiement: {
-        id: 0,
-        type: TypePaiement.CARTE,
-        montant: 0
+      this.commande = {
+        type: this.livraisonForm.value.typeLivraison,
+        total: 0,
+        date: new Date(),
+        items: [],
+        client: this.client,
+        paiement: {
+          id: 0,
+          type: TypePaiement.CARTE,
+          montant: 0
+        }
       }
-    }
+    } 
   }
 
-  onSubmitClient() {
-    // Handle form submission
-    // After successful submission, save client and payment info to local storage
+  onSubmitClient() {  // TODO, sauve les informations du client
     if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
       return;
     }
@@ -331,7 +304,7 @@ saveClientAndPaymentInfoToLocal(): void {
   }
 
   
-  onSubmitCommande() {  // TODO, DOIT CHANGER POUR COMMANDE ET NON CLIENT
+  onSubmitCommande() {  // TODO, permet d'enregistrer la commande
     if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
       return;
     }
@@ -343,10 +316,7 @@ saveClientAndPaymentInfoToLocal(): void {
     }
 
     // Inscrire la commande
-    this.api.signupClient(this.client).subscribe({
-      next: (response: LoginResponse) => this.handleSignupSuccess(response),
-      error: (error: HttpErrorResponse) => this.handleSignupError(error)
-    });
+    
 
 
   }

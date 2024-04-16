@@ -59,4 +59,5 @@ export class PanierComponent {
   commander() {
     this.router.navigate(['/commander']);
   }
+  
 }
