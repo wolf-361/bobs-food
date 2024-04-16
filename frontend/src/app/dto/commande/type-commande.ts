@@ -1,4 +1,5 @@
 export enum TypeCommande {
     LIVRAISON = 'Livraison',
-    COLLECTE = 'Collecte'
+    SUR_PLACE = 'Sur place',
+    A_EMPORTER = 'Pour emporter'
 }
