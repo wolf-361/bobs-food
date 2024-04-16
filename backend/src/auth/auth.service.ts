@@ -63,7 +63,7 @@ export class AuthService {
         }
         const role = user instanceof Client ? "client" : user instanceof Employe ? user.type : "guest";
 
-        const payload = { nom: user.nom, role: role, sub: user.id };
+        const payload = { nom: user.nom, role: role, id: user.id };
         return { token: this.jwtService.sign(payload), expiresIn: configService.jwtExpirationTime, role: role };
     }
 

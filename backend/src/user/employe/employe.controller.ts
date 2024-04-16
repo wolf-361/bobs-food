@@ -27,6 +27,7 @@ export class EmployeController {
   @ApiOperation({ summary: 'Get the current user (logged in)' })
   @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
   getSelf(@Request() req) {
+    console.log(req.user.id);
     return this.findOne(req.user.id);
   }
 
@@ -34,6 +35,7 @@ export class EmployeController {
   @ApiOperation({ summary: 'Delete the current user (logged in)' })
   @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
   deleteSelf(@Request() req) {
+    console.log(req.user.id);
     return this.remove(req.user.id);
   }
 
