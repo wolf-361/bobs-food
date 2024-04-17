@@ -48,7 +48,6 @@ export class DetailsCommandeComponent {
     public dialogRef: MatDialogRef<DetailsCommandeComponent>
   ) {
     this.commande = data.commande;
-    console.log("Quantité recu au début: " + this.commande.items[0].quantite);
   }
 
   onClose() {
@@ -75,9 +74,16 @@ export class DetailsCommandeComponent {
   }
 
   onSave() {
+
+    // TODO: Save the command without making 1003 errors
+
     // Use the service to save the new command
-
-
+    if(this.commande.id != null) {
+      this.api.patchCommande(this.commande.id.toString(), this.commande).subscribe((commande: Commande) => {
+        console.log("Commande modifiée: " + commande.id);
+        console.log("Items à la fin: " + commande.items[0].quantite);
+      });
+    }
   }
 
 }

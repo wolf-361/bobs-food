@@ -43,9 +43,6 @@ export class ModifierCommandeComponent {
     // Récupération de la commande à modifier
     let commande = this.commandes[index];
 
-    console.log('Commande à modifier: ' + commande.id);
-    console.log("Items au début: " + commande.items[0].quantite);
-
     // Sauvegarde de la commande originale (deep copy pour éviter les références)
     let originalCommande = JSON.parse(JSON.stringify(commande));
 
@@ -67,6 +64,8 @@ export class ModifierCommandeComponent {
   }
 
   onDeleteCommande(index: number) {
+    // TODO: Demander confirmation à l'utilisateur
 
+    // TODO: Supprimer la commande avec l'API
   }
 }
