@@ -27,6 +27,8 @@ import { Commande } from '../../dto/commande/commande';
 import { TypeCommande } from '../../dto/commande/type-commande';
 import { ItemCommande } from '../../dto/commande/item-commande';
 import { TypePaiement } from '../../dto/commande/type-paiement';
+import {MatChipsModule} from '@angular/material/chips';
+import { MatTooltipModule}  from '@angular/material/tooltip';
 
 
 
@@ -45,17 +47,22 @@ import { TypePaiement } from '../../dto/commande/type-paiement';
     MatRadioModule,
     MatSelectModule,
     MatListModule,
-    PanierComponent
+    PanierComponent,
+    MatChipsModule,
+    MatTooltipModule
 ],
   templateUrl: './commande.component.html',
   styleUrl: './commande.component.scss'
 })
 export class CommandeComponent implements OnInit  {
+  
   total: number = 0;
   selectedValue: string = 'Livraison';
   selectedValuePaiement: string = ''
+  selectedValueTypePaiement: string = '';
   value: string = '';
   enteredAddress: string = '';
+  isPaiementEnPersonne: boolean = false;
 
   
   
@@ -91,12 +98,16 @@ export class CommandeComponent implements OnInit  {
   });
 
   creditCardForm: FormGroup = new FormGroup({
-    typePaiement: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
-    titulaireCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]), // Si non présent, on prend le nom et prénom du client
+    typePaiement: new FormControl('', [Validators.required]),
+    typePaiementDistance:  new FormControl('', [Validators.required]),
+    titulaireCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]), 
     numeroCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{16}$/)]),
     dateExpiration: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
     cvcCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/)]),
   });
+  
+  
+
 
   stepperOrientation: Observable<StepperOrientation>;
   client?: Client;
@@ -121,38 +132,86 @@ export class CommandeComponent implements OnInit  {
     if (value === 'Livraison') {
       this.livraisonForm.get('adresseLivraison')?.reset();
     }
+  
     this.selectedValue = value;
     this.changeDetectorRef.detectChanges(); 
   }
 
   handleSelectionChangePaiement(value: string) {
-    this.selectedValuePaiement = value;
-     this.changeDetectorRef.detectChanges(); 
+    const typePaiementControl = this.creditCardForm.get('typePaiement');
+    if (typePaiementControl) {
+        typePaiementControl.reset();
+        this.selectedValuePaiement = value;
+        this.changeDetectorRef.detectChanges();
+
+        if (this.selectedValuePaiement === 'En Personne') {
+            const titulaireCarteCreditControl = this.creditCardForm.get('titulaireCarteCredit');
+            const numeroCarteCreditControl = this.creditCardForm.get('numeroCarteCredit');
+            const dateExpirationControl = this.creditCardForm.get('dateExpiration');
+            const cvcCarteCreditControl = this.creditCardForm.get('cvcCarteCredit');
+
+            if (titulaireCarteCreditControl) {
+                titulaireCarteCreditControl.clearValidators();
+                titulaireCarteCreditControl.updateValueAndValidity();
+            }
+            if (numeroCarteCreditControl) {
+                numeroCarteCreditControl.clearValidators();
+                numeroCarteCreditControl.updateValueAndValidity();
+            }
+            if (dateExpirationControl) {
+                dateExpirationControl.clearValidators();
+                dateExpirationControl.updateValueAndValidity();
+            }
+            if (cvcCarteCreditControl) {
+                cvcCarteCreditControl.clearValidators();
+                cvcCarteCreditControl.updateValueAndValidity();
+            }
+        }
+
+        if (this.selectedValuePaiement === 'En ligne') {
+            const titulaireCarteCreditControl = this.creditCardForm.get('titulaireCarteCredit');
+            const numeroCarteCreditControl = this.creditCardForm.get('numeroCarteCredit');
+            const dateExpirationControl = this.creditCardForm.get('dateExpiration');
+            const cvcCarteCreditControl = this.creditCardForm.get('cvcCarteCredit');
+
+            if (titulaireCarteCreditControl) {
+                titulaireCarteCreditControl.setValidators([Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]);
+                titulaireCarteCreditControl.updateValueAndValidity();
+            }
+            if (numeroCarteCreditControl) {
+                numeroCarteCreditControl.setValidators([Validators.required, Validators.pattern(/^[0-9]{16}$/)]);
+                numeroCarteCreditControl.updateValueAndValidity();
+            }
+            if (dateExpirationControl) {
+                dateExpirationControl.setValidators([Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]);
+                dateExpirationControl.updateValueAndValidity();
+            }
+            if (cvcCarteCreditControl) {
+                cvcCarteCreditControl.setValidators([Validators.required, Validators.pattern(/^[0-9]{3}$/)]);
+                cvcCarteCreditControl.updateValueAndValidity();
+            }
+        }
+    }
+}
+
+handleSelectionChangeTypePaiement(value: string) {
+  this.selectedValueTypePaiement = value;
+   this.changeDetectorRef.detectChanges(); 
+}
+
+copyAddress(input: HTMLInputElement) {
+  input.value = this.enteredAddress;
 }
 
 ngOnInit(): void {
-  // Load client information from storage if available
-  const savedClientInfo = localStorage.getItem('clientInfo');
-  if (savedClientInfo) {
-    const clientInfo = JSON.parse(savedClientInfo);
-    this.clientInfoForm.patchValue(clientInfo);
-  }
+ 
 }
 
-saveClientAndPaymentInfoToLocal(): void {
-  const clientAndPaymentInfo = {
-    client: this.clientInfoForm.value,
-    payment: this.creditCardForm.value
-  };
-  // Check if any of the form fields are empty
-  const isEmpty = Object.values(clientAndPaymentInfo.client).some(value => !value) ||
-                  Object.values(clientAndPaymentInfo.payment).some(value => !value);
-  // Save client and payment info only if it's not empty
-  if (!isEmpty) {
-    localStorage.setItem('clientAndPaymentInfo', JSON.stringify(clientAndPaymentInfo));
-  }
+isAddressFilled(): boolean {
+  return this.livraisonForm.get('adresseLivraison')?.value !== '';
 }
 
+ 
   /**
  * Getter for easy access to form fields
  * @returns {Object} The form controls
@@ -172,11 +231,7 @@ saveClientAndPaymentInfoToLocal(): void {
 
   // Vérifier si le client est déjà inscrit
   verifierSignup() {
-    if (!this.livraisonForm.valid) {
-      this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
-      return;
-    }
-
+  
     // Vérifier si le client est déjà inscrit
     this.api.getClient(this.livraisonForm.value.courriel).subscribe(
       (response) => {
@@ -198,10 +253,7 @@ saveClientAndPaymentInfoToLocal(): void {
   }
 
   verifierCreditCard() {
-    if (!this.creditCardForm.valid) {
-      this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
-      return;
-    }
+    
 
     // Vérifier que si un champs as été touché, les autres champs sont remplis (note le nom peut être vide si on prend le nom et prénom du client (mettre case à cocher))
     if (this.creditCardForm.touched) {
@@ -300,7 +352,6 @@ saveClientAndPaymentInfoToLocal(): void {
     if (!this.client) {
       return;
     }
-    this.saveClientAndPaymentInfoToLocal();
   }
 
   
