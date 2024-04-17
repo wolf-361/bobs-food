@@ -40,8 +40,8 @@ export class EmployeController {
   @Patch('password')
   @ApiOperation({ summary: 'Update the password of the current user (logged in)' })
   @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
-  updatePassword(@Request() req, @Body() { oldPassword, password }) {
-    return this.employeService.updatePassword(req.user.id, oldPassword, password);
+  updatePassword(@Request() req, @Body() { oldPassword, newPassword }) {
+    return this.employeService.updatePassword(req.user.id, oldPassword, newPassword);
   }
 
   @Patch()

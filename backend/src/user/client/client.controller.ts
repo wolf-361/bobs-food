@@ -45,8 +45,8 @@ export class ClientController {
   @Patch('password')
   @ApiOperation({ summary: 'Update the password of the current user (logged in)' })
   @Roles(['client'])
-  updatePassword(@Request() req, @Body() { oldPassword, password }) {
-    return this.clientService.updatePassword(req.user.id, oldPassword, password);
+  updatePassword(@Request() req, @Body() { oldPassword, newPassword }) {
+    return this.clientService.updatePassword(req.user.id, oldPassword, newPassword);
   }
 
 

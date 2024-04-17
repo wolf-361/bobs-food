@@ -80,7 +80,6 @@ export class ClientService {
     if (!this.authService.comparePassword(oldPassword, client.hashedPassword)) {
       throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
     }
-
     const { salt, hashedPassword } = this.authService.hashPassword(password);
     return this.clientRepository.update({ id: id }, { salt: salt, hashedPassword: hashedPassword });
   }

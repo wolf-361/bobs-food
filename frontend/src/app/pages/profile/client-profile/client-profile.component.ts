@@ -39,7 +39,7 @@ export class ClientProfileComponent {
     nom: new FormControl('', [Validators.required]),
     prenom: new FormControl('', [Validators.required]),
     adresse: new FormControl('', [Validators.required]),
-    courriel: new FormControl('', [Validators.required, Validators.email]),
+    courriel: new FormControl({ value: '', disabled: true }),
     titulaireCarteCredit: new FormControl(''),
     numeroCarteCredit: new FormControl(''),
     dateExpirationCarteCredit: new FormControl(''),
