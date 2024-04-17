@@ -74,7 +74,13 @@ export class ClientService {
     return this.clientRepository.update({ id: id }, updateClientDto);
   }
 
-  updatePassword(id: string, password: string) {
+  async updatePassword(id: string, oldPassword: string, password: string) {
+    // Check if the old password is correct
+    const client = await this.findOne(id);
+    if (!this.authService.comparePassword(oldPassword, client.hashedPassword)) {
+      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+    }
+
     const { salt, hashedPassword } = this.authService.hashPassword(password);
     return this.clientRepository.update({ id: id }, { salt: salt, hashedPassword: hashedPassword });
   }

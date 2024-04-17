@@ -147,8 +147,8 @@ export class ApiService {
     );
   }
   
-  updateEmployePassword(employeId: string, password: string): Observable<Employe> {
-    return this.http.patch<Employe>(`${this.apiUrl}/employe/${employeId}/password`, { password }).pipe(
+  updateCurrentEmployePassword(oldPassword: string, newPassword: string): Observable<Employe> {
+    return this.http.patch<Employe>(`${this.apiUrl}/employe/password`, { oldPassword, newPassword }).pipe(
       catchError(this.handleError),
       retry(3)
     );
@@ -199,6 +199,20 @@ export class ApiService {
 
   deleteCurrentClient(): Observable<Client> {
     return this.http.delete<Client>(`${this.apiUrl}/client`).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  updateCurrentClientPassword(oldPassword: string, newPassword: string): Observable<Client> {
+    return this.http.patch<Client>(`${this.apiUrl}/client/password`, { oldPassword, newPassword }).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  updateCurrentClient(client: Client): Observable<Client> {
+    return this.http.patch<Client>(`${this.apiUrl}/client`, client).pipe(
       catchError(this.handleError),
       retry(3)
     );

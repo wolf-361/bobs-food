@@ -28,7 +28,7 @@
     </mat-form-field>
     
     <div class="credit">
-        <mat-checkbox formControlName="carteDeCredit" [checked]="this.carteDeCreditVisible" (change)="this.toggleCarteDeCredit()">
+        <mat-checkbox [checked]="this.carteDeCreditVisible" (change)="this.toggleCarteDeCredit()">
             Carte de crédit
         </mat-checkbox>
     </div>
@@ -50,7 +50,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
-            <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
+            <input matInput placeholder="Date d'expiration" formControlName="dateExpirationCarteCredit"
                 autocomplete="cc-exp">
             <mat-error *ngIf="form['dateExpirationCarteCredit'].errors?.['required']">Ce champ est
                 obligatoire</mat-error>

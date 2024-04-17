@@ -12,6 +12,7 @@ import { EmployeType } from '../../../dto/user/employe-type';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteComponent } from '../dialogs/confirm-delete/confirm-delete.component';
+import { ChangePasswordComponent } from '../dialogs/change-password/change-password.component';
 
 @Component({
   selector: 'app-employe-profile',
@@ -67,7 +68,19 @@ export class EmployeProfileComponent {
   }
 
   onChangePassword() {
-    
+    // Prevent initial focus on the close button
+    const dialogRef = this.dialog.open(ChangePasswordComponent, {
+      autoFocus: false,
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.snackBar.open('Mot de passe changé', 'Fermer', {
+          duration: 5000
+        });
+      }
+    });
   }
 
   onDelete() {

@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ConfirmDeleteComponent } from '../dialogs/confirm-delete/confirm-delete.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ChangePasswordComponent } from '../dialogs/change-password/change-password.component';
 
 @Component({
   selector: 'app-client-profile',
@@ -85,7 +86,19 @@ export class ClientProfileComponent {
   }
   
   onChangePassword() {
-    
+    // Prevent initial focus on the close button
+    const dialogRef = this.dialog.open(ChangePasswordComponent, {
+      autoFocus: false,
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.snackBar.open('Mot de passe changé', 'Fermer', {
+          duration: 5000
+        });
+      }
+    });
   }
 
   onDelete() {
@@ -130,10 +143,86 @@ export class ClientProfileComponent {
     });
   }
 
+  private verifieCreditCard() {
+    // Si tous les champs sont null
+    if (this.form['titulaireCarteCredit'].value === null && this.form['numeroCarteCredit'].value === null && this.form['dateExpirationCarteCredit'].value === null && this.form['cvcCarteCredit'].value === null) {
+      this.carteDeCreditVisible = false;
+      return; // On ne fait rien
+    }
+
+    // Si au moins 1 champs est null
+    if (this.form['titulaireCarteCredit'].value === null || this.form['numeroCarteCredit'].value === null || this.form['dateExpirationCarteCredit'].value === null || this.form['cvcCarteCredit'].value === null) {
+      this.carteDeCreditVisible = false;
+      // Sauvegarder les valeurs de la carte de crédit pour les remettre si le user annule
+      const titulaireCarteCredit = this.form['titulaireCarteCredit'].value;
+      const numeroCarteCredit = this.form['numeroCarteCredit'].value;
+      const dateExpirationCarteCredit = this.form['dateExpirationCarteCredit'].value;
+      const cvcCarteCredit = this.form['cvcCarteCredit'].value;
+
+      // Réinitialiser les champs de la carte de crédit
+      this.form['titulaireCarteCredit'].setValue('');
+      this.form['numeroCarteCredit'].setValue('');
+      this.form['dateExpirationCarteCredit'].setValue('');
+      this.form['cvcCarteCredit'].setValue('');
+
+      
+      // Avertir le user et lui donner la chance de re montrer la carte de crédit
+      const snackBarRef = this.snackBar.open('La carte de crédit est cachée car un ou plusieurs champs sont vides', 'Annuler', {
+        duration: 5000
+      });
+      
+      // Si il annule
+      snackBarRef.onAction().subscribe(() => {
+        this.carteDeCreditVisible = true;
+        this.form['titulaireCarteCredit'].setValue(titulaireCarteCredit);
+        this.form['numeroCarteCredit'].setValue(numeroCarteCredit);
+        this.form['dateExpirationCarteCredit'].setValue(dateExpirationCarteCredit);
+        this.form['cvcCarteCredit'].setValue(cvcCarteCredit);
+      });
+    }
+    
+    // Si tous les champs sont remplis mettre à jour le user
+    // Tout est beau
+  }
+
   onSubmit() {
     if (this.clientForm.invalid) {
       return;
     }
 
+    // Vérifier la carte de crédit
+    this.verifieCreditCard();
+
+    // Vérifier le client
+    if (this.clientForm.value.courriel === '' || this.clientForm.value.nom === '' || this.clientForm.value.prenom === '' || this.clientForm.value.adresse === '') {
+      this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', {
+        duration: 5000
+      });
+      return;
+    }
+
+    // Update the client
+    this.client.prenom = this.clientForm.value.prenom;
+    this.client.nom = this.clientForm.value.nom;
+    this.client.adresse = this.clientForm.value.adresse;
+    if (this.carteDeCreditVisible) {
+      this.client.titulaireCarteCredit = this.clientForm.value.titulaireCarteCredit;
+      this.client.numeroCarteCredit = this.clientForm.value.numeroCarteCredit;
+      this.client.dateExpirationCarteCredit = this.clientForm.value.dateExpirationCarteCredit;
+      this.client.cvcCarteCredit = this.clientForm.value.cvcCarteCredit;
+    }
+
+    this.api.updateCurrentClient(this.client).subscribe({
+      next: (client) => {
+        this.snackBar.open('Profil mis à jour', 'Fermer', {
+          duration: 5000
+        });
+      },
+      error: (error) => {
+        this.snackBar.open('Erreur lors de la mise à jour du profil', 'Fermer', {
+          duration: 5000
+        });
+      }
+    });
   }
 }

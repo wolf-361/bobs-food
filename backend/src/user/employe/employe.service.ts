@@ -74,7 +74,13 @@ export class EmployeService {
     return this.employeRepository.update({ id: id}, updateEmployeDto);
   }
 
-  updatePassword(id: string, password: string) {
+  async updatePassword(id: string, oldPassword: string, password: string) {
+    // Check if the old password is correct
+    const employe = await this.employeRepository.findOne({ where: { id: id } });
+    if (!this.authService.comparePassword(oldPassword, employe.hashedPassword)) {
+      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+    }
+
     const { salt, hashedPassword } = this.authService.hashPassword(password);
     return this.employeRepository.update({ id: id }, { salt: salt, hashedPassword: hashedPassword });
   }
