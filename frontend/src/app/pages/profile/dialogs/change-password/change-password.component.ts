@@ -60,7 +60,7 @@ export class ChangePasswordComponent {
       this.snackBar.open('Les mots de passe ne correspondent pas.', 'Fermer', { duration: 3000 });
       return;
     }
-    
+
     // Check the usertype
     if (this.auth.Role === 'client') {
       this.api.updateCurrentClientPassword(oldPassword, newPassword).subscribe({
@@ -68,7 +68,10 @@ export class ChangePasswordComponent {
         error: (error: HttpErrorResponse) => this.onError(error)
       });
     } else {
-      this.api.updateCurrentEmployePassword
+      this.api.updateCurrentEmployePassword(oldPassword, newPassword).subscribe({
+        next: () => this.onSucess(),
+        error: (error: HttpErrorResponse) => this.onError(error)
+      });
     }
   }
 
