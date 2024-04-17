@@ -35,6 +35,7 @@ export class RoleGuard implements CanActivate {
     let payload;
     try {
       payload = this.authService.verifyToken(token);
+      console.log(payload);
     } catch (error) {
       throw new UnauthorizedException('Invalid token');
     }

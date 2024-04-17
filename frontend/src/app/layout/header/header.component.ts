@@ -67,6 +67,8 @@ export class HeaderComponent implements OnDestroy {
 
   logout() {
     this.auth.clearSession();
+    // Reload the page to reset the state
+    location.reload();
   }
 
   isOnAuthPage() {

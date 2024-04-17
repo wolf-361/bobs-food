@@ -133,6 +133,27 @@ export class ApiService {
     );
   }
 
+  getCurrentEmploye(): Observable<Employe> {
+    return this.http.get<Employe>(`${this.apiUrl}/employe`).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  deleteCurrentEmploye(): Observable<Employe> {
+    return this.http.delete<Employe>(`${this.apiUrl}/employe`).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+  
+  updateCurrentEmployePassword(oldPassword: string, newPassword: string): Observable<Employe> {
+    return this.http.patch<Employe>(`${this.apiUrl}/employe/password`, { oldPassword, newPassword }).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
   loginEmploye(employeId: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/employe/login`, { employeId, password }).pipe(
       catchError(this.handleError),
@@ -142,6 +163,13 @@ export class ApiService {
 
   signupEmploye(employe: CreateEmploye): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/employe/signup`, employe).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  updateEmploye(employeId: string, employe: CreateEmploye): Observable<Employe> {
+    return this.http.patch<Employe>(`${this.apiUrl}/employe/${employeId}`, employe).pipe(
       catchError(this.handleError),
       retry(3)
     );
@@ -162,6 +190,34 @@ export class ApiService {
     );
   }
 
+  getCurrentClient(): Observable<Client> {
+    return this.http.get<Client>(`${this.apiUrl}/client`).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  deleteCurrentClient(): Observable<Client> {
+    return this.http.delete<Client>(`${this.apiUrl}/client`).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  updateCurrentClientPassword(oldPassword: string, newPassword: string): Observable<Client> {
+    return this.http.patch<Client>(`${this.apiUrl}/client/password`, { oldPassword, newPassword }).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  updateCurrentClient(client: Client): Observable<Client> {
+    return this.http.patch<Client>(`${this.apiUrl}/client`, client).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
   loginClient(courriel: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/client/login`, { courriel, password }).pipe(
       catchError(this.handleError),
@@ -171,6 +227,13 @@ export class ApiService {
 
   signupClient(client: CreateClient): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/client/signup`, client).pipe(
+      catchError(this.handleError),
+      retry(3)
+    );
+  }
+
+  updateClient(clientId: string, client: CreateClient): Observable<Client> {
+    return this.http.patch<Client>(`${this.apiUrl}/client/${clientId}`, client).pipe(
       catchError(this.handleError),
       retry(3)
     );

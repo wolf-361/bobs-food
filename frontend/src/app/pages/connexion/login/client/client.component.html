@@ -1,5 +1,5 @@
 <h1>Se connecter comme client</h1>
-<form [formGroup]="this.loginForm" (ngSubmit)="this.onSubmit()" novalisate>
+<form [formGroup]="this.loginForm" (ngSubmit)="this.onSubmit()" novalidate>
     <mat-form-field appearance="outline">
         <mat-label>Entrer votre adresse email</mat-label>
         <input matInput type="email" required placeholder="Adresse email" formControlName="email" autocomplete="email"

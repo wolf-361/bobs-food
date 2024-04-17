@@ -17,8 +17,7 @@ export const routes: Routes = [
     {
         path: 'auth', component: ConnexionComponent, children: [
             { path: 'login', component: LoginComponent },
-            { path: 'register', component: SignupComponent },
-            { path: 'forgot-password', component: ConnexionComponent }
+            { path: 'register', component: SignupComponent }
         ]
     },
     { path: 'profile', component: ProfileComponent, canActivate: [roleGuard], data: { role: 'client, employe, gestionnaire, admin, proprietaire' } },

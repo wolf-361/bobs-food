@@ -30,6 +30,27 @@ export class EmployeController {
     return this.findOne(req.user.id);
   }
 
+  @Delete()
+  @ApiOperation({ summary: 'Delete the current user (logged in)' })
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
+  deleteSelf(@Request() req) {
+    return this.remove(req.user.id);
+  }
+
+  @Patch('password')
+  @ApiOperation({ summary: 'Update the password of the current user (logged in)' })
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
+  updatePassword(@Request() req, @Body() { oldPassword, newPassword }) {
+    return this.employeService.updatePassword(req.user.id, oldPassword, newPassword);
+  }
+
+  @Patch()
+  @ApiOperation({ summary: 'Update the current user (logged in)' })
+  @Roles(['employe', 'gestionnaire', 'admin', 'proprietaire'])
+  updateSelf(@Request() req, @Body() updateEmployeDto: UpdateEmployeDto) {
+    return this.update(req.user.id, updateEmployeDto);
+  }
+
   @Get('all')
   @Roles(['gestionnaire', 'admin', 'proprietaire'])
   findAll() {

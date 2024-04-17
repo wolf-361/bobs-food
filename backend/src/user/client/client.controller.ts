@@ -28,6 +28,28 @@ export class ClientController {
     return this.findOne(req.user.id);
   }
 
+  @Delete()
+  @ApiOperation({ summary: 'Delete the current user (logged in)' })
+  @Roles(['client'])
+  deleteSelf(@Request() req) {
+    return this.remove(req.user.id);
+  }
+
+  @Patch()
+  @ApiOperation({ summary: 'Update the current user (logged in)' })
+  @Roles(['client'])
+  updateSelf(@Request() req, @Body() updateClientDto: UpdateClientDto) {
+    return this.update(req.user.id, updateClientDto);
+  }
+
+  @Patch('password')
+  @ApiOperation({ summary: 'Update the password of the current user (logged in)' })
+  @Roles(['client'])
+  updatePassword(@Request() req, @Body() { oldPassword, newPassword }) {
+    return this.clientService.updatePassword(req.user.id, oldPassword, newPassword);
+  }
+
+
   @Get("all")
   @Roles(['gestionnaire', 'admin', 'proprietaire'])
   @ApiOperation({ summary: 'Get all users' })
