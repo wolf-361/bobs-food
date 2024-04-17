@@ -14,6 +14,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatList, MatListItem, MatListOption, MatSelectionList} from "@angular/material/list";
 import {ItemCommande} from "../../../../dto/commande/item-commande";
 import {MatButtonModule, MatIconButton} from "@angular/material/button";
+import {ApiService} from "../../../../services/api/api.service";
 
 
 @Component({
@@ -38,14 +39,16 @@ import {MatButtonModule, MatIconButton} from "@angular/material/button";
   styleUrl: './details-commande.component.scss'
 })
 export class DetailsCommandeComponent {
-  selectedItem: any;
+
   commande: Commande;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { commande: Commande }, 
+    @Inject(MAT_DIALOG_DATA) public data: { commande: Commande },
+    private api: ApiService,
     public dialogRef: MatDialogRef<DetailsCommandeComponent>
   ) {
     this.commande = data.commande;
+    console.log("Quantité recu au début: " + this.commande.items[0].quantite);
   }
 
   onClose() {
@@ -56,25 +59,24 @@ export class DetailsCommandeComponent {
 
   }
 
-  onDelete(item: ItemCommande) {
-
+  onIncrease(index: number) {
+    this.commande.items[index].quantite++;
   }
 
-  onIncrease(item: ItemCommande) {
-    item.quantite++;
-  }
-
-  onDecrease(item: ItemCommande) {
-    if (item.quantite > 1) {
-      item.quantite--;
+  onDecrease(index: number) {
+    // If the quantity is greater than 1, decrease it
+    if (this.commande.items[index].quantite > 1) {
+      this.commande.items[index].quantite--;
     }
+    // If the quantity is 1, remove the item
     else {
-      this.data.commande.items = this.data.commande.items.filter(i => i !== item);
-      // TODO : Save the new list
+      this.commande.items.splice(index, 1);
     }
   }
 
   onSave() {
+    // Use the service to save the new command
+
 
   }
 

@@ -29,7 +29,7 @@ export class ModifierCommandeComponent {
   commandes: Commande[] = [];
 
   constructor(
-    private api: ApiService, 
+    private api: ApiService,
     public dialog: MatDialog
   ) {
     this.api.getCommandes().subscribe((commandes: Commande[]) => {
@@ -38,7 +38,17 @@ export class ModifierCommandeComponent {
 
   }
 
-  onEditCommande(commande: Commande) {
+  onEditCommande(index: number) {
+
+    // Récupération de la commande à modifier
+    let commande = this.commandes[index];
+
+    console.log('Commande à modifier: ' + commande.id);
+    console.log("Items au début: " + commande.items[0].quantite);
+
+    // Sauvegarde de la commande originale (deep copy pour éviter les références)
+    let originalCommande = JSON.parse(JSON.stringify(commande));
+
     // Ouverture de la fenêtre de modification de la commande (Dialog)
     let dialogRef = this.dialog.open(DetailsCommandeComponent, {
       data: {
@@ -46,9 +56,17 @@ export class ModifierCommandeComponent {
       }
     });
 
+    // Si l'utilisateur appuie sur "Cancel"
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (!result) {
+        // On restaure la commande originale
+        this.commandes[index] = originalCommande;
+      }
+    });
+
   }
 
-  onDeleteCommande() {
+  onDeleteCommande(index: number) {
 
   }
 }

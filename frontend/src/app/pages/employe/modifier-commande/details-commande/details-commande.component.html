@@ -8,10 +8,10 @@
       <div class="flex">
         <mat-list-item>{{ item.item.nom }} ({{ item.quantite }})</mat-list-item>
         <div class="flex">
-          <button mat-icon-button class="addButton" (click)="onIncrease(item)">
+          <button mat-icon-button class="addButton" type="button" (click)="onIncrease($index)">
             <mat-icon>add</mat-icon>
           </button>
-          <button mat-icon-button class="removeButton" (click)="onDecrease(item)">
+          <button mat-icon-button class="removeButton" type="button" (click)="onDecrease($index)">
             <mat-icon>remove</mat-icon>
           </button>
         </div>
