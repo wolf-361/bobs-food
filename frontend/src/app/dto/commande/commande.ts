@@ -21,4 +21,5 @@ export class Commande {
         this.client = client;
         this.paiement = paiement;
     }
+    
 }

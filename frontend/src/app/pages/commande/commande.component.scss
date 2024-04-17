@@ -73,6 +73,7 @@ ul {
 li {
     display: flex;
     align-items: center;
+    text-align: center;
     gap: 0.5rem;
 }
 
@@ -82,4 +83,6 @@ li {
     align-items: flex-start; /* Align items vertically */
     gap: 5rem; /* Add gap between elements */
 }
+
+
 

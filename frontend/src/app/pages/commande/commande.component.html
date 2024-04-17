@@ -21,13 +21,13 @@
                 </mat-form-field>
 
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Entrer votre adresse email</mat-label>
-                    <input matInput type="email" placeholder="Adresse email" formControlName="courriel" autocomplete="email">
-                    <mat-error *ngIf="clientInfo['courriel'].errors?.['email']">Adresse email invalide</mat-error>
-                    <mat-error *ngIf="clientInfo['courriel'].errors?.['required']">Ce champ est obligatoire</mat-error>
-                </mat-form-field>
-
+                
+            <mat-form-field appearance="outline">
+                <mat-label>Entrer votre adresse email</mat-label>
+                <input matInput type="email" placeholder="Adresse email" formControlName="courriel" autocomplete="email">
+                <mat-error *ngIf="clientInfo['courriel'].errors?.['email']">Adresse email invalide</mat-error>
+                <mat-error *ngIf="clientInfo['courriel'].errors?.['required']">Ce champ est obligatoire</mat-error>
+            </mat-form-field>
               
                 <mat-form-field appearance="outline">
                     <mat-label>Enter votre adresse</mat-label>
@@ -58,16 +58,20 @@
               
                 <!-- Address input field -->
                 <ng-container *ngIf="selectedValue === 'Livraison'">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Enter votre adresse de livraison</mat-label>
-                    <input matInput required placeholder="Address" formControlName="adresseLivraison" autocomplete="address-line1" [value]="enteredAddress">
-                  </mat-form-field>
-                </ng-container>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Enter votre adresse de livraison</mat-label>
+                      <input matInput required placeholder="Address" formControlName="adresseLivraison" autocomplete="address-line1"
+                        [placeholder]="enteredAddress ? '' : 'Address'" #addressInput>
+                      <button mat-icon-button matSuffix matTooltip="{{ enteredAddress }}" matTooltipShowDelay="200" (click)="copyAddress(addressInput)">
+                        <mat-icon>info</mat-icon>
+                      </button>
+                    </mat-form-field>
+                  </ng-container>
               
                 <ng-container *ngIf="selectedValue === 'PourEmporter'">
                   <mat-form-field appearance="outline">
                     <mat-label>Choisir un restaurent Bob's Food</mat-label>
-                    <mat-select formControlName="adresseLivraison">
+                    <mat-select formControlName="adresseLivraison" [(ngModel)]="enteredAddress">
                       <mat-option *ngFor="let food of foods" [value]="food.adresse">{{food.adresse}}</mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -76,7 +80,7 @@
                 <ng-container *ngIf="selectedValue === 'SurPlace'">
                     <mat-form-field appearance="outline">
                       <mat-label>Choisir un restaurent Bob's Food</mat-label>
-                      <mat-select formControlName="adresseLivraison">
+                      <mat-select formControlName="adresseLivraison" [(ngModel)]="enteredAddress">
                         <mat-option *ngFor="let food of foods" [value]="food.adresse">{{food.adresse}}</mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -84,7 +88,7 @@
                 
                 
                 <div class="buttons">
-                  <button mat-raised-button color="primary" matStepperNext [disabled]="!livraisonForm.dirty || livraisonForm.invalid">Continuer</button>
+                  <button mat-raised-button color="primary" matStepperNext [disabled]="livraisonForm.invalid">Continuer</button>
                 </div>
               </form> 
 
@@ -106,42 +110,49 @@
         <div class="step">
             
             <form [formGroup]="this.creditCardForm" (ngSubmit)="verifierCreditCard(); this.verifierClient()" novalidate>
-                <mat-radio-group formControlName="typePaiement" (change)="handleSelectionChangePaiement($event.value)">
+             
+                    <mat-radio-group formControlName="typePaiementDistance" (change)="handleSelectionChangePaiement($event.value)">
                     <mat-radio-button value="En ligne">En Ligne</mat-radio-button>
-                    <mat-radio-button value="b">En personne</mat-radio-button>
+                    <mat-radio-button value="En Personne">En personne</mat-radio-button>
                   </mat-radio-group>
+
+                  <mat-chip-listbox aria-label="Type Paiement" formControlName="typePaiement" (change)="handleSelectionChangeTypePaiement($event.value)">
+                    <mat-chip-option color="primary" [disabled]="selectedValuePaiement === 'En Personne'">Carte</mat-chip-option>
+                    <mat-chip-option color="accent" [disabled]="selectedValuePaiement === 'En ligne'">Espèce</mat-chip-option>
+                    <mat-chip-option color="warn" selected [disabled]="selectedValuePaiement === 'En ligne'">Chèque</mat-chip-option>
+                  </mat-chip-listbox>
               
                 <!-- Address input field -->
-                <ng-container *ngIf="selectedValuePaiement === 'En ligne'">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
-                        <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
-                            autocomplete="cc-name">
-                        <mat-error *ngIf="creditCard['titulaireCarteCredit'].errors?.['required']">Ce champ est
-                            obligatoire</mat-error>
-                    </mat-form-field>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
-                        <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
-                            autocomplete="cc-number">
-                        <mat-error *ngIf="creditCard['numeroCarteCredit'].errors?.['required']">Ce champ est
-                            obligatoire</mat-error>
-                    </mat-form-field>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
-                        <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
-                            autocomplete="cc-exp">
-                        <mat-error *ngIf="creditCard['dateExpiration'].errors?.['required']">Ce champ est
-                            obligatoire</mat-error>
-                    </mat-form-field>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
-                        <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
-                            autocomplete="cc-csc">
-                        <mat-error *ngIf="creditCard['cvcCarteCredit'].errors?.['required']">Ce champ est
-                            obligatoire</mat-error>
-                    </mat-form-field>
-                </ng-container>
+                @if (selectedValuePaiement == 'En ligne' && selectedValueTypePaiement == 'Carte') {<mat-form-field appearance="outline">
+                    <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
+                    <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
+                        autocomplete="cc-name">
+                    <mat-error *ngIf="creditCard['titulaireCarteCredit'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
+                    <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
+                        autocomplete="cc-number">
+                    <mat-error *ngIf="creditCard['numeroCarteCredit'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
+                    <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
+                        autocomplete="cc-exp">
+                    <mat-error *ngIf="creditCard['dateExpiration'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
+                    <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
+                        autocomplete="cc-csc">
+                    <mat-error *ngIf="creditCard['cvcCarteCredit'].errors?.['required']">Ce champ est
+                        obligatoire</mat-error>
+                </mat-form-field>
+    }
+                    
               
                 <ng-container *ngIf="selectedValuePaiement === 'En personne'">
                     // TO DO
@@ -160,9 +171,16 @@
         <ng-template matStepLabel>Vérification</ng-template>
         <div class="step">
             <p>Confirmer les informations suivantes:</p>
-            <ul>
-                <li><b>Nom:</b> {{client?.nom}}</li>
-                <li><b>{{ selectedValue === 'Collecte' ? 'Collecte en restaurent' : 'Adresse de livraison:' }}</b> {{ client?.adresse }}</li>
+            <ul>        
+                <li><b>Nom de la commande:</b>{{ client?.prenom }} {{ client?.nom }}</li>
+                <li><b>Adresse Email:</b>{{ client?.courriel }}</li>
+                <li>
+                    {{ selectedValue === 'Livraison' ? 'Commande pour livraison ' : 
+                      (selectedValue === 'PourEmporter' ? 'Commande pour emporter ' : 
+                      (selectedValue === 'SurPlace' ? 'Commande sur place ' : '')) }}
+                  </li>
+                <li>{{enteredAddress}}</li>
+        
                 <span *ngIf="selectedValuePaiement === 'En ligne'">
                     <ul *ngIf="client?.titulaireCarteCredit && client?.numeroCarteCredit && client?.dateExpirationCarteCredit && client?.cvcCarteCredit">
                         <li><b>Titulaire de la carte de crédit:</b> {{ client?.titulaireCarteCredit }}</li>
@@ -172,23 +190,21 @@
                     </ul>
                 </span>
                 <span *ngIf="selectedValuePaiement === 'En Personne'">
-                        <li><b>Paiement en restaurent</b></li>
+                        <li>Paiement en restaurent</li>
                 </span>
-                <li><b>Paiement en restaurent</b></li>
+               
                 <div class="commande">
                     <div class="panier">
                         <app-panier></app-panier>
                     </div>
                 </div>
+
+                <p>Total de la commande: {{ total }}</p>
             </ul>
 
-            <button mat-raised-button color="primary" (click)="onSubmitClient()">Sauvgarder vos données localement</button>
             <button mat-raised-button color="primary" (click)="onSubmitCommande()">Confirmer la commande</button>
 
-            <div>
-                <button mat-button matStepperPrevious>Retour</button>
-                <button mat-button (click)="stepper.reset()">Réinitialiser</button>
-            </div>
+        
         </div>
 
     </mat-step>
