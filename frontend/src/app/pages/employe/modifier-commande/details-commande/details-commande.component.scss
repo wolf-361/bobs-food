@@ -1,15 +1,3 @@
-/* Pour aligner les boutons de suppression à droite */
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Pour espacer les éléments et les boutons de suppression */
-li + li {
-  margin-top: 10px;
-}
-
 button.addButton, button.removeButton{
   background-color: transparent;
   border: none;
@@ -26,12 +14,15 @@ button.addButton, button.removeButton{
   color: green;
 }
 
-.container {
-  padding: 20px;
-  color: white;
-}
-
 .flex {
   padding: 5px;
   display: flex;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  padding: 10px;
 }

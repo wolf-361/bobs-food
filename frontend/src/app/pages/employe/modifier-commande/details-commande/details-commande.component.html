@@ -1,12 +1,18 @@
-<div class="container">
-  <h2>Modification de la commande de {{ commande.client?.prenom }} {{ commande.client?.nom }}</h2>
-  <p>Adresse: {{ commande.client?.adresse }}</p>
-
-  <h3>Articles de la commande:</h3>
+<h2 mat-dialog-title>Modification de la commande de {{ commande.client?.prenom }} {{ commande.client?.nom }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="this.adresseForm">
+    <mat-form-field appearance="outline">
+      <input matInput placeholder="Adresse du client" [ngModel]="this.commande.client?.adresse" name="adresse" formControlName="adresse" required>
+    </mat-form-field>
+  </form>
+  <div mat-subheader>Articles de la commande:</div>
   <mat-list>
     @for (item of commande.items.slice(0, 3); track item.id) {
       <div class="flex">
-        <mat-list-item>{{ item.item.nom }} ({{ item.quantite }})</mat-list-item>
+        <mat-list-item>
+          <span matListItemTitle>{{ item.item.nom }}</span>
+          <span matListItemLine>Quantité: {{ item.quantite }}</span>
+        </mat-list-item>
         <div class="flex">
           <button mat-icon-button class="addButton" type="button" (click)="onIncrease($index)">
             <mat-icon>add</mat-icon>
@@ -18,8 +24,8 @@
       </div>
     }
   </mat-list>
-
+</mat-dialog-content>
+<mat-dialog-actions align="end">
   <button mat-raised-button color="primary" (click)="onSave()">Enregistrer</button>
   <button mat-raised-button color="warn" (click)="onClose()">Annuler</button>
-
-</div>
+</mat-dialog-actions>

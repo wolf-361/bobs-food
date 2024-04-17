@@ -50,18 +50,9 @@ export class ModifierCommandeComponent {
     let dialogRef = this.dialog.open(DetailsCommandeComponent, {
       autoFocus: false,
       data: {
-        commande: commande
+        commande: originalCommande
       }
     });
-
-    // Si l'utilisateur appuie sur "Cancel"
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if (!result) {
-        // On restaure la commande originale
-        this.commandes[index] = originalCommande;
-      }
-    });
-
   }
 
   onDeleteCommande(index: number) {

@@ -1,46 +1,46 @@
-import {Component, Inject} from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
+  MatDialogModule,
   MatDialogRef
 } from "@angular/material/dialog";
-import {MatCardTitle} from "@angular/material/card";
-import {Commande} from "../../../../dto/commande/commande";
-import {FormsModule} from "@angular/forms";
-import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
-import {MatIcon} from "@angular/material/icon";
-import {MatList, MatListItem, MatListOption, MatSelectionList} from "@angular/material/list";
-import {ItemCommande} from "../../../../dto/commande/item-commande";
-import {MatButtonModule, MatIconButton} from "@angular/material/button";
-import {ApiService} from "../../../../services/api/api.service";
+import { MatCardTitle } from "@angular/material/card";
+import { Commande } from "../../../../dto/commande/commande";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatRadioButton, MatRadioGroup } from "@angular/material/radio";
+import { MatIcon } from "@angular/material/icon";
+import { MatList, MatListItem, MatListModule, MatListOption, MatSelectionList } from "@angular/material/list";
+import { ItemCommande } from "../../../../dto/commande/item-commande";
+import { MatButtonModule, MatIconButton } from "@angular/material/button";
+import { ApiService } from "../../../../services/api/api.service";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @Component({
   selector: 'app-details-commande',
   standalone: true,
   imports: [
-    MatDialogContent,
-    MatCardTitle,
-    MatDialogActions,
-    MatDialogClose,
+    MatDialogModule,
     FormsModule,
-    MatRadioButton,
-    MatRadioGroup,
     MatIcon,
-    MatSelectionList,
-    MatListOption,
-    MatList,
-    MatListItem,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatListModule,
     MatButtonModule
   ],
   templateUrl: './details-commande.component.html',
   styleUrl: './details-commande.component.scss'
 })
 export class DetailsCommandeComponent {
-
   commande: Commande;
+  adresseForm: FormGroup = new FormGroup({
+    adresse: new FormControl()
+  });
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { commande: Commande },
@@ -48,6 +48,8 @@ export class DetailsCommandeComponent {
     public dialogRef: MatDialogRef<DetailsCommandeComponent>
   ) {
     this.commande = data.commande;
+    // Set the adresse
+    this.adresseForm.setValue({ adresse: this.commande.client?.adresse });
   }
 
   onClose() {
@@ -74,11 +76,8 @@ export class DetailsCommandeComponent {
   }
 
   onSave() {
-
-    // TODO: Save the command without making 1003 errors
-
     // Use the service to save the new command
-    if(this.commande.id != null) {
+    if (this.commande.id != null) {
       this.api.patchCommande(this.commande.id.toString(), this.commande).subscribe((commande: Commande) => {
         console.log("Commande modifiée: " + commande.id);
         console.log("Items à la fin: " + commande.items[0].quantite);
