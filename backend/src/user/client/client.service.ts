@@ -38,7 +38,7 @@ export class ClientService {
 
   async login(loginDto: ClientLoginDto): Promise<{ token: string, expiresIn: number, role: string }> {
     // Find the client
-    const client = await this.findOneByEmail(loginDto.email);
+    const client = await this.findOneByEmail(loginDto.courriel);
 
     // Check if the client exists
     if (!client) {
