@@ -29,10 +29,7 @@
                 <mat-error *ngIf="clientInfo['courriel'].errors?.['required']">Ce champ est obligatoire</mat-error>
             </mat-form-field>
               
-                <mat-form-field appearance="outline">
-                    <mat-label>Enter votre adresse</mat-label>
-                    <input matInput required placeholder="Votre Adresse" formControlName="adresseUser" autocomplete="address-line1" [(ngModel)]="enteredAddress">
-                </mat-form-field>
+            
                  
               
                 <div class="buttons">
@@ -61,10 +58,7 @@
                     <mat-form-field appearance="outline">
                       <mat-label>Enter votre adresse de livraison</mat-label>
                       <input matInput required placeholder="Address" formControlName="adresseLivraison" autocomplete="address-line1"
-                        [placeholder]="enteredAddress ? '' : 'Address'" #addressInput>
-                      <button mat-icon-button matSuffix matTooltip="{{ enteredAddress }}" matTooltipShowDelay="200" (click)="copyAddress(addressInput)">
-                        <mat-icon>info</mat-icon>
-                      </button>
+                        [placeholder]="enteredAddress ? '' : 'Address'" #addressInput>        
                     </mat-form-field>
                   </ng-container>
               
@@ -117,9 +111,9 @@
                   </mat-radio-group>
 
                   <mat-chip-listbox aria-label="Type Paiement" formControlName="typePaiement" (change)="handleSelectionChangeTypePaiement($event.value)">
-                    <mat-chip-option color="primary" [disabled]="selectedValuePaiement === 'En Personne'">Carte</mat-chip-option>
+                    <mat-chip-option color="accent" [disabled]="selectedValuePaiement === 'En Personne'">Carte</mat-chip-option>
                     <mat-chip-option color="accent" [disabled]="selectedValuePaiement === 'En ligne'">Espèce</mat-chip-option>
-                    <mat-chip-option color="warn" selected [disabled]="selectedValuePaiement === 'En ligne'">Chèque</mat-chip-option>
+                    <mat-chip-option color="accent" selected [disabled]="selectedValuePaiement === 'En ligne'">Chèque</mat-chip-option>
                   </mat-chip-listbox>
               
                 <!-- Address input field -->
@@ -170,10 +164,10 @@
     <mat-step>
         <ng-template matStepLabel>Vérification</ng-template>
         <div class="step">
-            <p>Confirmer les informations suivantes:</p>
+            <h2>Confirmer les informations suivantes:</h2>
             <ul>        
-                <li><b>Nom de la commande:</b>{{ client?.prenom }} {{ client?.nom }}</li>
-                <li><b>Adresse Email:</b>{{ client?.courriel }}</li>
+                <li>{{ client?.prenom }} {{ client?.nom }}</li>
+                <li>{{ client?.courriel }}</li>
                 <li>
                     {{ selectedValue === 'Livraison' ? 'Commande pour livraison ' : 
                       (selectedValue === 'PourEmporter' ? 'Commande pour emporter ' : 
@@ -191,19 +185,18 @@
                 </span>
                 <span *ngIf="selectedValuePaiement === 'En Personne'">
                         <li>Paiement en restaurent</li>
-                </span>
-               
-                <div class="commande">
-                    <div class="panier">
-                        <app-panier></app-panier>
-                    </div>
-                </div>
-
-                <p>Total de la commande: {{ total }}</p>
+                </span>            
             </ul>
 
+            <div class="commande">
+                <div class="panier">
+                    <app-panier></app-panier>
+                </div>
+                <p>Total de la commande: {{ total }}</p>
+            </div>
+            
             <button mat-raised-button color="primary" (click)="onSubmitCommande()">Confirmer la commande</button>
-
+            
         
         </div>
 

@@ -89,7 +89,6 @@ export class CommandeComponent implements OnInit  {
     prenom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
     nom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
     courriel: new FormControl('', [Validators.required, Validators.email]),
-    adresseUser: new FormControl('', [Validators.required]),
   });
 
   livraisonForm: FormGroup = new FormGroup({
