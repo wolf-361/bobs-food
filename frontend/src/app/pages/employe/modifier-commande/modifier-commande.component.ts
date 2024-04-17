@@ -48,6 +48,7 @@ export class ModifierCommandeComponent {
 
     // Ouverture de la fenêtre de modification de la commande (Dialog)
     let dialogRef = this.dialog.open(DetailsCommandeComponent, {
+      autoFocus: false,
       data: {
         commande: commande
       }
