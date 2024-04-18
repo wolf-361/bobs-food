@@ -14,11 +14,11 @@ export class ItemCommande {
     item: Item;
 
     @Column()
-    quantity: number;
+    quantite: number;
 
 
-    constructor(item: Item, quantity: number) {
+    constructor(item: Item, quantite: number) {
         this.item = item;
-        this.quantity = quantity;
+        this.quantite = quantite;
     }
 }

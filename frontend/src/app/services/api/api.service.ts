@@ -35,7 +35,7 @@ export class ApiService {
     );
   }
 
-  getCommande(id: string): Observable<Commande> {
+  getCommande(id: number): Observable<Commande> {
     return this.http.get<Commande>(`${this.apiUrl}/commande/${id}`).pipe(
       catchError(this.handleError),
       retry(3)
@@ -49,14 +49,14 @@ export class ApiService {
     );
   }
 
-  patchCommande(id: string, commande: Commande): Observable<Commande> {
+  patchCommande(id: number, commande: Commande): Observable<Commande> {
     return this.http.patch<Commande>(`${this.apiUrl}/commande/${id}`, commande).pipe(
       catchError(this.handleError),
       retry(3)
     );
   }
 
-  deleteCommande(id: string): Observable<Commande> {
+  deleteCommande(id: number): Observable<Commande> {
     return this.http.delete<Commande>(`${this.apiUrl}/commande/${id}`).pipe(
       catchError(this.handleError),
       retry(3)

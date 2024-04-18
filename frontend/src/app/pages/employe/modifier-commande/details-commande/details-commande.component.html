@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Modification de la commande de {{ commande.client?.prenom }} {{ commande.client?.nom }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="this.adresseForm">
+    <mat-form-field appearance="outline">
+      <input matInput placeholder="Adresse du client" name="adresse" formControlName="adresse" required>
+    </mat-form-field>
+  </form>
+  <div mat-subheader>Articles de la commande:</div>
+  <mat-list>
+    @for (item of commande.items.slice(0, 3); track item.id) {
+      <div class="flex">
+        <mat-list-item>
+          <span matListItemTitle>{{ item.item.nom }}</span>
+          <span matListItemLine>Quantité: {{ item.quantite }}</span>
+        </mat-list-item>
+        <div class="flex">
+          <button mat-icon-button class="addButton" type="button" (click)="onIncrease($index)">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-icon-button class="removeButton" type="button" (click)="onDecrease($index)">
+            <mat-icon>remove</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+  </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="onSave()">Enregistrer</button>
+  <button mat-raised-button color="warn" (click)="onClose()">Annuler</button>
+</mat-dialog-actions>

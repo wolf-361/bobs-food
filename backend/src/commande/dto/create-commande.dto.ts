@@ -33,6 +33,6 @@ export class CreateCommandeDto {
     constructor(partial: Partial<CreateCommandeDto>) {
         Object.assign(this, partial);
         // Recalculate the total of the commande.
-        this.total = this.items.reduce((total, item) => total + item.item.prix * item.quantity, 0);
+        this.total = this.items.reduce((total, item) => total + item.item.prix * item.quantite, 0);
     }
 }

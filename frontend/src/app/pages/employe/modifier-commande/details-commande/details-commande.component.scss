@@ -1,0 +1,28 @@
+button.addButton, button.removeButton{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
+}
+
+.removeButton:hover {
+  color: red;
+}
+
+.addButton:hover {
+  color: green;
+}
+
+.flex {
+  padding: 5px;
+  display: flex;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  padding: 10px;
+}
