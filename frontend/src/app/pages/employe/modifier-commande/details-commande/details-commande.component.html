@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <form [formGroup]="this.adresseForm">
     <mat-form-field appearance="outline">
-      <input matInput placeholder="Adresse du client" [ngModel]="this.commande.client?.adresse" name="adresse" formControlName="adresse" required>
+      <input matInput placeholder="Adresse du client" name="adresse" formControlName="adresse" required>
     </mat-form-field>
   </form>
   <div mat-subheader>Articles de la commande:</div>

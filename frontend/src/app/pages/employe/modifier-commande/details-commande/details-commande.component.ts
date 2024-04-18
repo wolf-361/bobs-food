@@ -18,6 +18,7 @@ import { MatButtonModule, MatIconButton } from "@angular/material/button";
 import { ApiService } from "../../../../services/api/api.service";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -31,7 +32,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSnackBarModule
   ],
   templateUrl: './details-commande.component.html',
   styleUrl: './details-commande.component.scss'
@@ -45,7 +47,8 @@ export class DetailsCommandeComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { commande: Commande },
     private api: ApiService,
-    public dialogRef: MatDialogRef<DetailsCommandeComponent>
+    public dialogRef: MatDialogRef<DetailsCommandeComponent>,
+    private snackBar: MatSnackBar
   ) {
     this.commande = data.commande;
     // Set the adresse
@@ -54,10 +57,6 @@ export class DetailsCommandeComponent {
 
   onClose() {
     this.dialogRef.close();
-  }
-
-  onEdit() {
-
   }
 
   onIncrease(index: number) {
@@ -78,10 +77,13 @@ export class DetailsCommandeComponent {
   onSave() {
     // Use the service to save the new command
     if (this.commande.id != null) {
-      this.api.patchCommande(this.commande.id.toString(), this.commande).subscribe((commande: Commande) => {
-        console.log("Commande modifiée: " + commande.id);
-        console.log("Items à la fin: " + commande.items[0].quantite);
+      this.api.patchCommande(this.commande.id, this.commande).subscribe((commande: Commande) => {
+        this.dialogRef.close(commande);
+        this.snackBar.open('Commande modifiée avec succès', 'Fermer', { duration: 2000 });
       });
+    } else {
+      this.dialogRef.close();
+      this.snackBar.open('Impossible de modifier une commande non enregistrée', 'Fermer', { duration: 2000 });
     }
   }
 

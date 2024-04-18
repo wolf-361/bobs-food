@@ -27,7 +27,7 @@ export class CommandeService {
   }
 
   update(id: number, updateCommandeDto: UpdateCommandeDto) {
-    return this.commandeRepository.update({ id }, updateCommandeDto);
+    return this.commandeRepository.save({ id, ...updateCommandeDto });
   }
 
   remove(id: number) {

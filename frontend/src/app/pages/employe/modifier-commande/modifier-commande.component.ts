@@ -53,6 +53,14 @@ export class ModifierCommandeComponent {
         commande: originalCommande
       }
     });
+
+    // Gestion de la fermeture de la fenêtre de modification
+    dialogRef.afterClosed().subscribe((result: Commande) => {
+      if (result) {
+        // Mise à jour de la commande dans la liste
+        this.commandes[index] = result;
+      }
+    });
   }
 
   onDeleteCommande(index: number) {
