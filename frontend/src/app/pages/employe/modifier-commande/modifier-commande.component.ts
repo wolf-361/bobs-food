@@ -7,6 +7,7 @@ import {MatButton} from "@angular/material/button";
 import {Observable} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {DetailsCommandeComponent} from "./details-commande/details-commande.component";
+import { ConfirmerSupressionComponent } from './confirmer-supression/confirmer-supression.component';
 
 @Component({
   selector: 'app-modifier-commande',
@@ -64,8 +65,27 @@ export class ModifierCommandeComponent {
   }
 
   onDeleteCommande(index: number) {
-    // TODO: Demander confirmation à l'utilisateur
+    let dialogRef = this.dialog.open(ConfirmerSupressionComponent, {
+      autoFocus: false,
+      data: {
+        commande: this.commandes[index]
+      }
+    });
 
-    // TODO: Supprimer la commande avec l'API
+    // Gestion de la fermeture de la fenêtre de confirmation
+    dialogRef.afterClosed().subscribe((result: { confirm: boolean }) => {
+      if (result.confirm) {
+        const id = this.commandes[index].id;
+
+        // Assert id is not null
+        if (id == null) {
+          throw new Error('Commande ID is null');
+        }
+
+        this.api.deleteCommande(id).subscribe(() => {
+          this.commandes.splice(index, 1);
+        });
+      }
+    });
   }
 }
