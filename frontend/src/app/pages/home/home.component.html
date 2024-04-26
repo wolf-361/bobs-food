@@ -7,7 +7,10 @@
         <mat-icon iconPositionEnd>chevron_right</mat-icon>
     </button>
 </mat-toolbar>
-<div class="page">
+
+<mat-progress-bar *ngIf="this.loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="page" *ngIf="!this.loading">
     @if (!this.montrerPanierMobile){
     <mat-accordion class="menu">
         <!-- For every category of the menu -->
