@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { Restaurent } from '../../../dto/restaurent/restaurent';
 import { ApiService } from '../../../services/api/api.service';
 import { Item } from '../../../dto/item/item';
@@ -13,6 +13,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { RestaurentService } from '../../../services/restaurent/restaurent.service';
 import { LoggerService } from '../../../services/logger/logger.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-modifier-menu',
@@ -24,7 +26,9 @@ import { BreakpointObserver } from '@angular/cdk/layout';
     ToggleItemComponent,
     MatSnackBarModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatProgressBarModule,
+    NgIf
   ],
   templateUrl: './modifier-menu.component.html',
   styleUrl: './modifier-menu.component.scss'
@@ -52,28 +56,8 @@ export class ModifierMenuComponent {
     // Subscribe to the items
     this._items.subscribe((items) => this.items = items);
 
-    // Get all the restaurents
-    this.api.getRestaurents().subscribe((restaurents) => {
-      this.restaurents = restaurents;
-    });
-
-    // Get all the items (for the admin to choose from)
-    this.api.getItems().subscribe((items) => {
-      this.allItems = items;
-
-      // Subscribe to the restaurent (one the items have been loaded)
-      this.restaurentService.restaurent.subscribe((restaurent) => {
-        this.restaurent = restaurent;
-
-        // Update the items list
-        this._items.next(this.allItems.map((item) => {
-          return {
-            item: item,
-            isSelected: (restaurent.menu?.findIndex((i) => i.id === item.id) !== -1)
-          };
-        }));
-      });
-    });
+    // Initialize the data
+    this.initData();
 
     // Subscribe to the breakpoint observer
     this.breakpointObserver.observe('(max-width: 600px)').subscribe(result => {
@@ -88,6 +72,32 @@ export class ModifierMenuComponent {
       // If the selected items are different from the restaurent's menu (somewhat ok)
       this.isChanged = items.filter((i) => i.isSelected).length !== this.restaurent.menu.length;
     });
+  }
+
+  private async initData() {
+
+    // Get all the items (for the admin to choose from)
+    await firstValueFrom(this.api.getItems()).then((items) => this.allItems = items );
+
+    // Get all the restaurents
+    await firstValueFrom(this.api.getRestaurents()).then((restaurents) => this.restaurents = restaurents );
+
+    // Subscribe to the restaurent (one the items have been loaded)
+    this.restaurentService.restaurent.subscribe((restaurent) => {      
+      this.restaurent = restaurent;
+
+      // Update the items list
+      this._items.next(this.allItems.map((item) => {
+        return {
+          item: item,
+          isSelected: (restaurent.menu?.findIndex((i) => i.id === item.id) !== -1)
+        };
+      }));
+    });
+  }
+
+  loading(): boolean {
+    return !this.restaurent || !this.items || !this.restaurents || !this.allItems;
   }
 
   changeSelectedRestaurent(selectedRestaurent: MatSelectChange) {
@@ -163,7 +173,7 @@ export class ModifierMenuComponent {
             item: item,
             isSelected: (restaurent.menu.findIndex((i) => i.id === item.id) !== -1)
           };
-        }));  
+        }));
       },
       error: this.onError
     });
