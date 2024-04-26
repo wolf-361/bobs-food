@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Restaurent } from '../../dto/restaurent/restaurent';
 import { ApiService } from '../api/api.service';
-import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, map, Observable, ReplaySubject, Subject } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Item } from '../../dto/item/item';
 
@@ -10,13 +10,13 @@ import { Item } from '../../dto/item/item';
 })
 export class RestaurentService {
   private prefix: string;
-  private _restaurent!: Subject<Restaurent>;
+  private _restaurent!: ReplaySubject<Restaurent>;
 
   constructor(
     private api: ApiService,
     private auth: AuthService
   ) {
-    this._restaurent = new Subject<Restaurent>();
+    this._restaurent = new ReplaySubject<Restaurent>();
 
     // Now that we have the items, we can get the restaurent
     if (this.restaurentId !== '') {
@@ -35,6 +35,7 @@ export class RestaurentService {
   }
 
   public get restaurent(): Observable<Restaurent> {
+    // Return as observable, we also want to send the current value
     return this._restaurent.asObservable();
   }
 

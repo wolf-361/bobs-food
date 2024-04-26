@@ -16,6 +16,7 @@
     <button mat-raised-button color="primary" (click)="save()" [disabled]="!this.isChanged">Sauvegarder</button>
     }
 </mat-toolbar>
+<mat-progress-bar *ngIf="this.loading()" mode="indeterminate"></mat-progress-bar>
 <div class="items">
     <!-- Menu selectionner et option pour le changer -->
     @for (packed of this.items; track $index) {
