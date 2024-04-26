@@ -1,7 +1,7 @@
 @import "src/styles/constant.scss";
 
 :host {
-    height: calc($page-height - 48px - 48px); // 48px for each tab-group
+    height: calc($page-height);
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -31,7 +31,7 @@ mat-stepper {
     justify-content: center;
     align-items: center;
     gap: 3rem;
-    min-height: calc($page-height - 48px - 48px - 72px - 24px); // 48px for each tab-group + 72px for the stepper + 24px for the padding
+    min-height: calc($page-height - 72px - 24px); // 72px for the stepper header and 24px for the stepper content padding
 }
 
 .mat-mdc-form-field {
