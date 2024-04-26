@@ -40,13 +40,18 @@ mat-toolbar {
 
 .panier {
     display: flex;
-    min-width: 300px;
+    min-width: 400px;
     max-width: 50%;
     // Le fixer à droite pour que même si on scroll, il reste à droite
     position: sticky;
     top: $mobile-menu-height;
     right: 0;
     flex-direction: column;
+    
+    app-panier {
+        min-height: calc($page-height - 56px - 3rem);
+        width: 100%;
+    }
 }
 
 // Stick mobile command menu to the bottom
@@ -66,7 +71,7 @@ mat-toolbar {
     
     app-panier {
         width: calc(100vw - 3rem);
-        min-height: calc($page-height - 56px - 56px - 3rem);
+        min-height: calc($page-height - 3rem);
     }
 
     mat-toolbar {

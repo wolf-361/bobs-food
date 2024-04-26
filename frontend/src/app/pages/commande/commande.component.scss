@@ -36,7 +36,7 @@ mat-stepper {
 
 .mat-mdc-form-field {
     margin-top: 16px;
-  }
+}
 
 form {
     display: flex;
@@ -59,10 +59,10 @@ form mat-error:not(:first-of-type) {
 
 button {
     width: 80%;
-    
+
 }
 
-button:hover{
+button:hover {
     background-color: #69f0ae;
 }
 
@@ -85,11 +85,12 @@ li {
 }
 
 .commande {
-    display: flex; /* Add flex display to .commande */
-    justify-content: center; /* Align items horizontally */
-    align-items: flex-start; /* Align items vertically */
-    gap: 5rem; /* Add gap between elements */
+    display: flex;
+    /* Add flex display to .commande */
+    justify-content: center;
+    /* Align items horizontally */
+    align-items: flex-start;
+    /* Align items vertically */
+    gap: 5rem;
+    /* Add gap between elements */
 }
-
-
-

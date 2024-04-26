@@ -15,7 +15,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map, Observable } from 'rxjs';
-import { PanierComponent } from '../../general/panier-items/panier.component';
 import { Client } from '../../dto/user/client';
 import { MatRadioModule } from '@angular/material/radio';
 import { Restaurent } from '../../dto/restaurent/restaurent';
@@ -24,18 +23,18 @@ import { ChangeDetectorRef } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { CommandeService } from '../../services/commande/commande.service';
 import { Commande } from '../../dto/commande/commande';
-import { TypeCommande } from '../../dto/commande/type-commande';
-import { ItemCommande } from '../../dto/commande/item-commande';
 import { TypePaiement } from '../../dto/commande/type-paiement';
 import {MatChipsModule} from '@angular/material/chips';
 import { MatTooltipModule}  from '@angular/material/tooltip';
+import { ItemCommande } from '../../dto/commande/item-commande';
 
 
 
 @Component({
   selector: 'app-commande',
   standalone: true,
-  imports: [ CommonModule,
+  imports: [ 
+    CommonModule,
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
@@ -47,43 +46,15 @@ import { MatTooltipModule}  from '@angular/material/tooltip';
     MatRadioModule,
     MatSelectModule,
     MatListModule,
-    PanierComponent,
     MatChipsModule,
     MatTooltipModule
 ],
   templateUrl: './commande.component.html',
   styleUrl: './commande.component.scss'
 })
-export class CommandeComponent implements OnInit  {
-  
-  total: number = 0;
-  selectedValue: string = 'Livraison';
-  selectedValuePaiement: string = ''
-  selectedValueTypePaiement: string = '';
-  value: string = '';
-  enteredAddress: string = '';
-  isPaiementEnPersonne: boolean = false;
-
-  
-  
-
-  foods: Restaurent[] = [
-    {
-      id: 'Restaurent A', adresse: '100 Rue Alpes',
-      menu: []
-    },
-    {
-      id: 'Restaurent B', adresse:  '200 Rue Alpes',
-      menu: []
-    } ,
-    {
-      id: 'Restaurent C', adresse: '300 Rue Alpes',
-      menu: []
-    },
-  ];
-  
-
-
+export class CommandeComponent {
+  stepperOrientation: Observable<StepperOrientation>;
+  isPaiementEnPersonne: boolean = false;  
 
   clientInfoForm: FormGroup = new FormGroup({
     prenom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
@@ -104,13 +75,9 @@ export class CommandeComponent implements OnInit  {
     dateExpiration: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
     cvcCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/)]),
   });
-  
-  
 
-
-  stepperOrientation: Observable<StepperOrientation>;
+  items: ItemCommande[] = [];
   client?: Client;
-  commande?: Commande;
 
 
   constructor(
@@ -125,98 +92,16 @@ export class CommandeComponent implements OnInit  {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
+
+    this.commandeService.Items.subscribe(items => this.items = items);
   }
-
-  handleSelectionChange(value: string) {
-    if (value === 'Livraison') {
-      this.livraisonForm.get('adresseLivraison')?.reset();
-    }
-  
-    this.selectedValue = value;
-    this.changeDetectorRef.detectChanges(); 
-  }
-
-  handleSelectionChangePaiement(value: string) {
-    const typePaiementControl = this.creditCardForm.get('typePaiement');
-    if (typePaiementControl) {
-        typePaiementControl.reset();
-        this.selectedValuePaiement = value;
-        this.changeDetectorRef.detectChanges();
-
-        if (this.selectedValuePaiement === 'En Personne') {
-            const titulaireCarteCreditControl = this.creditCardForm.get('titulaireCarteCredit');
-            const numeroCarteCreditControl = this.creditCardForm.get('numeroCarteCredit');
-            const dateExpirationControl = this.creditCardForm.get('dateExpiration');
-            const cvcCarteCreditControl = this.creditCardForm.get('cvcCarteCredit');
-
-            if (titulaireCarteCreditControl) {
-                titulaireCarteCreditControl.clearValidators();
-                titulaireCarteCreditControl.updateValueAndValidity();
-            }
-            if (numeroCarteCreditControl) {
-                numeroCarteCreditControl.clearValidators();
-                numeroCarteCreditControl.updateValueAndValidity();
-            }
-            if (dateExpirationControl) {
-                dateExpirationControl.clearValidators();
-                dateExpirationControl.updateValueAndValidity();
-            }
-            if (cvcCarteCreditControl) {
-                cvcCarteCreditControl.clearValidators();
-                cvcCarteCreditControl.updateValueAndValidity();
-            }
-        }
-
-        if (this.selectedValuePaiement === 'En ligne') {
-            const titulaireCarteCreditControl = this.creditCardForm.get('titulaireCarteCredit');
-            const numeroCarteCreditControl = this.creditCardForm.get('numeroCarteCredit');
-            const dateExpirationControl = this.creditCardForm.get('dateExpiration');
-            const cvcCarteCreditControl = this.creditCardForm.get('cvcCarteCredit');
-
-            if (titulaireCarteCreditControl) {
-                titulaireCarteCreditControl.setValidators([Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]);
-                titulaireCarteCreditControl.updateValueAndValidity();
-            }
-            if (numeroCarteCreditControl) {
-                numeroCarteCreditControl.setValidators([Validators.required, Validators.pattern(/^[0-9]{16}$/)]);
-                numeroCarteCreditControl.updateValueAndValidity();
-            }
-            if (dateExpirationControl) {
-                dateExpirationControl.setValidators([Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]);
-                dateExpirationControl.updateValueAndValidity();
-            }
-            if (cvcCarteCreditControl) {
-                cvcCarteCreditControl.setValidators([Validators.required, Validators.pattern(/^[0-9]{3}$/)]);
-                cvcCarteCreditControl.updateValueAndValidity();
-            }
-        }
-    }
-}
-
-handleSelectionChangeTypePaiement(value: string) {
-  this.selectedValueTypePaiement = value;
-   this.changeDetectorRef.detectChanges(); 
-}
-
-copyAddress(input: HTMLInputElement) {
-  input.value = this.enteredAddress;
-}
-
-ngOnInit(): void {
- 
-}
-
-isAddressFilled(): boolean {
-  return this.livraisonForm.get('adresseLivraison')?.value !== '';
-}
-
  
   /**
  * Getter for easy access to form fields
  * @returns {Object} The form controls
  * @example form['email'].value
  */
-  get signup(): { [key: string]: AbstractControl } {
+  get livraison(): { [key: string]: AbstractControl } {
     return this.livraisonForm.controls;
   }
 
@@ -252,8 +137,6 @@ isAddressFilled(): boolean {
   }
 
   verifierCreditCard() {
-    
-
     // Vérifier que si un champs as été touché, les autres champs sont remplis (note le nom peut être vide si on prend le nom et prénom du client (mettre case à cocher))
     if (this.creditCardForm.touched) {
       // Si un champs est rempli, tous les champs doivent être remplis
@@ -326,18 +209,6 @@ isAddressFilled(): boolean {
 
       const date = this.creditCardForm.value.dateExpiration.split('/');
 
-      this.commande = {
-        type: this.livraisonForm.value.typeLivraison,
-        total: 0,
-        date: new Date(),
-        items: [],
-        client: this.client,
-        paiement: {
-          id: 0,
-          type: TypePaiement.CARTE,
-          montant: 0
-        }
-      }
     } 
   }
 

@@ -1,6 +1,6 @@
 <mat-stepper #stepper linear="true" [orientation]="(stepperOrientation | async)!">
     <h1>Créer un compte client</h1>
-    
+
     <mat-step [stepControl]="this.clientInfoForm" errorMessage="Entrer vos informations personelles">
         <ng-template matStepLabel>Informations personnelles</ng-template>
         <div class="step">
@@ -12,7 +12,7 @@
                         required>
                     <mat-error *ngIf="clientInfo['prenom'].errors?.['required']">Ce champ est obligatoire</mat-error>
                 </mat-form-field>
-               
+
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer votre nom</mat-label>
                     <input matInput required placeholder="Nom" formControlName="nom" autocomplete="family-name"
@@ -20,18 +20,14 @@
                     <mat-error *ngIf="clientInfo['nom'].errors?.['required']">Ce champ est obligatoire</mat-error>
                 </mat-form-field>
 
+                <mat-form-field appearance="outline">
+                    <mat-label>Entrer votre adresse email</mat-label>
+                    <input matInput type="email" placeholder="Adresse email" formControlName="courriel"
+                        autocomplete="email">
+                    <mat-error *ngIf="clientInfo['courriel'].errors?.['email']">Adresse email invalide</mat-error>
+                    <mat-error *ngIf="clientInfo['courriel'].errors?.['required']">Ce champ est obligatoire</mat-error>
+                </mat-form-field>
 
-                
-            <mat-form-field appearance="outline">
-                <mat-label>Entrer votre adresse email</mat-label>
-                <input matInput type="email" placeholder="Adresse email" formControlName="courriel" autocomplete="email">
-                <mat-error *ngIf="clientInfo['courriel'].errors?.['email']">Adresse email invalide</mat-error>
-                <mat-error *ngIf="clientInfo['courriel'].errors?.['required']">Ce champ est obligatoire</mat-error>
-            </mat-form-field>
-              
-            
-                 
-              
                 <div class="buttons">
                     <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
                     <button mat-raised-button color="primary" matStepperNext
@@ -41,59 +37,41 @@
         </div>
     </mat-step>
 
-    <mat-step [stepControl]="this.livraisonForm" [ngClass]="{'disabled': enteredAddress === undefined || enteredAddress === ''}" errorMessage="Courriel et mot de passe requis">
+    <mat-step [stepControl]="this.livraisonForm" errorMessage="Nom complet et courriel requis">
         <ng-template matStepLabel>Options de livraison</ng-template>
         <div class="step">
             <form [formGroup]="livraisonForm" (ngSubmit)="verifierSignup()" novalidate>
                 <!-- Radio button group for choosing between option "a" and "b" -->
-                <mat-radio-group formControlName="typeLivraison" (change)="handleSelectionChange($event.value)" value="Livraison">
+                <mat-radio-group formControlName="typeLivraison"
+                    value="Livraison">
                     <mat-radio-button value="Livraison">Livraison</mat-radio-button>
                     <mat-radio-button value="PourEmporter">Pour Emporter</mat-radio-button>
                     <mat-radio-button value="SurPlace">Sur Place</mat-radio-button>
+                </mat-radio-group>
 
-                  </mat-radio-group>
-              
                 <!-- Address input field -->
+                <!--
                 <ng-container *ngIf="selectedValue === 'Livraison'">
                     <mat-form-field appearance="outline">
-                      <mat-label>Enter votre adresse de livraison</mat-label>
-                      <input matInput required placeholder="Address" formControlName="adresseLivraison" autocomplete="address-line1"
-                        [placeholder]="enteredAddress ? '' : 'Address'" #addressInput>        
+                        <mat-label>Enter votre adresse de livraison</mat-label>
+                        <input matInput required placeholder="Address" formControlName="adresseLivraison"
+                            autocomplete="address-line1" [placeholder]="enteredAddress ? '' : 'Address'" #addressInput>
                     </mat-form-field>
-                  </ng-container>
-              
-                <ng-container *ngIf="selectedValue === 'PourEmporter'">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Choisir un restaurent Bob's Food</mat-label>
-                    <mat-select formControlName="adresseLivraison" [(ngModel)]="enteredAddress">
-                      <mat-option *ngFor="let food of foods" [value]="food.adresse">{{food.adresse}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </ng-container>
+                </ng-container>-->
 
-                <ng-container *ngIf="selectedValue === 'SurPlace'">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Choisir un restaurent Bob's Food</mat-label>
-                      <mat-select formControlName="adresseLivraison" [(ngModel)]="enteredAddress">
-                        <mat-option *ngFor="let food of foods" [value]="food.adresse">{{food.adresse}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </ng-container>
-                
-                
                 <div class="buttons">
-                  <button mat-raised-button color="primary" matStepperNext [disabled]="livraisonForm.invalid">Continuer</button>
+                    <button mat-raised-button color="primary" matStepperNext
+                        [disabled]="livraisonForm.invalid">Continuer</button>
                 </div>
-              </form> 
+            </form>
 
-              <div class="commande">
+            <div class="commande">
                 <div class="panier">
-                    <app-panier></app-panier>
                 </div>
-                <p>Total de la commande: {{ total }}</p>
+                <p>Total de la commande: </p>
             </div>
         </div>
-        
+
 
 
     </mat-step>
@@ -102,22 +80,27 @@
     <mat-step [stepControl]="this.creditCardForm">
         <ng-template matStepLabel>Paiement</ng-template>
         <div class="step">
-            
+
             <form [formGroup]="this.creditCardForm" (ngSubmit)="verifierCreditCard(); this.verifierClient()" novalidate>
-             
-                    <mat-radio-group formControlName="typePaiementDistance" (change)="handleSelectionChangePaiement($event.value)">
+<!--
+                <mat-radio-group formControlName="typePaiementDistance"
+                    (change)="handleSelectionChangePaiement($event.value)">
                     <mat-radio-button value="En ligne">En Ligne</mat-radio-button>
                     <mat-radio-button value="En Personne">En personne</mat-radio-button>
-                  </mat-radio-group>
+                </mat-radio-group>
 
-                  <mat-chip-listbox aria-label="Type Paiement" formControlName="typePaiement" (change)="handleSelectionChangeTypePaiement($event.value)">
-                    <mat-chip-option color="accent" [disabled]="selectedValuePaiement === 'En Personne'">Carte</mat-chip-option>
-                    <mat-chip-option color="accent" [disabled]="selectedValuePaiement === 'En ligne'">Espèce</mat-chip-option>
-                    <mat-chip-option color="accent" selected [disabled]="selectedValuePaiement === 'En ligne'">Chèque</mat-chip-option>
-                  </mat-chip-listbox>
-              
-                <!-- Address input field -->
-                @if (selectedValuePaiement == 'En ligne' && selectedValueTypePaiement == 'Carte') {<mat-form-field appearance="outline">
+                <mat-chip-listbox aria-label="Type Paiement" formControlName="typePaiement"
+                    (change)="handleSelectionChangeTypePaiement($event.value)">
+                    <mat-chip-option color="accent"
+                        [disabled]="selectedValuePaiement === 'En Personne'">Carte</mat-chip-option>
+                    <mat-chip-option color="accent"
+                        [disabled]="selectedValuePaiement === 'En ligne'">Espèce</mat-chip-option>
+                    <mat-chip-option color="accent" selected
+                        [disabled]="selectedValuePaiement === 'En ligne'">Chèque</mat-chip-option>
+                </mat-chip-listbox>
+
+                @if (selectedValuePaiement == 'En ligne' && selectedValueTypePaiement == 'Carte') {<mat-form-field
+                    appearance="outline">
                     <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
                     <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
                         autocomplete="cc-name">
@@ -145,16 +128,17 @@
                     <mat-error *ngIf="creditCard['cvcCarteCredit'].errors?.['required']">Ce champ est
                         obligatoire</mat-error>
                 </mat-form-field>
-    }
-                    
-              
+                }
+
+
                 <ng-container *ngIf="selectedValuePaiement === 'En personne'">
                     // TO DO
                 </ng-container>
-                
+            -->
                 <div class="buttons">
                     <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
-                    <button mat-raised-button color="primary" matStepperNext [disabled]="this.creditCardForm.invalid">Vérifier</button>
+                    <button mat-raised-button color="primary" matStepperNext
+                        [disabled]="this.creditCardForm.invalid">Vérifier</button>
                 </div>
             </form>
         </div>
@@ -165,39 +149,16 @@
         <ng-template matStepLabel>Vérification</ng-template>
         <div class="step">
             <h2>Confirmer les informations suivantes:</h2>
-            <ul>        
-                <li>{{ client?.prenom }} {{ client?.nom }}</li>
-                <li>{{ client?.courriel }}</li>
-                <li>
-                    {{ selectedValue === 'Livraison' ? 'Commande pour livraison ' : 
-                      (selectedValue === 'PourEmporter' ? 'Commande pour emporter ' : 
-                      (selectedValue === 'SurPlace' ? 'Commande sur place ' : '')) }}
-                  </li>
-                <li>{{enteredAddress}}</li>
-        
-                <span *ngIf="selectedValuePaiement === 'En ligne'">
-                    <ul *ngIf="client?.titulaireCarteCredit && client?.numeroCarteCredit && client?.dateExpirationCarteCredit && client?.cvcCarteCredit">
-                        <li><b>Titulaire de la carte de crédit:</b> {{ client?.titulaireCarteCredit }}</li>
-                        <li><b>Numéro de carte de crédit:</b> {{ client?.numeroCarteCredit }}</li>
-                        <li><b>Date d'expiration:</b> {{ client?.dateExpirationCarteCredit }}</li>
-                        <li><b>Code de sécurité:</b> {{ client?.cvcCarteCredit }}</li>
-                    </ul>
-                </span>
-                <span *ngIf="selectedValuePaiement === 'En Personne'">
-                        <li>Paiement en restaurent</li>
-                </span>            
-            </ul>
+            
 
             <div class="commande">
                 <div class="panier">
-                    <app-panier></app-panier>
                 </div>
-                <p>Total de la commande: {{ total }}</p>
+                <p>Total de la commande: </p>
             </div>
-            
-            <button mat-raised-button color="primary" (click)="onSubmitCommande()">Confirmer la commande</button>
-            
-        
-        </div>
 
+            <button mat-raised-button color="primary" (click)="onSubmitCommande()">Confirmer la commande</button>
+
+
+        </div>
     </mat-step>
