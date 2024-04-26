@@ -1,13 +1,30 @@
-<div>
+<div class="panier">
+    <h2>Mon panier</h2>
     <!-- Unpack item and quantity from items -->
-    @for (pack of this.items; track pack.item.id;) {
-        <mat-icon>{{ this.getIcon(pack.item.categorie) }}</mat-icon>
-        <p>{{ pack.item.nom }} : {{ pack.quantite }}</p>
-
-    }
-    @empty {
-        <p>Le panier est vide</p>
-    }
+    <mat-list>
+        @for (pack of this.items; track pack.item.id;) {
+        <div class="flex">
+            <mat-list-item>
+                <mat-icon matListItemIcon>{{ this.getIcon(pack.item.categorie) }}</mat-icon>
+                <span matListItemTitle>{{ pack.item.nom }}</span>
+                <span matListItemLine>Quantité: {{ pack.quantite }}</span>
+            </mat-list-item>
+            <div class="flex">
+                <button mat-icon-button class="addButton" type="button" (click)="onIncrease(pack.item)">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button mat-icon-button class="removeButton" type="button" (click)="onDecrease(pack.item)">
+                    <mat-icon>remove</mat-icon>
+                </button>
+            </div>
+        </div>
+        }
+        @empty {
+            <div class="empty">
+                <p>Le panier est vide</p>
+            </div>
+        }
+    </mat-list>
 </div>
 <div class="buttons">
     <button mat-raised-button color="primary" (click)="commander()" [disabled]="this.isVide">Commander</button>
