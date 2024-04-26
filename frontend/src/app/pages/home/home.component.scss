@@ -7,6 +7,14 @@
 mat-toolbar {
     // Space elements 
     gap: 1.5rem;
+    justify-content: end;
+
+    mat-form-field {
+        width: fit-content;
+        margin: .5rem 0;
+        min-width: 600px;
+        max-width: 100%;
+    }
 }
 
 .page  {
@@ -54,4 +62,12 @@ mat-toolbar {
     .panier {
         min-width: 200px;
     }
+
+    mat-toolbar {
+        justify-content: center;
+        mat-form-field {
+            min-width: 50%;
+        }
+    }
+    
 }

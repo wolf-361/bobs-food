@@ -19,6 +19,9 @@ import { Router } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {MatProgressBar} from "@angular/material/progress-bar";
 import {NgIf} from "@angular/common";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -30,13 +33,16 @@ import {NgIf} from "@angular/common";
     ItemComponent,
     PanierComponent,
     MatExpansionModule,
+    MatFormFieldModule,
+    MatSelectModule,
     MatProgressBar,
     NgIf,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent extends BaseOverlayController{
+export class HomeComponent {
+  restaurents!: Restaurent[];
   restaurent!: Restaurent;
   // Dictionary of categories and their items
   menu: Map<ItemCategory, Item[]> = new Map<ItemCategory, Item[]>();
@@ -50,17 +56,14 @@ export class HomeComponent extends BaseOverlayController{
 
 
   constructor(
-    private injector: Injector,
-    private parentOverlay: Overlay,
     private restaurentService: RestaurentService,
     private commande: CommandeService,
-    private breakpointObserver: BreakpointObserver,
-    private router: Router
+    private api: ApiService,
+    private breakpointObserver: BreakpointObserver
   ) {
-    super(parentOverlay);
-
-    // TODO: If the restaurent is not set, propose to choose one
-
+    firstValueFrom(this.api.getRestaurents()).then((restaurents) => {
+      this.restaurents = restaurents;
+    });
     // Get the restaurent
     this.restaurentService.restaurent.subscribe((restaurent: Restaurent) => {
       if (!restaurent) {
@@ -83,20 +86,12 @@ export class HomeComponent extends BaseOverlayController{
     this.commande.Items.subscribe(items => this.isPanierVide = items.length === 0);
   }
 
-  commander() {
-    this.router.navigate(['/commander']);
-  }
-
-  addItem(item: Item) {
-    this.commande.addItem(item);
-  }
-
-  removeItem(item: Item) {
-    this.commande.removeItem(item);
-  }
-
-  passerCommande() {
-    this.commande.submit();
+  changeSelectedRestaurent(selectedRestaurent: MatSelectChange) {
+    const restaurent = this.restaurents.find((r) => r.id === selectedRestaurent.value);
+    if (!restaurent) {
+      return;
+    }
+    this.restaurentService.restaurent = restaurent;
   }
 
   get categories(): ItemCategory[] {
@@ -114,19 +109,6 @@ export class HomeComponent extends BaseOverlayController{
       }
       this.menu.get(item.categorie)?.push(item);
     }
-  }
-
-  protected override get componentPortal(): ComponentPortal<any> {
-    return new ComponentPortal(ChoisirCommandeComponent, null, this.createInjector());
-  }
-
-  private createInjector() {
-    return Injector.create({
-      parent: this.injector,
-      providers: [
-        { provide: OverlayRef, useValue: this.overlayRef }
-      ]
-    });
   }
 
 }

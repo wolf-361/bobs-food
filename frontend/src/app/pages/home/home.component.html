@@ -1,13 +1,17 @@
 <mat-toolbar style="background-color: transparent;" class="mat-elevation-z2">
-    @if (!isMobile) {
-    <span>Votre commande</span>
+    <!-- Restaurent selectionner et option pour le changer -->
+    @if (restaurent) {
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Selectionner un Restaurant</mat-label>
+        <!-- Start with selected restaurent, and on change with changeSelectedrestaurent-->
+        <mat-select [(value)]="restaurent.id" (selectionChange)="changeSelectedRestaurent($event)">
+            @for (restaurent of restaurents; track restaurent.id) {
+            <mat-option [value]="restaurent.id">{{ restaurent.adresse }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
     }
-    <button mat-stroked-button color="primary" (click)="open()">
-        <span>Choisir un type de commande</span>
-        <mat-icon iconPositionEnd>chevron_right</mat-icon>
-    </button>
 </mat-toolbar>
-
 <mat-progress-bar *ngIf="this.loading" mode="indeterminate"></mat-progress-bar>
 
 <div class="page" *ngIf="!this.loading">
@@ -25,8 +29,8 @@
             <!-- Show the category items -->
             <div class="category-items">
                 @for (item of this.getItems(categorie); track item.id) {
-                    <app-item [item]="item"></app-item>
-                    }
+                <app-item [item]="item"></app-item>
+                }
             </div>
         </mat-expansion-panel>
         }
