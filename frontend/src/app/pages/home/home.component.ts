@@ -17,17 +17,21 @@ import { PanierComponent } from '../../general/panier/panier.component';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
+import {MatProgressBar} from "@angular/material/progress-bar";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    MatToolbar, 
-    MatButtonModule, 
+    MatToolbar,
+    MatButtonModule,
     MatIconModule,
     ItemComponent,
     PanierComponent,
     MatExpansionModule,
+    MatProgressBar,
+    NgIf,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -40,6 +44,7 @@ export class HomeComponent extends BaseOverlayController{
   isPanierVide = true;
   montrerPanierMobile = false;
   categorieSelectionner: number = 0;
+  loading = true;
 
   // Pourrais faire un dictionnaire des descriptions des categories
 
@@ -61,9 +66,12 @@ export class HomeComponent extends BaseOverlayController{
       if (!restaurent) {
         return;
       }
-      
+
       this.restaurent = restaurent;
+
+      // Load the menu once it is set, set the loading to false
       this.loadMenu();
+      this.loading = false;
     });
 
     // Listen to the screen size
@@ -99,7 +107,7 @@ export class HomeComponent extends BaseOverlayController{
     return this.menu.get(itemCategory) || [];
   }
 
-  private loadMenu() {   
+  private loadMenu() {
     for (const item of this.restaurent.menu) {
       if (!this.menu.has(item.categorie)) {
         this.menu.set(item.categorie, []);
@@ -120,5 +128,5 @@ export class HomeComponent extends BaseOverlayController{
       ]
     });
   }
-  
+
 }
