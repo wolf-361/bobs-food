@@ -9,4 +9,7 @@
         <p>Le panier est vide</p>
     }
 </div>
-<button mat-raised-button color="primary" (click)="commander()" [disabled]="this.isVide">Commander</button>
+<div class="buttons">
+    <button mat-raised-button color="primary" (click)="commander()" [disabled]="this.isVide">Commander</button>
+    <button mat-raised-button color="warn" (click)="viderPanier()" [disabled]="this.isVide">Vider le panier</button>
+</div>

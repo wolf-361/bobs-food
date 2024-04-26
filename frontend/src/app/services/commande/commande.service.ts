@@ -17,7 +17,6 @@ import { ItemCommande } from '../../dto/commande/item-commande';
   providedIn: 'root'
 })
 export class CommandeService {
- 
   private TypeCommande?: TypeCommande;
   private total: number;
   private date?: Date;
@@ -111,6 +110,13 @@ export class CommandeService {
       // Update the items
       this.items.next(items);
     }
+  }
+
+  /**
+   * Clear the command
+   */
+  public clearCommande(): void {
+    this.items.next([]);
   }
 
   /**

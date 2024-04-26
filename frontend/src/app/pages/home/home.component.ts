@@ -78,7 +78,7 @@ export class HomeComponent {
     });
 
     // Listen to the screen size
-    this.breakpointObserver.observe('(max-width: 600px)').subscribe(result => {
+    this.breakpointObserver.observe('(max-width: 1024px)').subscribe(result => {
       this.isMobile = result.matches;
     });
 

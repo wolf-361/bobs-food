@@ -18,6 +18,7 @@ mat-toolbar {
 }
 
 .page  {
+    min-height: calc($page-height - 56px - 56px);
     display: flex;
     flex-direction: row;
     gap: 1.5rem;
@@ -59,8 +60,13 @@ mat-toolbar {
 
 // Medium-large screen
 @media screen and (max-width: 1024px) {
-    .panier {
-        min-width: 200px;
+    .page {
+        flex-direction: column;
+    }
+    
+    app-panier {
+        width: calc(100vw - 3rem);
+        min-height: calc($page-height - 56px - 56px - 3rem);
     }
 
     mat-toolbar {

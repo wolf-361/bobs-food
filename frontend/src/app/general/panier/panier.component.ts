@@ -60,4 +60,8 @@ export class PanierComponent {
     this.router.navigate(['/commander']);
   }
   
+  viderPanier() {
+    this.commande.clearCommande();
+  }
+  
 }
