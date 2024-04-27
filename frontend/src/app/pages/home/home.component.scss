@@ -6,6 +6,7 @@
 
 mat-toolbar {
     // Space elements 
+    height: 72px;
     gap: 1.5rem;
     justify-content: end;
 
@@ -68,11 +69,18 @@ mat-toolbar {
     .page {
         flex-direction: column;
     }
-    
-    app-panier {
-        width: calc(100vw - 3rem);
-        min-height: calc($page-height - 3rem);
+
+    .panier {
+        min-width: 100%;
+
+        app-panier {
+            width: calc(100vw - 3rem);
+            min-height: calc(100vh - 56px - 56px - 3rem - 72px);
+            margin-bottom: 72px;
+        }
     }
+    
+
 
     mat-toolbar {
         justify-content: center;
