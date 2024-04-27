@@ -76,11 +76,7 @@ export class HomeComponent {
         return;
       }
       this.restaurent = restaurent;
-
-      // If the restaurentSelecter is not set, set it
-      if (!this.restaurentSelecterFormControl.value) {
-        this.restaurentSelecterFormControl.setValue(restaurent.id);
-      }
+      this.restaurentSelecterFormControl.setValue(restaurent.id); // Set the selected value
 
       // Load the menu once it is set, set the loading to false
       this.loadMenu();

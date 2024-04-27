@@ -15,6 +15,8 @@ import { LoggerService } from '../../../services/logger/logger.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgIf } from '@angular/common';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-modifier-menu',
@@ -28,12 +30,16 @@ import { NgIf } from '@angular/common';
     MatSelectModule,
     MatFormFieldModule,
     MatProgressBarModule,
-    NgIf
+    NgIf,
+    ReactiveFormsModule,
+    MatInputModule,
+    FormsModule
   ],
   templateUrl: './modifier-menu.component.html',
   styleUrl: './modifier-menu.component.scss'
 })
 export class ModifierMenuComponent {
+  restaurentSelecterFormControl: FormControl = new FormControl();
   private allItems!: Item[];
   private _items!: BehaviorSubject<{ item: Item, isSelected: boolean }[]>;
   restaurent!: Restaurent;
@@ -85,6 +91,7 @@ export class ModifierMenuComponent {
     // Subscribe to the restaurent (one the items have been loaded)
     this.restaurentService.restaurent.subscribe((restaurent) => {      
       this.restaurent = restaurent;
+      this.restaurentSelecterFormControl.setValue(restaurent.id); // Set the selected value
 
       // Update the items list
       this._items.next(this.allItems.map((item) => {
