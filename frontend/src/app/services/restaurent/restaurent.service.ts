@@ -16,6 +16,9 @@ export class RestaurentService {
     private api: ApiService,
     private auth: AuthService
   ) {
+    // Set the prefix to use for the local storage (first cause we use it to get the restaurentId)
+    this.prefix = this.auth.Role + '_' || 'guest_';
+
     this._restaurent = new ReplaySubject<Restaurent>();
 
     // Now that we have the items, we can get the restaurent
@@ -30,8 +33,6 @@ export class RestaurentService {
         this.restaurent = restaurent;
       });
     }
-
-    this.prefix = this.auth.Role
   }
 
   public get restaurent(): Observable<Restaurent> {
@@ -41,6 +42,8 @@ export class RestaurentService {
 
   public set restaurent(restaurent: Restaurent) {
     this._restaurent.next(restaurent); // Update the observable
+    console.log('Restaurent set', restaurent.adresse);
+    
     this.restaurentId = restaurent.id; // Update the local storage
   }
 

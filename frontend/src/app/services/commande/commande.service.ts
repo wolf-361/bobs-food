@@ -120,6 +120,14 @@ export class CommandeService {
   }
 
   /**
+   * Filter the items in the command to only include the ones in the menu
+   */
+  public filterItems(menu: Item[]) {
+    const items = this.items.value.filter(i => menu.find(m => m.id === i.item.id));
+    this.items.next(items);
+  }
+
+  /**
    * Set the client for the command
    */
   public set Client(client: Client) {

@@ -4,7 +4,7 @@
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>Selectionner un Restaurant</mat-label>
         <!-- Start with selected restaurent, and on change with changeSelectedrestaurent-->
-        <mat-select [(value)]="restaurent.id" (selectionChange)="changeSelectedRestaurent($event)">
+        <mat-select [formControl]="this.restaurentSelecterFormControl" (selectionChange)="changeSelectedRestaurent($event)" #restaurentSelecter>
             @for (restaurent of restaurents; track restaurent.id) {
             <mat-option [value]="restaurent.id">{{ restaurent.adresse }}</mat-option>
             }
