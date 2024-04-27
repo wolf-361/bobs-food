@@ -1,10 +1,11 @@
 <mat-stepper #stepper linear="true" [orientation]="(stepperOrientation | async)!">
     <h1>Créer un compte client</h1>
 
+    @if (!this.isConnected()) {
     <mat-step [stepControl]="this.clientInfoForm" errorMessage="Entrer vos informations personelles">
         <ng-template matStepLabel>Informations personnelles</ng-template>
         <div class="step">
-            <form [formGroup]="this.clientInfoForm" (ngSubmit)="this.verifierClientInfo()" novalidate>
+            <form [formGroup]="this.clientInfoForm" (ngSubmit)="this.verifierSignup()" novalidate>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer votre prenom</mat-label>
@@ -36,53 +37,76 @@
             </form>
         </div>
     </mat-step>
-
+    }
     <mat-step [stepControl]="this.livraisonForm" errorMessage="Nom complet et courriel requis">
         <ng-template matStepLabel>Options de livraison</ng-template>
         <div class="step">
-            <form [formGroup]="livraisonForm" (ngSubmit)="verifierSignup()" novalidate>
+            <form [formGroup]="livraisonForm" novalidate>
                 <!-- Radio button group for choosing between option "a" and "b" -->
-                <mat-radio-group formControlName="typeLivraison"
-                    value="Livraison">
-                    <mat-radio-button value="Livraison">Livraison</mat-radio-button>
-                    <mat-radio-button value="PourEmporter">Pour Emporter</mat-radio-button>
-                    <mat-radio-button value="SurPlace">Sur Place</mat-radio-button>
+                <mat-radio-group formControlName="typeCommande" (change)="handleTypeCommandeChange($event.value)">
+                    @for (type of typesCommande; track type.value) {
+                    <mat-radio-button value="{{type.value}}">{{type.viewValue}}</mat-radio-button>
+                    }
                 </mat-radio-group>
 
-                <!-- Address input field -->
-                <!--
-                <ng-container *ngIf="selectedValue === 'Livraison'">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Enter votre adresse de livraison</mat-label>
-                        <input matInput required placeholder="Address" formControlName="adresseLivraison"
-                            autocomplete="address-line1" [placeholder]="enteredAddress ? '' : 'Address'" #addressInput>
-                    </mat-form-field>
-                </ng-container>-->
+                @if (this.isLivraison) {
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter votre adresse de livraison</mat-label>
+                    <input matInput required placeholder="Address" formControlName="adresse"
+                        autocomplete="address-line1" placeholder="Adresse de livraison">
 
+                </mat-form-field>
+                }
                 <div class="buttons">
                     <button mat-raised-button color="primary" matStepperNext
                         [disabled]="livraisonForm.invalid">Continuer</button>
                 </div>
             </form>
-
-            <div class="commande">
-                <div class="panier">
-                </div>
-                <p>Total de la commande: </p>
-            </div>
         </div>
-
-
-
     </mat-step>
 
 
-    <mat-step [stepControl]="this.creditCardForm">
+    <mat-step [stepControl]="this.paiementForm">
         <ng-template matStepLabel>Paiement</ng-template>
         <div class="step">
+            <form [formGroup]="this.paiementForm" (ngSubmit)="verifierCreditCard()" novalidate>
+                <mat-chip-listbox aria-label="Type Paiement" formControlName="typePaiement"
+                (change)="handleTypePaiementChange($event.value)">
+                @for (type of typesPaiement; track type.value) {
+                <mat-chip-option color="accent" [value]="type.value" selected>{{type.viewValue}}</mat-chip-option>
+                }
+            </mat-chip-listbox>
 
-            <form [formGroup]="this.creditCardForm" (ngSubmit)="verifierCreditCard(); this.verifierClient()" novalidate>
-<!--
+                <mat-form-field
+                appearance="outline">
+                <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
+                <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
+                    autocomplete="cc-name">
+                <mat-error *ngIf="paiement['titulaireCarteCredit'].errors?.['required']">Ce champ est
+                    obligatoire</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
+                <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
+                    autocomplete="cc-number">
+                <mat-error *ngIf="paiement['numeroCarteCredit'].errors?.['required']">Ce champ est
+                    obligatoire</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
+                <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
+                    autocomplete="cc-exp">
+                <mat-error *ngIf="paiement['dateExpiration'].errors?.['required']">Ce champ est
+                    obligatoire</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
+                <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
+                    autocomplete="cc-csc">
+                <mat-error *ngIf="paiement['cvcCarteCredit'].errors?.['required']">Ce champ est
+                    obligatoire</mat-error>
+            </mat-form-field>
+                <!--
                 <mat-radio-group formControlName="typePaiementDistance"
                     (change)="handleSelectionChangePaiement($event.value)">
                     <mat-radio-button value="En ligne">En Ligne</mat-radio-button>
@@ -138,7 +162,7 @@
                 <div class="buttons">
                     <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
                     <button mat-raised-button color="primary" matStepperNext
-                        [disabled]="this.creditCardForm.invalid">Vérifier</button>
+                        [disabled]="this.paiementForm.invalid">Vérifier</button>
                 </div>
             </form>
         </div>
@@ -149,7 +173,7 @@
         <ng-template matStepLabel>Vérification</ng-template>
         <div class="step">
             <h2>Confirmer les informations suivantes:</h2>
-            
+
 
             <div class="commande">
                 <div class="panier">

@@ -46,6 +46,10 @@ export class CommandeService {
     this.TypeCommande = TypeCommande;
   }
 
+  public get Type(): TypeCommande {
+    return this.TypeCommande || TypeCommande.LIVRAISON;
+  }
+
   /**
    * Calculate the total of the command (ideally should be done on the server)
    */

@@ -12,6 +12,9 @@ export class Paiement {
     @Column({ type: 'float' })
     montant: number;
 
+    @Column({ default: false })
+    payerEnPersonne: boolean;
+
     constructor(type: TypePaiement, montant: number) {
         this.type = type;
         this.montant = montant;

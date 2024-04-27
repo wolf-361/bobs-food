@@ -24,16 +24,17 @@ import { MatListModule } from '@angular/material/list';
 import { CommandeService } from '../../services/commande/commande.service';
 import { Commande } from '../../dto/commande/commande';
 import { TypePaiement } from '../../dto/commande/type-paiement';
-import {MatChipsModule} from '@angular/material/chips';
-import { MatTooltipModule}  from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ItemCommande } from '../../dto/commande/item-commande';
+import { TypeCommande } from '../../dto/commande/type-commande';
 
 
 
 @Component({
   selector: 'app-commande',
   standalone: true,
-  imports: [ 
+  imports: [
     CommonModule,
     MatIconModule,
     MatInputModule,
@@ -48,13 +49,13 @@ import { ItemCommande } from '../../dto/commande/item-commande';
     MatListModule,
     MatChipsModule,
     MatTooltipModule
-],
+  ],
   templateUrl: './commande.component.html',
   styleUrl: './commande.component.scss'
 })
 export class CommandeComponent {
   stepperOrientation: Observable<StepperOrientation>;
-  isPaiementEnPersonne: boolean = false;  
+  isPaiementEnPersonne: boolean = false;
 
   clientInfoForm: FormGroup = new FormGroup({
     prenom: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
@@ -63,39 +64,93 @@ export class CommandeComponent {
   });
 
   livraisonForm: FormGroup = new FormGroup({
-    typeLivraison: new FormControl('Livraison', [Validators.required]),
-    adresseLivraison: new FormControl('', [Validators.required]),
+    typeCommande: new FormControl('Livraison', [Validators.required]),
+    adresse: new FormControl('', [Validators.required]),
   });
 
-  creditCardForm: FormGroup = new FormGroup({
+  paiementForm: FormGroup = new FormGroup({
     typePaiement: new FormControl('', [Validators.required]),
-    typePaiementDistance:  new FormControl('', [Validators.required]),
-    titulaireCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]), 
+    typePaiementDistance: new FormControl('', [Validators.required]),
+    titulaireCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
     numeroCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{16}$/)]),
     dateExpiration: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
     cvcCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/)]),
   });
 
   items: ItemCommande[] = [];
-  client?: Client;
 
+  typesCommande: { value: TypeCommande, viewValue: string }[] = [
+    { value: TypeCommande.LIVRAISON, viewValue: 'Livraison' },
+    { value: TypeCommande.A_EMPORTER, viewValue: 'Cueillette' },
+    { value: TypeCommande.SUR_PLACE, viewValue: 'Sur place' },
+  ];
+
+  typesPaiement: { value: TypePaiement, viewValue: string }[] = [
+    { value: TypePaiement.CARTE, viewValue: 'Carte de crédit' },
+    { value: TypePaiement.ESPECE, viewValue: 'Argent comptant' },
+    { value: TypePaiement.CHEQUE, viewValue: 'Par chèque' },
+  ];
 
   constructor(
     private api: ApiService,
     private auth: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private changeDetectorRef: ChangeDetectorRef,
-    private commandeService: CommandeService,
+    private commande: CommandeService,
     breakpointObserver: BreakpointObserver
-  ) { 
+  ) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
-      .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
+      .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
-    this.commandeService.Items.subscribe(items => this.items = items);
+    this.commande.Items.subscribe(items => this.items = items);
+
+    if (this.auth.IsAuthenticated) {
+      this.api.getCurrentClient().subscribe(client => {
+        this.commande.Client = client;
+
+        // Disable the email field
+        this.clientInfoForm.get('courriel')?.disable();
+
+        this.livraisonForm.setValue({
+          typeCommande: TypeCommande.LIVRAISON,
+          adresse: client.adresse
+        });
+
+        // Make the adresse field readonly
+        this.livraisonForm.get('adresse')?.disable();
+
+        this.paiementForm.setValue({
+          typePaiement: TypePaiement.CARTE,
+          typePaiementDistance: TypePaiement.CARTE,
+          titulaireCarteCredit: client.prenom + ' ' + client.nom,
+          numeroCarteCredit: client.numeroCarteCredit,
+          dateExpiration: client.dateExpirationCarteCredit,
+          cvcCarteCredit: client.cvcCarteCredit
+        });
+      });
+    }
+
+    // Set the default type of the command
+    this.commande.Type = TypeCommande.LIVRAISON;
   }
- 
+
+  handleTypeCommandeChange(value: TypeCommande) {
+    this.commande.Type = value;
+  }
+
+  handleTypePaiementChange(value: TypePaiement) {
+    this.commande.Paiement.type = value;
+  }
+
+  isConnected(): boolean {
+    return this.auth.IsAuthenticated;
+  }
+
+  get isLivraison(): boolean {    
+    return this.commande.Type === TypeCommande.LIVRAISON;
+  }
+
   /**
  * Getter for easy access to form fields
  * @returns {Object} The form controls
@@ -109,13 +164,12 @@ export class CommandeComponent {
     return this.clientInfoForm.controls;
   }
 
-  get creditCard(): { [key: string]: AbstractControl } {
-    return this.creditCardForm.controls;
+  get paiement(): { [key: string]: AbstractControl } {
+    return this.paiementForm.controls;
   }
 
   // Vérifier si le client est déjà inscrit
   verifierSignup() {
-  
     // Vérifier si le client est déjà inscrit
     this.api.getClient(this.livraisonForm.value.courriel).subscribe(
       (response) => {
@@ -127,9 +181,7 @@ export class CommandeComponent {
         this.snackBar.open('Le client est déjà inscrit', 'Fermer', { duration: 5000 });
       },
     );
-  }
 
-  verifierClientInfo() {
     if (!this.clientInfoForm.valid) {
       this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
       return;
@@ -138,10 +190,10 @@ export class CommandeComponent {
 
   verifierCreditCard() {
     // Vérifier que si un champs as été touché, les autres champs sont remplis (note le nom peut être vide si on prend le nom et prénom du client (mettre case à cocher))
-    if (this.creditCardForm.touched) {
+    if (this.paiementForm.touched) {
       // Si un champs est rempli, tous les champs doivent être remplis
-      if (this.creditCardForm.value.titulaireCarteCredit != '' || this.creditCardForm.value.numeroCarteCredit != '' || this.creditCardForm.value.dateExpiration != '' || this.creditCardForm.value.cvcCarteCredit != '') {
-        if (!this.creditCardForm.value.titulaireCarteCredit || !this.creditCardForm.value.numeroCarteCredit || !this.creditCardForm.value.dateExpiration || !this.creditCardForm.value.cvcCarteCredit) {
+      if (this.paiementForm.value.titulaireCarteCredit != '' || this.paiementForm.value.numeroCarteCredit != '' || this.paiementForm.value.dateExpiration != '' || this.paiementForm.value.cvcCarteCredit != '') {
+        if (!this.paiementForm.value.titulaireCarteCredit || !this.paiementForm.value.numeroCarteCredit || !this.paiementForm.value.dateExpiration || !this.paiementForm.value.cvcCarteCredit) {
           this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
           return;
         }
@@ -150,7 +202,7 @@ export class CommandeComponent {
   }
 
   verifierClient() {  //  TODO, DOIT CHANGER POUR COMMANDE ET NON CLIENT
-    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
+    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.paiementForm.valid) {
       return;
     }
 
@@ -160,38 +212,18 @@ export class CommandeComponent {
     let cvcCarteCredit: string | null;
 
     // Si la carte de crédit n'est pas valide (un champs autre que nom vide), on ne l'inclut pas dans le client
-    if (this.creditCardForm.value.numeroCarteCredit && this.creditCardForm.value.dateExpiration && this.creditCardForm.value.cvcCarteCredit) {
+    if (this.paiementForm.value.numeroCarteCredit && this.paiementForm.value.dateExpiration && this.paiementForm.value.cvcCarteCredit) {
       // Si le titulaire de la carte n'est pas spécifié, on prend le nom et prénom du client
-      if (!this.creditCardForm.value.titulaireCarteCredit) {
-        this.creditCardForm.value.titulaireCarteCredit = this.clientInfoForm.value.prenom + ' ' + this.clientInfoForm.value.nom;
+      if (!this.paiementForm.value.titulaireCarteCredit) {
+        this.paiementForm.value.titulaireCarteCredit = this.clientInfoForm.value.prenom + ' ' + this.clientInfoForm.value.nom;
       }
 
-      const date = this.creditCardForm.value.dateExpiration.split('/');
-
-      this.client = {
-        courriel: this.livraisonForm.value.courriel,
-        prenom: this.clientInfoForm.value.prenom,
-        nom: this.clientInfoForm.value.nom,
-        estInscrit: true,
-        adresse: this.clientInfoForm.value.adresseLivraison,
-        titulaireCarteCredit: this.creditCardForm.value.titulaireCarteCredit,
-        numeroCarteCredit: this.creditCardForm.value.numeroCarteCredit,
-        dateExpirationCarteCredit: this.creditCardForm.value.dateExpiration,
-        cvcCarteCredit: this.creditCardForm.value.cvcCarteCredit,
-      };
-    } else {
-      this.client = {
-        courriel: this.livraisonForm.value.courriel,
-        prenom: this.clientInfoForm.value.prenom,
-        nom: this.clientInfoForm.value.nom,
-        estInscrit: true,
-        adresse: this.clientInfoForm.value.adresse,
-      };
+      const date = this.paiementForm.value.dateExpiration.split('/');
     }
   }
 
-  verifierCommande(){
-    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
+  verifierCommande() {
+    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.paiementForm.valid) {
       return;
     }
 
@@ -201,43 +233,37 @@ export class CommandeComponent {
     let cvcCarteCredit: string | null;
 
     // Si la carte de crédit n'est pas valide (un champs autre que nom vide), on ne l'inclut pas dans le client
-    if (this.creditCardForm.value.numeroCarteCredit && this.creditCardForm.value.dateExpiration && this.creditCardForm.value.cvcCarteCredit) {
+    if (this.paiementForm.value.numeroCarteCredit && this.paiementForm.value.dateExpiration && this.paiementForm.value.cvcCarteCredit) {
       // Si le titulaire de la carte n'est pas spécifié, on prend le nom et prénom du client
-      if (!this.creditCardForm.value.titulaireCarteCredit) {
-        this.creditCardForm.value.titulaireCarteCredit = this.clientInfoForm.value.prenom + ' ' + this.clientInfoForm.value.nom;
+      if (!this.paiementForm.value.titulaireCarteCredit) {
+        this.paiementForm.value.titulaireCarteCredit = this.clientInfoForm.value.prenom + ' ' + this.clientInfoForm.value.nom;
       }
 
-      const date = this.creditCardForm.value.dateExpiration.split('/');
+      const date = this.paiementForm.value.dateExpiration.split('/');
 
-    } 
+    }
   }
 
   onSubmitClient() {  // TODO, sauve les informations du client
-    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
+    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.paiementForm.valid) {
       return;
     }
-  
+
     this.verifierClient();
-  
-    if (!this.client) {
-      return;
-    }
+
   }
 
-  
+
   onSubmitCommande() {  // TODO, permet d'enregistrer la commande
-    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.creditCardForm.valid) {
+    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.paiementForm.valid) {
       return;
     }
-    
+
     this.verifierCommande(); // Vérifier les informations du client (etre certain que le client est fait )
 
-    if (!this.client) {
-      return;
-    }
 
     // Inscrire la commande
-    
+
 
 
   }
@@ -251,7 +277,7 @@ export class CommandeComponent {
     this.auth.Session = response;
 
     // Redirect to the home
-    this.router.navigate(['/']);   
+    this.router.navigate(['/']);
   }
 
   /**
@@ -269,7 +295,7 @@ export class CommandeComponent {
       this.snackBar.open('Utilisateur introuvable', 'Fermer', { duration: 5000 });
       this.livraisonForm.reset();
     }
-    
+
     if (error.status === 500) {
       this.snackBar.open('Erreur interne du serveur', 'Fermer', { duration: 5000 });
     }
