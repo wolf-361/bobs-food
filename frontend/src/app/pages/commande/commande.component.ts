@@ -172,6 +172,7 @@ export class CommandeComponent {
 
   handleTypeCommandeChange(value: TypeCommande) {
     this.commande.Type = value;
+    this.checkIfAdresseIsNeeded();
   }
 
   handleTypePaiementChange(value: TypePaiement) {
@@ -190,6 +191,16 @@ export class CommandeComponent {
 
   get Email(): string {
     return this.clientInfoForm.value.courriel || this.commande.Client?.courriel || '';
+  }
+
+  private checkIfAdresseIsNeeded() {
+    if (this.commande.Type === TypeCommande.LIVRAISON) {
+      this.livraisonForm.get('adresse')?.setValidators([Validators.required]);
+    } else {
+      this.livraisonForm.get('adresse')?.clearValidators();
+    }
+
+    this.livraisonForm.get('adresse')?.updateValueAndValidity();
   }
 
   private checkIfCreditIsNeeded() {
