@@ -32,6 +32,11 @@ mat-stepper {
     align-items: center;
     gap: 3rem;
     min-height: calc($page-height - 72px - 24px); // 72px for the stepper header and 24px for the stepper content padding
+
+    mat-list {
+        width: 100%;
+        max-width: 400px;
+    }
 }
 
 .mat-mdc-form-field {

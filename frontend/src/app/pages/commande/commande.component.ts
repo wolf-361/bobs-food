@@ -74,7 +74,7 @@ export class CommandeComponent {
   });
 
   paiementForm: FormGroup = new FormGroup({
-    typePaiement: new FormControl('', [Validators.required]),
+    typePaiement: new FormControl(TypePaiement.CARTE, [Validators.required]),
     enPersonne: new FormControl(false),
     titulaireCarteCredit: new FormControl(),
     numeroCarteCredit: new FormControl(),
@@ -162,6 +162,14 @@ export class CommandeComponent {
   handleEnPersonneChange(value: boolean) {
     this.isPaiementEnPersonne = value;
     this.checkIfCreditIsNeeded();
+  }
+
+  get Adresse(): string {
+    return this.livraisonForm.value.adresse || this.commande.Client?.adresse || '';
+  }
+
+  get Email(): string {
+    return this.clientInfoForm.value.courriel || this.commande.Client?.courriel || '';
   }
 
   private checkIfCreditIsNeeded() {

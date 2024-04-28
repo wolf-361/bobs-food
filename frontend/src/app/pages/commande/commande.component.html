@@ -134,7 +134,8 @@
         <div class="step">
             <h2>Confirmer les informations suivantes:</h2>
             <mat-list>
-                <div matSubheader>Informations personnelles</div>
+                <mat-divider></mat-divider>
+                <div matSubheader><b>Informations personnelles</b></div>
                 <mat-list-item>
                     <div matListItemTitle>Prenom</div>
                     <div matListItemLine>{{ this.clientInfoForm.value.prenom }}</div>
@@ -145,10 +146,10 @@
                 </mat-list-item>
                 <mat-list-item>
                     <div matListItemTitle>Courriel</div>
-                    <div matListItemLine>{{ this.clientInfoForm.value.courriel }}</div>
+                    <div matListItemLine>{{ this.Email }}</div>
                 </mat-list-item>
                 <mat-divider></mat-divider>
-                <div matSubheader>Options de livraison</div>
+                <div matSubheader><b>Options de livraison</b></div>
                 <mat-list-item>
                     <div matListItemTitle>Type de commande</div>
                     <div matListItemLine>{{ this.livraisonForm.value.typeCommande }}</div>
@@ -156,11 +157,11 @@
                 @if (this.isLivraison) {
                 <mat-list-item>
                     <div matListItemTitle>Adresse de livraison</div>
-                    <div matListItemLine>{{ this.livraisonForm.value.adresse }}</div>
+                    <div matListItemLine>{{ this.Adresse }}</div>
                 </mat-list-item>
                 }
                 <mat-divider></mat-divider>
-                <div matSubheader>Paiement</div>
+                <div matSubheader><b>Paiement</b></div>
                 <mat-list-item>
                     <div matListItemTitle>Type de paiement</div>
                     <div matListItemLine>{{ this.paiementForm.value.typePaiement }}</div>
@@ -187,6 +188,7 @@
                     <div matListItemLine>{{ this.paiementForm.value.cvcCarteCredit }}</div>
                 </mat-list-item>
                 }
+                <mat-divider></mat-divider>
             </mat-list>
             <div class="buttons">
                 <button mat-raised-button color="primary" matStepperPrevious>Retour</button>

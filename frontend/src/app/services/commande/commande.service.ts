@@ -137,7 +137,14 @@ export class CommandeService {
    * Set the client for the command
    */
   public set Client(client: Client) {
-    this.client = client;
+    this.client = client;    
+  }
+
+  /**
+   * Get the client for the command
+   */
+  public get Client(): Client | undefined {
+    return this.client;
   }
 
   public set TypeDePaiement(type: TypePaiement) {
