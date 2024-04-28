@@ -1,11 +1,7 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { BaseOverlayController } from '../../overlays/base-overlay-controller/base-overlay-controller';
-import { ChoisirCommandeComponent } from '../../overlays/choisir-commande/choisir-commande.component';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ApiService } from '../../services/api/api.service';
 import { Restaurent } from '../../dto/restaurent/restaurent';
 import { RestaurentService } from '../../services/restaurent/restaurent.service';
@@ -17,13 +13,15 @@ import { PanierComponent } from '../../general/panier/panier.component';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {MatProgressBar} from "@angular/material/progress-bar";
-import {NgIf} from "@angular/common";
+import { MatProgressBar } from "@angular/material/progress-bar";
+import { NgIf } from "@angular/common";
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { firstValueFrom } from 'rxjs';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
+import { ItemPopupComponent } from '../../overlays/item-popup/item-popup.component';
 
 @Component({
   selector: 'app-home',
@@ -66,7 +64,7 @@ export class HomeComponent {
     private commande: CommandeService,
     private api: ApiService,
     private breakpointObserver: BreakpointObserver,
-    private router: Router,
+    private router: Router
   ) {
     firstValueFrom(this.api.getRestaurents()).then((restaurents) => {
       this.restaurents = restaurents;
@@ -92,14 +90,14 @@ export class HomeComponent {
     // Subscribe to the items in the command to know if the panier is vide
     this.commande.Items.subscribe(items => this.isPanierVide = items.length === 0);
   }
-  
+
   commander() {
     this.router.navigate(['/commander']);
   }
 
   changeSelectedRestaurent(selectedRestaurent: MatSelectChange) {
     const restaurent = this.restaurents.find((r) => r.id == selectedRestaurent.value);
-    
+
     if (!restaurent) {
       return;
     }
