@@ -30,6 +30,7 @@ import { ItemCommande } from '../../dto/commande/item-commande';
 import { TypeCommande } from '../../dto/commande/type-commande';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
+import { PanierComponent } from '../../general/panier/panier.component';
 
 
 
@@ -53,7 +54,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatTooltipModule,
     MatCheckboxModule,
     MatListModule,
-    MatDividerModule
+    MatDividerModule,
+    PanierComponent
   ],
   templateUrl: './commande.component.html',
   styleUrl: './commande.component.scss'

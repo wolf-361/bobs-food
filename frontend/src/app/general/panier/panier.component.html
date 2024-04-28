@@ -20,13 +20,18 @@
         </div>
         }
         @empty {
-            <div class="empty">
-                <p>Le panier est vide</p>
-            </div>
+        <div class="empty">
+            <p>Le panier est vide</p>
+        </div>
         }
     </mat-list>
 </div>
-<div class="buttons">
-    <button mat-raised-button color="primary" (click)="commander()" [disabled]="this.isVide">Commander</button>
-    <button mat-raised-button color="warn" (click)="viderPanier()" [disabled]="this.isVide">Vider le panier</button>
+<div class="bottom">
+    <p>Total: {{ this.Total }} $</p>
+    <div class="buttons">
+        @if (this.showButton) {
+        <button mat-raised-button color="primary" (click)="commander()" [disabled]="this.isVide">Commander</button>
+        }
+        <button mat-raised-button color="warn" (click)="viderPanier()" [disabled]="this.isVide">Vider le panier</button>
+    </div>
 </div>
