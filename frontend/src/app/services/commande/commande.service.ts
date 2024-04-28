@@ -7,7 +7,7 @@ import { Paiement } from '../../dto/commande/paiement';
 import { AuthService } from '../auth/auth.service';
 import { ApiService } from '../api/api.service';
 import { LoggerService } from '../logger/logger.service';
-import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, Observable, Subject } from 'rxjs';
 import { ItemCommande } from '../../dto/commande/item-commande';
 import { TypePaiement } from '../../dto/commande/type-paiement';
 
@@ -163,16 +163,17 @@ export class CommandeService {
   /**
    * Submit the command to the server
    */
-  public submit(): void {
+  public submit(): Promise<boolean> {
     if (!this.TypeCommande) {
       throw new Error('Type is required');
     }
 
+    // If the date is not set, set it to now
     if (!this.date) {
-      throw new Error('Date is required');
+      this.date = new Date();
     }
 
-    if (!this.auth.IsAuthenticated && !this.client) {
+    if (!this.client) {
       throw new Error('Client is required');
     }
 
@@ -196,14 +197,12 @@ export class CommandeService {
     );
 
     // Submit the command (if the user is auth, they will be added in the backend)
-    this.api.postCommande(commande).subscribe({
-      next: commande => {
-        this.logger.commande('Commande created ' + JSON.stringify(commande));
-      },
-      error: error => {
-        this.logger.commande('Error creating the command ' + JSON.stringify(error));
-      }
+    return firstValueFrom(this.api.postCommande(commande)).then(() => {
+      this.clearCommande();
+      return true;
+    }).catch((error) => {
+      this.logger.commande('Error creating the command ' + JSON.stringify(error));
+      return false;
     });
-
   }
 }

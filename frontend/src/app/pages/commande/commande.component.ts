@@ -108,7 +108,14 @@ export class CommandeComponent {
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
-    this.commande.Items.subscribe(items => this.items = items);
+    this.commande.Items.subscribe(items => {
+      // if there are no items, redirect to the menu
+      if (items.length === 0) {
+        this.router.navigate(['/']);
+      }
+      this.items = items;
+    });
+      
 
     if (this.auth.IsAuthenticated) {
       this.api.getCurrentClient().subscribe(client => {
@@ -141,6 +148,8 @@ export class CommandeComponent {
           cvcCarteCredit: client.cvcCarteCredit
         });
       });
+
+      // Put the default values for 
 
       // Setup the validation for the credit card fields
       this.checkIfCreditIsNeeded();
@@ -176,6 +185,7 @@ export class CommandeComponent {
     if (this.commande.TypeDePaiement === TypePaiement.CARTE && !this.isPaiementEnPersonne) {
       // Check in person
       this.paiementForm.get('enPersonne')?.setValue(false);
+      this.commande.PayerEnPersonne = false;
 
       // Set the credit card fields as required
       this.paiementForm.get('titulaireCarteCredit')?.setValidators([Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]);
@@ -230,39 +240,6 @@ export class CommandeComponent {
     return this.paiementForm.controls;
   }
 
-  // Vérifier si le client est déjà inscrit
-  verifierSignup() {
-    // Vérifier si le client est déjà inscrit
-    this.api.getClient(this.livraisonForm.value.courriel).subscribe(
-      (response) => {
-        // Si le client n'est pas inscrit, on affiche un message de succès
-        if (response === null) {
-          return
-        }
-        // Si le client est déjà inscrit, on affiche un message d'erreur
-        this.snackBar.open('Le client est déjà inscrit', 'Fermer', { duration: 5000 });
-      },
-    );
-
-    if (!this.clientInfoForm.valid) {
-      this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
-      return;
-    }
-  }
-
-  verifierCreditCard() {
-    // Vérifier que si un champs as été touché, les autres champs sont remplis (note le nom peut être vide si on prend le nom et prénom du client (mettre case à cocher))
-    if (this.paiementForm.touched) {
-      // Si un champs est rempli, tous les champs doivent être remplis
-      if (this.paiementForm.value.titulaireCarteCredit != '' || this.paiementForm.value.numeroCarteCredit != '' || this.paiementForm.value.dateExpiration != '' || this.paiementForm.value.cvcCarteCredit != '') {
-        if (!this.paiementForm.value.titulaireCarteCredit || !this.paiementForm.value.numeroCarteCredit || !this.paiementForm.value.dateExpiration || !this.paiementForm.value.cvcCarteCredit) {
-          this.snackBar.open('Veuillez remplir tous les champs', 'Fermer', { duration: 5000 });
-          return;
-        }
-      }
-    }
-  }
-
   verifierClient() {  //  TODO, DOIT CHANGER POUR COMMANDE ET NON CLIENT
     if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.paiementForm.valid) {
       return;
@@ -284,83 +261,33 @@ export class CommandeComponent {
     }
   }
 
-  verifierCommande() {
+  onSubmit() {
     if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.paiementForm.valid) {
       return;
     }
 
-    let titulaireCarteCredit: string | null;
-    let numeroCarteCredit: string | null;
-    let dateExpiration: string | null;
-    let cvcCarteCredit: string | null;
-
-    // Si la carte de crédit n'est pas valide (un champs autre que nom vide), on ne l'inclut pas dans le client
-    if (this.paiementForm.value.numeroCarteCredit && this.paiementForm.value.dateExpiration && this.paiementForm.value.cvcCarteCredit) {
-      // Si le titulaire de la carte n'est pas spécifié, on prend le nom et prénom du client
-      if (!this.paiementForm.value.titulaireCarteCredit) {
-        this.paiementForm.value.titulaireCarteCredit = this.clientInfoForm.value.prenom + ' ' + this.clientInfoForm.value.nom;
-      }
-
-      const date = this.paiementForm.value.dateExpiration.split('/');
-
+    if (!this.auth.IsAuthenticated) {
+      this.commande.Client = new Client(
+        this.clientInfoForm.value.nom,
+        this.clientInfoForm.value.prenom,
+        this.livraisonForm.value.adresse,
+        this.clientInfoForm.value.courriel,
+        false,
+        this.paiementForm.value.titulaireCarteCredit,
+        this.paiementForm.value.numeroCarteCredit,
+        this.paiementForm.value.dateExpiration,
+        this.paiementForm.value.cvcCarteCredit
+      );
     }
-  }
-
-  onSubmitClient() {  // TODO, sauve les informations du client
-    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.paiementForm.valid) {
-      return;
-    }
-
-    this.verifierClient();
-
-  }
-
-
-  onSubmitCommande() {  // TODO, permet d'enregistrer la commande
-    if (!this.livraisonForm.valid || !this.clientInfoForm.valid || !this.paiementForm.valid) {
-      return;
-    }
-
-    this.verifierCommande(); // Vérifier les informations du client (etre certain que le client est fait )
-
 
     // Inscrire la commande
-
-
-
-  }
-
-  /**
-   * Handle the http success response from the signup request
-   * @param response The response to handle
-   */
-  private handleSignupSuccess(response: LoginResponse): void {
-    // Store the session in the auth service
-    this.auth.Session = response;
-
-    // Redirect to the home
-    this.router.navigate(['/']);
-  }
-
-  /**
-   * Handle the http error response from the signup request
-   * @param error The error to handle
-   */
-  private handleSignupError(error: HttpErrorResponse) {
-    if (error.status === 401) {
-      this.snackBar.open('Email ou mot de passe invalide', 'Fermer', { duration: 5000 });
-      // Clear the fields
-      this.livraisonForm.reset();
-    }
-
-    if (error.status === 404) {
-      this.snackBar.open('Utilisateur introuvable', 'Fermer', { duration: 5000 });
-      this.livraisonForm.reset();
-    }
-
-    if (error.status === 500) {
-      this.snackBar.open('Erreur interne du serveur', 'Fermer', { duration: 5000 });
-    }
+    this.commande.submit().then((success) => {
+      if (success) {
+        this.router.navigate(['/']);
+      } else {
+        this.snackBar.open('Erreur lors de la création de la commande', 'Fermer', { duration: 5000 });
+      }
+    });
   }
 
 }
