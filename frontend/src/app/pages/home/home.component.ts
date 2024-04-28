@@ -65,7 +65,8 @@ export class HomeComponent {
     private restaurentService: RestaurentService,
     private commande: CommandeService,
     private api: ApiService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private router: Router,
   ) {
     firstValueFrom(this.api.getRestaurents()).then((restaurents) => {
       this.restaurents = restaurents;
@@ -90,6 +91,10 @@ export class HomeComponent {
 
     // Subscribe to the items in the command to know if the panier is vide
     this.commande.Items.subscribe(items => this.isPanierVide = items.length === 0);
+  }
+  
+  commander() {
+    this.router.navigate(['/commander']);
   }
 
   changeSelectedRestaurent(selectedRestaurent: MatSelectChange) {

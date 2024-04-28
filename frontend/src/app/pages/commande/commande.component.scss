@@ -60,3 +60,21 @@ form mat-form-field {
 form mat-error:not(:first-of-type) {
     display: none;
 }
+
+// Media
+@media (max-width: 600px) {
+    :host {
+        flex-direction: column;
+    }
+
+    app-panier {
+        width: 100vw;
+        display: flex;
+        min-width: 400px;
+        max-width: 50%;
+        // Le fixer à droite pour que même si on scroll, il reste à droite
+        position: sticky;
+        top: $mobile-menu-height;
+        right: 0;
+    }
+}

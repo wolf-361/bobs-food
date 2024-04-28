@@ -39,7 +39,7 @@
     @if (!this.isMobile || this.montrerPanierMobile) {
     <div class="commande">
         <div class="panier">
-            <app-panier></app-panier>
+            <app-panier [showButton]="!this.isMobile"></app-panier>
         </div>
         <div class="bottom-spacer"></div>
     </div>
@@ -58,7 +58,7 @@
         <mat-icon iconPositionEnd>shopping_cart</mat-icon>
     </button>
     }
-    <button mat-stroked-button color="accent" [disabled]="this.isPanierVide">
+    <button mat-stroked-button color="accent" [disabled]="this.isPanierVide" (click)="this.commander()">
         Commander
     </button>
 </mat-toolbar>
