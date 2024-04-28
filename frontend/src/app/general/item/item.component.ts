@@ -1,17 +1,14 @@
 import { Component, EventEmitter, HostListener, InjectionToken, Injector, Input, Output, ViewChild } from '@angular/core';
 import { Item } from '../../dto/item/item';
 import { BehaviorSubject } from 'rxjs';
-import { BaseOverlayController } from '../../overlays/base-overlay-controller/base-overlay-controller';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { BaseOverlayComponent } from '../../overlays/base-overlay/base-overlay.component';
-import { ItemPopupComponent } from '../../overlays/item-popup/item-popup.component';
 import { CommandeService } from '../../services/commande/commande.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { BaseItemComponent } from './base-item/base-item.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ItemPopupComponent } from '../../overlays/item-popup/item-popup.component';
 
 @Component({
   selector: 'app-item',
@@ -25,8 +22,7 @@ import { BaseItemComponent } from './base-item/base-item.component';
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss'
 })
-export class ItemComponent extends BaseOverlayController {
-  @ViewChild(BaseOverlayComponent) overlayComponent!: BaseOverlayComponent;
+export class ItemComponent {
   @Input({ required: true }) item!: Item;
   private mouseOver: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isMouseOver: boolean = false;
@@ -49,17 +45,18 @@ export class ItemComponent extends BaseOverlayController {
     if ((event.target as HTMLElement).classList.contains('mat-mdc-button-touch-target')) {
       return;
     }
+    this.dialog.open(ItemPopupComponent, {
+      autoFocus: false,
+      data: { item: this.item }
+    });
 
-    this.open();
   }
 
   constructor(
-    private injector: Injector,
-    private parentOverlay: Overlay,
+    private dialog: MatDialog,
     private commande: CommandeService,
     private breakpointObserver: BreakpointObserver,
   ) {
-    super(parentOverlay);
     // Check if the mouse is over the item
     this.mouseOver.subscribe((isMouseOver: boolean) => this.isMouseOver = isMouseOver);
 
@@ -83,19 +80,5 @@ export class ItemComponent extends BaseOverlayController {
 
   removeFromCart() {
     this.commande.removeItem(this.item);
-  }
-
-  protected override get componentPortal(): ComponentPortal<any> {
-    return new ComponentPortal(ItemPopupComponent, null, this.createInjector());
-  }
-
-  private createInjector() {
-    return Injector.create({
-      parent: this.injector,
-      providers: [
-        { provide: OverlayRef, useValue: this.overlayRef },
-        { provide: Item, useValue: this.item }
-      ]
-    });
   }
 }

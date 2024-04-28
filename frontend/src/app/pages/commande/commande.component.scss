@@ -1,18 +1,17 @@
 @import "src/styles/constant.scss";
 
 :host {
-    min-height: calc($page-height);
+    min-height: calc($page-height - 72px);
     width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 3rem;
+    flex-direction: row;
+    gap: 1.5rem;
 }
 
 mat-stepper {
     width: 100%;
     min-height: 100%;
+    flex-grow: 1;
 
     button {
         max-width: 150px;
@@ -62,40 +61,41 @@ form mat-error:not(:first-of-type) {
     display: none;
 }
 
-button {
-    width: 80%;
-
-}
-
-button:hover {
-    background-color: #69f0ae;
-}
-
-
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+// Stick mobile command menu to the bottom
+#mobileCommandeMenu {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
     justify-content: center;
 }
 
-li {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-}
 
-.commande {
-    display: flex;
-    /* Add flex display to .commande */
-    justify-content: center;
-    /* Align items horizontally */
-    align-items: flex-start;
-    /* Align items vertically */
-    gap: 5rem;
-    /* Add gap between elements */
+// Media
+@media (max-width: 600px) {
+    :host {
+        flex-direction: column;
+    }
+
+    mat-stepper {
+        margin-bottom: 56px;
+    }
+
+    app-panier {
+        padding: 1rem;
+        height: calc($page-height - 56px - 2rem);
+        width: calc(100% - 2rem);
+        display: flex;
+        // Le fixer à droite pour que même si on scroll, il reste à droite
+        position: sticky;
+        top: $mobile-menu-height;
+        right: 0;
+    }
+    
+    mat-toolbar {
+        justify-content: center;
+        mat-form-field {
+            min-width: 50%;
+        }
+    }
 }

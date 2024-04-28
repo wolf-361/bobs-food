@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommandeService } from '../../services/commande/commande.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,8 @@ import { LayoutModule } from '@angular/cdk/layout';
   styleUrl: './panier.component.scss'
 })
 export class PanierComponent {
+  @Input()
+  showButton: boolean = true;
   isVide: boolean = true;
   categoryIcons: Map<ItemCategory, string> = new Map([
     [ItemCategory.PIZZA, 'local_pizza'],
@@ -53,6 +55,10 @@ export class PanierComponent {
    */
   getIcon(category: ItemCategory): string {
     return this.categoryIcons.get(category) || 'restaurant';
+  }
+
+  get Total() {
+    return this.commande.Total;
   }
 
   /**

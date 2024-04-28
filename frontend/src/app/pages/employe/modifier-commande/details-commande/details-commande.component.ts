@@ -1,20 +1,14 @@
 import { Component, Inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
   MatDialogModule,
   MatDialogRef
 } from "@angular/material/dialog";
-import { MatCardTitle } from "@angular/material/card";
 import { Commande } from "../../../../dto/commande/commande";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatRadioButton, MatRadioGroup } from "@angular/material/radio";
 import { MatIcon } from "@angular/material/icon";
-import { MatList, MatListItem, MatListModule, MatListOption, MatSelectionList } from "@angular/material/list";
-import { ItemCommande } from "../../../../dto/commande/item-commande";
-import { MatButtonModule, MatIconButton } from "@angular/material/button";
+import { MatListModule } from "@angular/material/list";
+import { MatButtonModule } from "@angular/material/button";
 import { ApiService } from "../../../../services/api/api.service";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';

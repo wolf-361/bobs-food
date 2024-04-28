@@ -56,3 +56,27 @@ img {
     object-fit: cover;
     border-radius: 15px;
 }
+
+@media screen and (max-width: 600px){
+    :host {
+        width: 100%;
+        min-height: 300px;
+        height: fit-content;
+    }    
+
+    mat-card-title {
+        width: calc(100% - 2rem);
+    }
+
+    mat-card-subtitle {
+        max-width: calc(100% - 3rem);
+    }
+
+    img {
+        height: 200px;
+    }
+
+    .name {
+        width: calc(100% - 72px);
+    }
+}

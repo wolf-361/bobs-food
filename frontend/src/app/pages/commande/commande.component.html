@@ -1,3 +1,4 @@
+@if (!this.montrerPanierMobile) {
 <mat-stepper #stepper linear="true" [orientation]="(stepperOrientation | async)!">
     <h1>Créer un compte client</h1>
 
@@ -196,3 +197,25 @@
             </div>
         </div>
     </mat-step>
+</mat-stepper>
+}
+
+@if (!this.isMobile || this.montrerPanierMobile) {
+<app-panier [showButton]="false"></app-panier>
+}
+
+@if (this.isMobile) {
+    <mat-toolbar class="mat-elevation-z2" id="mobileCommandeMenu">
+        @if (this.montrerPanierMobile) {
+        <button mat-stroked-button color="primary" (click)="this.montrerPanierMobile = false">
+            <span>Retour</span>
+            <mat-icon iconPositionEnd>chevron_left</mat-icon>
+        </button>
+        } @else {
+        <button mat-stroked-button color="primary" (click)="this.montrerPanierMobile = true">
+            Panier
+            <mat-icon iconPositionEnd>shopping_cart</mat-icon>
+        </button>
+        }
+    </mat-toolbar>
+    }
