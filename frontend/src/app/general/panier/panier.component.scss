@@ -38,6 +38,7 @@
 .flex {
     padding: 5px;
     display: flex;
+    width: 100%;
 }
 
 // Mobile
@@ -48,5 +49,9 @@
 
     .buttons {
         max-width: 100%;
+    }
+
+    .flex {
+        width: min-content;
     }
 }

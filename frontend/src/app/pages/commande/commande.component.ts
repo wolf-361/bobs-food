@@ -31,6 +31,7 @@ import { TypeCommande } from '../../dto/commande/type-commande';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { PanierComponent } from '../../general/panier/panier.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 
@@ -55,7 +56,8 @@ import { PanierComponent } from '../../general/panier/panier.component';
     MatCheckboxModule,
     MatListModule,
     MatDividerModule,
-    PanierComponent
+    PanierComponent,
+    MatToolbarModule
   ],
   templateUrl: './commande.component.html',
   styleUrl: './commande.component.scss'
@@ -98,6 +100,9 @@ export class CommandeComponent {
     { value: TypePaiement.CHEQUE, viewValue: 'Par chèque' },
   ];
 
+  isMobile: boolean = false;
+  montrerPanierMobile = false;
+
   constructor(
     private api: ApiService,
     private auth: AuthService,
@@ -109,6 +114,10 @@ export class CommandeComponent {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
+
+    breakpointObserver.observe('(max-width: 800px)').subscribe(result => {
+      this.isMobile = result.matches;
+    });
 
     this.commande.Items.subscribe(items => {
       // if there are no items, redirect to the menu

@@ -61,20 +61,41 @@ form mat-error:not(:first-of-type) {
     display: none;
 }
 
+// Stick mobile command menu to the bottom
+#mobileCommandeMenu {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+    justify-content: center;
+}
+
+
 // Media
 @media (max-width: 600px) {
     :host {
         flex-direction: column;
     }
 
+    mat-stepper {
+        margin-bottom: 56px;
+    }
+
     app-panier {
-        width: 100vw;
+        padding: 1rem;
+        height: calc($page-height - 56px - 2rem);
+        width: calc(100% - 2rem);
         display: flex;
-        min-width: 400px;
-        max-width: 50%;
         // Le fixer à droite pour que même si on scroll, il reste à droite
         position: sticky;
         top: $mobile-menu-height;
         right: 0;
+    }
+    
+    mat-toolbar {
+        justify-content: center;
+        mat-form-field {
+            min-width: 50%;
+        }
     }
 }
