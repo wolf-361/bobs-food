@@ -15,6 +15,13 @@
         align-items: center;
         gap: 1rem;
     }
+
+    .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
 }
 
 .bottom {
@@ -38,7 +45,7 @@
 .flex {
     padding: 5px;
     display: flex;
-    width: 100%;
+    width: fit-content;
 }
 
 // Mobile

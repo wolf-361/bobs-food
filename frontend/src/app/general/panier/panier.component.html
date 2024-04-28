@@ -3,7 +3,7 @@
     <!-- Unpack item and quantity from items -->
     <mat-list>
         @for (pack of this.items; track pack.item.id;) {
-        <div class="flex">
+        <div class="item">
             <mat-list-item>
                 <mat-icon matListItemIcon>{{ this.getIcon(pack.item.categorie) }}</mat-icon>
                 <span matListItemTitle>{{ pack.item.nom }}</span>
