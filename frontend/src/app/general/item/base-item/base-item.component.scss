@@ -68,11 +68,15 @@ img {
         width: calc(100% - 2rem);
     }
 
+    mat-card-subtitle {
+        max-width: calc(100% - 3rem);
+    }
+
     img {
         height: 200px;
     }
 
     .name {
-        width: calc(100% - 2rem - 72px);
+        width: calc(100% - 72px);
     }
 }

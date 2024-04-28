@@ -1,8 +1,7 @@
-<h1 title>{{item.nom}}</h1>
+<h1 mat-dialog-title>{{item.nom + ' ' + item.prix + '$'}}</h1>
 <mat-dialog-content>
+    <p>{{item.description}}</p>
   <img [src]="item.image" alt="image de l'article">
-<p>{{item.description}}</p>
-<p>{{item.prix}} $</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-raised-button color="primary" (click)="close()">Fermer</button>
