@@ -4,12 +4,42 @@ img {
     border-radius: 5px;
 }
 
+.fabs {
+    // Align to the bottom left corner of the card
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    gap: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
 // Mobile
 @media (max-width: 600px) {
+    mat-card-content {
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .image-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     img {
         width: 100%;
-        height: 150px;
+        height: auto;
         overflow: hidden;
         object-fit: cover;
+    }
+
+    mat-dialog-actions {
+        gap: 0.5rem;
+        justify-content: center;
     }
 }

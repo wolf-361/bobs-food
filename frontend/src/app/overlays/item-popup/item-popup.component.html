@@ -1,9 +1,23 @@
 <h1 mat-dialog-title>{{item.nom + ' ' + item.prix + '$'}}</h1>
 <mat-dialog-content>
     <p>{{item.description}}</p>
-  <img [src]="item.image" alt="image de l'article">
+    <div class="image-container">
+        <img [src]="item.image" alt="image de l'article">
+
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-raised-button color="primary" (click)="close()">Fermer</button>
-  <button mat-raised-button (click)="this.addItem()"><mat-icon>add</mat-icon>Ajouter au panier</button>
+    @if (this.isMouseOver || this.isMobile) {
+        <div class="fabs" content>
+            @if (this.isDansCommande) {
+            <button mat-mini-fab color="warn" (click)="removeItem()">
+                <mat-icon>remove</mat-icon>
+            </button>
+            }
+            <button mat-mini-fab color="accent" (click)="addItem()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        }
+    <button mat-raised-button color="primary" (click)="close()">Fermer</button>
 </mat-dialog-actions>

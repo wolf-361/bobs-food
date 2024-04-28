@@ -52,6 +52,7 @@ mat-toolbar {
     app-panier {
         min-height: calc($page-height - 56px - 3rem);
         width: 100%;
+        min-width: 100%;
     }
 }
 
