@@ -70,95 +70,55 @@
         <ng-template matStepLabel>Paiement</ng-template>
         <div class="step">
             <form [formGroup]="this.paiementForm" (ngSubmit)="verifierCreditCard()" novalidate>
-                <mat-chip-listbox aria-label="Type Paiement" formControlName="typePaiement"
-                (change)="handleTypePaiementChange($event.value)">
-                @for (type of typesPaiement; track type.value) {
-                <mat-chip-option color="accent" [value]="type.value" selected>{{type.viewValue}}</mat-chip-option>
-                }
-            </mat-chip-listbox>
-
-                <mat-form-field
-                appearance="outline">
-                <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
-                <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
-                    autocomplete="cc-name">
-                <mat-error *ngIf="paiement['titulaireCarteCredit'].errors?.['required']">Ce champ est
-                    obligatoire</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
-                <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
-                    autocomplete="cc-number">
-                <mat-error *ngIf="paiement['numeroCarteCredit'].errors?.['required']">Ce champ est
-                    obligatoire</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
-                <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
-                    autocomplete="cc-exp">
-                <mat-error *ngIf="paiement['dateExpiration'].errors?.['required']">Ce champ est
-                    obligatoire</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
-                <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
-                    autocomplete="cc-csc">
-                <mat-error *ngIf="paiement['cvcCarteCredit'].errors?.['required']">Ce champ est
-                    obligatoire</mat-error>
-            </mat-form-field>
-                <!--
-                <mat-radio-group formControlName="typePaiementDistance"
-                    (change)="handleSelectionChangePaiement($event.value)">
-                    <mat-radio-button value="En ligne">En Ligne</mat-radio-button>
-                    <mat-radio-button value="En Personne">En personne</mat-radio-button>
-                </mat-radio-group>
-
-                <mat-chip-listbox aria-label="Type Paiement" formControlName="typePaiement"
-                    (change)="handleSelectionChangeTypePaiement($event.value)">
-                    <mat-chip-option color="accent"
-                        [disabled]="selectedValuePaiement === 'En Personne'">Carte</mat-chip-option>
-                    <mat-chip-option color="accent"
-                        [disabled]="selectedValuePaiement === 'En ligne'">Espèce</mat-chip-option>
-                    <mat-chip-option color="accent" selected
-                        [disabled]="selectedValuePaiement === 'En ligne'">Chèque</mat-chip-option>
+                <mat-chip-listbox aria-label="Type Paiement" formControlName="typePaiement" required
+                    (change)="handleTypePaiementChange($event.value)">
+                    @for (type of typesPaiement; track type.value) {
+                    <mat-chip-option color="accent" [value]="type.value">{{type.viewValue}}</mat-chip-option>
+                    }
                 </mat-chip-listbox>
 
-                @if (selectedValuePaiement == 'En ligne' && selectedValueTypePaiement == 'Carte') {<mat-form-field
-                    appearance="outline">
+                <mat-checkbox formControlName="enPersonne" labelPosition="before"
+                    (change)="handleEnPersonneChange($event.checked)">En
+                    personne</mat-checkbox>
+
+                @if (this.showCreditCard) {
+                <mat-form-field appearance="outline">
                     <mat-label>Entrer le nom sur votre carte de crédit</mat-label>
                     <input matInput placeholder="Nom sur la carte de crédit" formControlName="titulaireCarteCredit"
                         autocomplete="cc-name">
-                    <mat-error *ngIf="creditCard['titulaireCarteCredit'].errors?.['required']">Ce champ est
+                    <mat-error *ngIf="paiement['titulaireCarteCredit'].errors?.['required']">Ce champ est
                         obligatoire</mat-error>
+                    <mat-error *ngIf="paiement['titulaireCarteCredit'].errors?.['pattern']">Le nom sur la carte de
+                        crédit est invalide</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer le numéro de votre carte de crédit</mat-label>
-                    <input matInput placeholder="Numéro de carte de crédit" formControlName="numeroCarteCredit"
-                        autocomplete="cc-number">
-                    <mat-error *ngIf="creditCard['numeroCarteCredit'].errors?.['required']">Ce champ est
+                    <input matInput inputmode="numeric" placeholder="Numéro de carte de crédit"
+                        formControlName="numeroCarteCredit" autocomplete="cc-number">
+                    <mat-error *ngIf="paiement['numeroCarteCredit'].errors?.['required']">Ce champ est
                         obligatoire</mat-error>
+                    <mat-error *ngIf="paiement['numeroCarteCredit'].errors?.['pattern']">Le numéro de carte de crédit
+                        est invalide, Entrer un numero à 16 chiffres</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer la date d'expiration de votre carte de crédit</mat-label>
                     <input matInput placeholder="Date d'expiration" formControlName="dateExpiration"
                         autocomplete="cc-exp">
-                    <mat-error *ngIf="creditCard['dateExpiration'].errors?.['required']">Ce champ est
+                    <mat-error *ngIf="paiement['dateExpiration'].errors?.['required']">Ce champ est
                         obligatoire</mat-error>
+                    <mat-error *ngIf="paiement['dateExpiration'].errors?.['pattern']">La date d'expiration est invalide,
+                        Ex. 11/03</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Entrer le code de sécurité de votre carte de crédit</mat-label>
-                    <input matInput placeholder="Code de sécurité" formControlName="cvcCarteCredit"
+                    <input matInput inputmode="numeric" placeholder="Code de sécurité" formControlName="cvcCarteCredit"
                         autocomplete="cc-csc">
-                    <mat-error *ngIf="creditCard['cvcCarteCredit'].errors?.['required']">Ce champ est
+                    <mat-error *ngIf="paiement['cvcCarteCredit'].errors?.['required']">Ce champ est
                         obligatoire</mat-error>
+                    <mat-error *ngIf="paiement['cvcCarteCredit'].errors?.['pattern']">Le code de sécurité est invalide,
+                        Entrer un numero à 3 chiffres</mat-error>
                 </mat-form-field>
                 }
-
-
-                <ng-container *ngIf="selectedValuePaiement === 'En personne'">
-                    // TO DO
-                </ng-container>
-            -->
                 <div class="buttons">
                     <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
                     <button mat-raised-button color="primary" matStepperNext
@@ -173,16 +133,64 @@
         <ng-template matStepLabel>Vérification</ng-template>
         <div class="step">
             <h2>Confirmer les informations suivantes:</h2>
-
-
-            <div class="commande">
-                <div class="panier">
-                </div>
-                <p>Total de la commande: </p>
+            <mat-list>
+                <div matSubheader>Informations personnelles</div>
+                <mat-list-item>
+                    <div matListItemTitle>Prenom</div>
+                    <div matListItemLine>{{ this.clientInfoForm.value.prenom }}</div>
+                </mat-list-item>
+                <mat-list-item>
+                    <div matListItemTitle>Nom</div>
+                    <div matListItemLine>{{ this.clientInfoForm.value.nom }}</div>
+                </mat-list-item>
+                <mat-list-item>
+                    <div matListItemTitle>Courriel</div>
+                    <div matListItemLine>{{ this.clientInfoForm.value.courriel }}</div>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <div matSubheader>Options de livraison</div>
+                <mat-list-item>
+                    <div matListItemTitle>Type de commande</div>
+                    <div matListItemLine>{{ this.livraisonForm.value.typeCommande }}</div>
+                </mat-list-item>
+                @if (this.isLivraison) {
+                <mat-list-item>
+                    <div matListItemTitle>Adresse de livraison</div>
+                    <div matListItemLine>{{ this.livraisonForm.value.adresse }}</div>
+                </mat-list-item>
+                }
+                <mat-divider></mat-divider>
+                <div matSubheader>Paiement</div>
+                <mat-list-item>
+                    <div matListItemTitle>Type de paiement</div>
+                    <div matListItemLine>{{ this.paiementForm.value.typePaiement }}</div>
+                </mat-list-item>
+                <mat-list-item>
+                    <div matListItemTitle>En personne</div>
+                    <div matListItemLine>{{ this.paiementForm.value.enPersonne ? 'Oui' : 'Non' }}</div>
+                </mat-list-item>
+                @if (this.showCreditCard) {
+                <mat-list-item>
+                    <div matListItemTitle>Titulaire de la carte de crédit</div>
+                    <div matListItemLine>{{ this.paiementForm.value.titulaireCarteCredit }}</div>
+                </mat-list-item>
+                <mat-list-item>
+                    <div matListItemTitle>Numéro de carte de crédit</div>
+                    <div matListItemLine>{{ this.paiementForm.value.numeroCarteCredit }}</div>
+                </mat-list-item>
+                <mat-list-item>
+                    <div matListItemTitle>Date d'expiration</div>
+                    <div matListItemLine>{{ this.paiementForm.value.dateExpiration }}</div>
+                </mat-list-item>
+                <mat-list-item>
+                    <div matListItemTitle>Code de sécurité</div>
+                    <div matListItemLine>{{ this.paiementForm.value.cvcCarteCredit }}</div>
+                </mat-list-item>
+                }
+            </mat-list>
+            <div class="buttons">
+                <button mat-raised-button color="primary" matStepperPrevious>Retour</button>
+                <button mat-raised-button color="primary" (click)="this.onSubmitCommande()">Confirmer</button>
             </div>
-
-            <button mat-raised-button color="primary" (click)="onSubmitCommande()">Confirmer la commande</button>
-
-
         </div>
     </mat-step>

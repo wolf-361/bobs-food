@@ -28,6 +28,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ItemCommande } from '../../dto/commande/item-commande';
 import { TypeCommande } from '../../dto/commande/type-commande';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 
@@ -48,7 +50,10 @@ import { TypeCommande } from '../../dto/commande/type-commande';
     MatSelectModule,
     MatListModule,
     MatChipsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatCheckboxModule,
+    MatListModule,
+    MatDividerModule
   ],
   templateUrl: './commande.component.html',
   styleUrl: './commande.component.scss'
@@ -70,11 +75,11 @@ export class CommandeComponent {
 
   paiementForm: FormGroup = new FormGroup({
     typePaiement: new FormControl('', [Validators.required]),
-    typePaiementDistance: new FormControl('', [Validators.required]),
-    titulaireCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
-    numeroCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{16}$/)]),
-    dateExpiration: new FormControl('', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]),
-    cvcCarteCredit: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/)]),
+    enPersonne: new FormControl(false),
+    titulaireCarteCredit: new FormControl(),
+    numeroCarteCredit: new FormControl(),
+    dateExpiration: new FormControl(),
+    cvcCarteCredit: new FormControl(),
   });
 
   items: ItemCommande[] = [];
@@ -112,6 +117,13 @@ export class CommandeComponent {
         // Disable the email field
         this.clientInfoForm.get('courriel')?.disable();
 
+        // Set the values of the form
+        this.clientInfoForm.setValue({
+          prenom: client.prenom,
+          nom: client.nom,
+          courriel: client.courriel
+        });
+
         this.livraisonForm.setValue({
           typeCommande: TypeCommande.LIVRAISON,
           adresse: client.adresse
@@ -122,13 +134,16 @@ export class CommandeComponent {
 
         this.paiementForm.setValue({
           typePaiement: TypePaiement.CARTE,
-          typePaiementDistance: TypePaiement.CARTE,
-          titulaireCarteCredit: client.prenom + ' ' + client.nom,
+          enPersonne: false,
+          titulaireCarteCredit: client.titulaireCarteCredit,
           numeroCarteCredit: client.numeroCarteCredit,
           dateExpiration: client.dateExpirationCarteCredit,
           cvcCarteCredit: client.cvcCarteCredit
         });
       });
+
+      // Setup the validation for the credit card fields
+      this.checkIfCreditIsNeeded();
     }
 
     // Set the default type of the command
@@ -140,15 +155,54 @@ export class CommandeComponent {
   }
 
   handleTypePaiementChange(value: TypePaiement) {
-    this.commande.Paiement.type = value;
+    this.commande.TypeDePaiement = value;
+    this.checkIfCreditIsNeeded();
+  }
+
+  handleEnPersonneChange(value: boolean) {
+    this.isPaiementEnPersonne = value;
+    this.checkIfCreditIsNeeded();
+  }
+
+  private checkIfCreditIsNeeded() {
+    if (this.commande.TypeDePaiement === TypePaiement.CARTE && !this.isPaiementEnPersonne) {
+      // Check in person
+      this.paiementForm.get('enPersonne')?.setValue(false);
+
+      // Set the credit card fields as required
+      this.paiementForm.get('titulaireCarteCredit')?.setValidators([Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]);
+      this.paiementForm.get('numeroCarteCredit')?.setValidators([Validators.required, Validators.pattern(/^[0-9]{16}$/)]);
+      this.paiementForm.get('dateExpiration')?.setValidators([Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/[0-9]{2}$/)]);
+      this.paiementForm.get('cvcCarteCredit')?.setValidators([Validators.required, Validators.pattern(/^[0-9]{3}$/)]);
+    } else {
+      // Check in person
+      this.paiementForm.get('enPersonne')?.setValue(true);
+      this.commande.PayerEnPersonne = true;
+
+      // Remove the required validators
+      this.paiementForm.get('titulaireCarteCredit')?.clearValidators()
+      this.paiementForm.get('numeroCarteCredit')?.clearValidators();
+      this.paiementForm.get('dateExpiration')?.clearValidators();
+      this.paiementForm.get('cvcCarteCredit')?.clearValidators();
+    }
+
+    // Update value and validity
+    this.paiementForm.get('titulaireCarteCredit')?.updateValueAndValidity();
+    this.paiementForm.get('numeroCarteCredit')?.updateValueAndValidity();
+    this.paiementForm.get('dateExpiration')?.updateValueAndValidity();
+    this.paiementForm.get('cvcCarteCredit')?.updateValueAndValidity();
   }
 
   isConnected(): boolean {
     return this.auth.IsAuthenticated;
   }
 
-  get isLivraison(): boolean {    
+  get isLivraison(): boolean {
     return this.commande.Type === TypeCommande.LIVRAISON;
+  }
+
+  get showCreditCard(): boolean {
+    return this.commande.TypeDePaiement === TypePaiement.CARTE && !this.isPaiementEnPersonne;
   }
 
   /**

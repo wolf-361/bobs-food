@@ -9,6 +9,7 @@ import { ApiService } from '../api/api.service';
 import { LoggerService } from '../logger/logger.service';
 import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 import { ItemCommande } from '../../dto/commande/item-commande';
+import { TypePaiement } from '../../dto/commande/type-paiement';
 
 /**
  * Service permettant de monter une commande
@@ -22,7 +23,7 @@ export class CommandeService {
   private date?: Date;
   private items: BehaviorSubject<ItemCommande[]>;
   private client?: Client;
-  private paiement?: Paiement;
+  private paiement: Paiement;
 
   constructor(
     private auth: AuthService,
@@ -32,6 +33,7 @@ export class CommandeService {
     this.items = new BehaviorSubject<ItemCommande[]>([]);
     this.total = 0;
     this.calculateTotal().subscribe(total => this.total = total);
+    this.paiement = new Paiement();
   }
 
   // Allow to subscribe to the items in the command
@@ -138,12 +140,18 @@ export class CommandeService {
     this.client = client;
   }
 
-  /**
-   * Set the paiement for the command
-   */
-  public set Paiement(paiement: Paiement) {
-    this.paiement = paiement;
+  public set TypeDePaiement(type: TypePaiement) {
+    this.paiement.type = type;
   }
+
+  public get TypeDePaiement(): TypePaiement {
+    return this.paiement.type;
+  }
+
+  public set PayerEnPersonne(payerEnPersonne: boolean) {
+    this.paiement.payerEnPersonne = payerEnPersonne;
+  }
+  
 
   /**
    * Submit the command to the server

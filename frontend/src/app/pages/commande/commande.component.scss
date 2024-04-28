@@ -1,7 +1,7 @@
 @import "src/styles/constant.scss";
 
 :host {
-    height: calc($page-height);
+    min-height: calc($page-height);
     width: 100%;
     display: flex;
     flex-direction: column;
