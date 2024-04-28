@@ -1,5 +1,5 @@
 :host {
-    width: 300px;
+    width: 350px;
     min-height: 300px;
     height: fit-content;
 }
@@ -33,11 +33,19 @@ mat-card-content {
 }
 
 mat-card-title {
-    min-width: calc(300px - 2rem);
+    width: calc(350px - 2rem);
+    height: 32px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: wrap;
+}
+
+.name {
+    width: calc(350px - 2rem - 72px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 

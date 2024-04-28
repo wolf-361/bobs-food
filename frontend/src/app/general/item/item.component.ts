@@ -65,6 +65,9 @@ export class ItemComponent extends BaseOverlayController {
 
     // Check if the item is in the cart
     this.commande.Items.subscribe(items => {
+      if (!this.item) {
+        return;
+      }
       this.isDansCommande = items.findIndex(i => i.item.id === this.item.id) !== -1;
     });
 

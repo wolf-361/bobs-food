@@ -1,13 +1,14 @@
 import { TypePaiement } from "./type-paiement";
 
 export class Paiement {
-    id: number;
+    id?: number;
     type: TypePaiement;
     montant: number;
+    payerEnPersonne: boolean;
 
-    constructor(id: number, type: TypePaiement, montant: number) {
-        this.id = id;
-        this.type = type;
-        this.montant = montant;
+    constructor() {
+        this.type = TypePaiement.CARTE;
+        this.montant = 0;
+        this.payerEnPersonne = false;
     }
 }

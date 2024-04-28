@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +19,11 @@ import { Router } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {MatProgressBar} from "@angular/material/progress-bar";
 import {NgIf} from "@angular/common";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { firstValueFrom } from 'rxjs';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-home',
@@ -30,13 +35,20 @@ import {NgIf} from "@angular/common";
     ItemComponent,
     PanierComponent,
     MatExpansionModule,
+    MatFormFieldModule,
+    MatSelectModule,
     MatProgressBar,
     NgIf,
+    ReactiveFormsModule,
+    FormsModule,
+    MatInputModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent extends BaseOverlayController{
+export class HomeComponent {
+  restaurentSelecterFormControl: FormControl = new FormControl();
+  restaurents!: Restaurent[];
   restaurent!: Restaurent;
   // Dictionary of categories and their items
   menu: Map<ItemCategory, Item[]> = new Map<ItemCategory, Item[]>();
@@ -50,24 +62,21 @@ export class HomeComponent extends BaseOverlayController{
 
 
   constructor(
-    private injector: Injector,
-    private parentOverlay: Overlay,
     private restaurentService: RestaurentService,
     private commande: CommandeService,
-    private breakpointObserver: BreakpointObserver,
-    private router: Router
+    private api: ApiService,
+    private breakpointObserver: BreakpointObserver
   ) {
-    super(parentOverlay);
-
-    // TODO: If the restaurent is not set, propose to choose one
-
+    firstValueFrom(this.api.getRestaurents()).then((restaurents) => {
+      this.restaurents = restaurents;
+    });
     // Get the restaurent
     this.restaurentService.restaurent.subscribe((restaurent: Restaurent) => {
       if (!restaurent) {
         return;
       }
-
       this.restaurent = restaurent;
+      this.restaurentSelecterFormControl.setValue(restaurent.id); // Set the selected value
 
       // Load the menu once it is set, set the loading to false
       this.loadMenu();
@@ -75,7 +84,7 @@ export class HomeComponent extends BaseOverlayController{
     });
 
     // Listen to the screen size
-    this.breakpointObserver.observe('(max-width: 600px)').subscribe(result => {
+    this.breakpointObserver.observe('(max-width: 1024px)').subscribe(result => {
       this.isMobile = result.matches;
     });
 
@@ -83,20 +92,13 @@ export class HomeComponent extends BaseOverlayController{
     this.commande.Items.subscribe(items => this.isPanierVide = items.length === 0);
   }
 
-  commander() {
-    this.router.navigate(['/commander']);
-  }
-
-  addItem(item: Item) {
-    this.commande.addItem(item);
-  }
-
-  removeItem(item: Item) {
-    this.commande.removeItem(item);
-  }
-
-  passerCommande() {
-    this.commande.submit();
+  changeSelectedRestaurent(selectedRestaurent: MatSelectChange) {
+    const restaurent = this.restaurents.find((r) => r.id == selectedRestaurent.value);
+    
+    if (!restaurent) {
+      return;
+    }
+    this.restaurentService.restaurent = restaurent;
   }
 
   get categories(): ItemCategory[] {
@@ -108,25 +110,19 @@ export class HomeComponent extends BaseOverlayController{
   }
 
   private loadMenu() {
+    // Clear the menu
+    this.menu.clear();
+
+    // Remove the items from the command that are not in the menu
+    this.commande.filterItems(this.restaurent.menu)
+
+    // Fill the menu with the new items
     for (const item of this.restaurent.menu) {
       if (!this.menu.has(item.categorie)) {
         this.menu.set(item.categorie, []);
       }
       this.menu.get(item.categorie)?.push(item);
     }
-  }
-
-  protected override get componentPortal(): ComponentPortal<any> {
-    return new ComponentPortal(ChoisirCommandeComponent, null, this.createInjector());
-  }
-
-  private createInjector() {
-    return Injector.create({
-      parent: this.injector,
-      providers: [
-        { provide: OverlayRef, useValue: this.overlayRef }
-      ]
-    });
   }
 
 }

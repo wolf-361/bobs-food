@@ -6,10 +6,20 @@
 
 mat-toolbar {
     // Space elements 
+    height: 72px;
     gap: 1.5rem;
+    justify-content: end;
+
+    mat-form-field {
+        width: fit-content;
+        margin: .5rem 0;
+        min-width: 600px;
+        max-width: 100%;
+    }
 }
 
 .page  {
+    min-height: calc($page-height - 56px - 56px);
     display: flex;
     flex-direction: row;
     gap: 1.5rem;
@@ -31,13 +41,18 @@ mat-toolbar {
 
 .panier {
     display: flex;
-    min-width: 300px;
+    min-width: 400px;
     max-width: 50%;
     // Le fixer à droite pour que même si on scroll, il reste à droite
     position: sticky;
     top: $mobile-menu-height;
     right: 0;
     flex-direction: column;
+    
+    app-panier {
+        min-height: calc($page-height - 56px - 3rem);
+        width: 100%;
+    }
 }
 
 // Stick mobile command menu to the bottom
@@ -51,7 +66,27 @@ mat-toolbar {
 
 // Medium-large screen
 @media screen and (max-width: 1024px) {
-    .panier {
-        min-width: 200px;
+    .page {
+        flex-direction: column;
     }
+
+    .panier {
+        min-width: 100%;
+
+        app-panier {
+            width: calc(100vw - 3rem);
+            min-height: calc(100vh - 56px - 56px - 3rem - 72px);
+            margin-bottom: 72px;
+        }
+    }
+    
+
+
+    mat-toolbar {
+        justify-content: center;
+        mat-form-field {
+            min-width: 50%;
+        }
+    }
+    
 }

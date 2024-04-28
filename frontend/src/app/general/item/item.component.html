@@ -1,5 +1,5 @@
 <app-base-item [item]="item">
-    @if (this.isMouseOver) {
+    @if (this.isMouseOver || this.isMobile) {
     <div class="fabs" content>
         @if (this.isDansCommande) {
         <button mat-mini-fab color="warn" (click)="removeFromCart()">

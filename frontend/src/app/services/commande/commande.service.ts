@@ -7,8 +7,9 @@ import { Paiement } from '../../dto/commande/paiement';
 import { AuthService } from '../auth/auth.service';
 import { ApiService } from '../api/api.service';
 import { LoggerService } from '../logger/logger.service';
-import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, Observable, Subject } from 'rxjs';
 import { ItemCommande } from '../../dto/commande/item-commande';
+import { TypePaiement } from '../../dto/commande/type-paiement';
 
 /**
  * Service permettant de monter une commande
@@ -17,12 +18,12 @@ import { ItemCommande } from '../../dto/commande/item-commande';
   providedIn: 'root'
 })
 export class CommandeService {
-  private type?: TypeCommande;
+  private TypeCommande?: TypeCommande;
   private total: number;
   private date?: Date;
   private items: BehaviorSubject<ItemCommande[]>;
   private client?: Client;
-  private paiement?: Paiement;
+  private paiement: Paiement;
 
   constructor(
     private auth: AuthService,
@@ -32,6 +33,7 @@ export class CommandeService {
     this.items = new BehaviorSubject<ItemCommande[]>([]);
     this.total = 0;
     this.calculateTotal().subscribe(total => this.total = total);
+    this.paiement = new Paiement();
   }
 
   // Allow to subscribe to the items in the command
@@ -42,14 +44,18 @@ export class CommandeService {
   /**
    * Set the type of the command
    */
-  public set Type(type: TypeCommande) {
-    this.type = type;
+  public set Type(TypeCommande: TypeCommande) {
+    this.TypeCommande = TypeCommande;
+  }
+
+  public get Type(): TypeCommande {
+    return this.TypeCommande || TypeCommande.LIVRAISON;
   }
 
   /**
    * Calculate the total of the command (ideally should be done on the server)
    */
-  private calculateTotal(): Observable<number> {
+  public calculateTotal(): Observable<number> {
     return this.items.asObservable().pipe(
       map(items => items.reduce((acc, i) => acc + i.item.prix * i.quantite, 0))
     );
@@ -113,32 +119,61 @@ export class CommandeService {
   }
 
   /**
-   * Set the client for the command
+   * Clear the command
    */
-  public set Client(client: Client) {
-    this.client = client;
+  public clearCommande(): void {
+    this.items.next([]);
   }
 
   /**
-   * Set the paiement for the command
+   * Filter the items in the command to only include the ones in the menu
    */
-  public set Paiement(paiement: Paiement) {
-    this.paiement = paiement;
+  public filterItems(menu: Item[]) {
+    const items = this.items.value.filter(i => menu.find(m => m.id === i.item.id));
+    this.items.next(items);
   }
+
+  /**
+   * Set the client for the command
+   */
+  public set Client(client: Client) {
+    this.client = client;    
+  }
+
+  /**
+   * Get the client for the command
+   */
+  public get Client(): Client | undefined {
+    return this.client;
+  }
+
+  public set TypeDePaiement(type: TypePaiement) {
+    this.paiement.type = type;
+  }
+
+  public get TypeDePaiement(): TypePaiement {
+    return this.paiement.type;
+  }
+
+  public set PayerEnPersonne(payerEnPersonne: boolean) {
+    this.paiement.payerEnPersonne = payerEnPersonne;
+  }
+  
 
   /**
    * Submit the command to the server
    */
-  public submit(): void {
-    if (!this.type) {
+  public submit(): Promise<boolean> {
+    if (!this.TypeCommande) {
       throw new Error('Type is required');
     }
 
+    // If the date is not set, set it to now
     if (!this.date) {
-      throw new Error('Date is required');
+      this.date = new Date();
     }
 
-    if (!this.auth.IsAuthenticated && !this.client) {
+    if (!this.client) {
       throw new Error('Client is required');
     }
 
@@ -152,7 +187,7 @@ export class CommandeService {
 
     // Create the command
     const commande = new Commande(
-      this.type,
+      this.TypeCommande,
       this.total,
       this.date,
       this.items.value,
@@ -162,19 +197,12 @@ export class CommandeService {
     );
 
     // Submit the command (if the user is auth, they will be added in the backend)
-    this.api.postCommande(commande).subscribe({
-      next: commande => {
-        this.logger.commande('Commande created ' + JSON.stringify(commande));
-      },
-      error: error => {
-        this.logger.commande('Error creating the command ' + JSON.stringify(error));
-      }
+    return firstValueFrom(this.api.postCommande(commande)).then(() => {
+      this.clearCommande();
+      return true;
+    }).catch((error) => {
+      this.logger.commande('Error creating the command ' + JSON.stringify(error));
+      return false;
     });
-
   }
-
-
-
-
-
 }

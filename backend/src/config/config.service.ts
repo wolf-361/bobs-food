@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { env } from 'process';

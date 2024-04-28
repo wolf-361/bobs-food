@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Item } from '../../dto/item/item';
 import { ItemCategory } from '../../dto/item/item-categorie';
 import { ItemCommande } from '../../dto/commande/item-commande';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-panier',
@@ -15,6 +16,7 @@ import { ItemCommande } from '../../dto/commande/item-commande';
     MatIconModule,
     MatButtonModule,
     MatListModule,
+    LayoutModule,
   ],
   templateUrl: './panier.component.html',
   styleUrl: './panier.component.scss'
@@ -23,11 +25,11 @@ export class PanierComponent {
   isVide: boolean = true;
   categoryIcons: Map<ItemCategory, string> = new Map([
     [ItemCategory.PIZZA, 'local_pizza'],
-    [ItemCategory.POUTINE, 'restaurant_menu'],
-    [ItemCategory.FRITE, 'fastfood'],
-    [ItemCategory.BURGER, 'hamburger'],
-    [ItemCategory.SANDWICH, 'sandwich'],
-    [ItemCategory.SALADE, 'salad'],
+    [ItemCategory.POUTINE, 'ramen_dining'],
+    [ItemCategory.FRITE, 'tapas'],
+    [ItemCategory.BURGER, 'lunch_dining'],
+    [ItemCategory.SANDWICH, 'breakfast_dining'],
+    [ItemCategory.SALADE, 'local_dining'],
     [ItemCategory.DESSERT, 'cake'],
     [ItemCategory.BOISSON, 'local_drink'],
     [ItemCategory.AUTRE, 'restaurant'],
@@ -54,9 +56,27 @@ export class PanierComponent {
   }
 
   /**
+   * Remove the given item from the command
+   * @param item The item to remove
+   */
+  onDecrease(item: Item) {
+    this.commande.removeItem(item);
+  }
+
+  onIncrease(item: Item) {
+    this.commande.addItem(item);
+  }
+
+
+  /**
    * Redirect to the command page
    */
   commander() {
     this.router.navigate(['/commander']);
   }
+  
+  viderPanier() {
+    this.commande.clearCommande();
+  }
+  
 }

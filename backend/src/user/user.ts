@@ -14,9 +14,9 @@ export class User {
     @Column()
     adresse: string;
 
-    @Column()
+    @Column({ nullable: true })
     salt: string;
 
-    @Column()
+    @Column({ nullable: true })
     hashedPassword: string;
 }
