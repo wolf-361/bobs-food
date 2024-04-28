@@ -27,7 +27,7 @@ export class Commande {
     })
     items: ItemCommande[];
 
-    @ManyToOne(() => Client, { eager: true })
+    @ManyToOne(() => Client, { cascade: ['insert'], eager: true, nullable: true })
     @JoinTable()
     client: Client
 

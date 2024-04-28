@@ -13,6 +13,7 @@ export class ClientController {
 
   @Post('signup')
   signup(@Body() signupDto: ClientSignUpDto) {
+    signupDto.estInscrit = true;
     return this.clientService.signup(signupDto);
   }
 

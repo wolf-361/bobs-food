@@ -6,7 +6,7 @@ export class Client extends User {
     @PrimaryColumn()
     courriel: string;
 
-    @Column()
+    @Column({ default: false })
     estInscrit: boolean;
 
     @Column({ nullable: true })
