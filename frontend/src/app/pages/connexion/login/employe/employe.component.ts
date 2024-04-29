@@ -57,7 +57,9 @@ export class EmployeComponent {
       return;
     }
 
-    this.api.loginEmploye(this.loginForm.value.email, this.loginForm.value.password).subscribe({
+    console.log(this.loginForm.value);
+
+    this.api.loginEmploye(this.loginForm.value.employeId, this.loginForm.value.password).subscribe({
       next: (response) => this.handleLoginSuccess(response),
       error: (error) => this.handleLoginError(error)
     });
@@ -81,7 +83,7 @@ export class EmployeComponent {
    */
   private handleLoginError(error: HttpErrorResponse) {
     if (error.status === 401) {
-      this.snackBar.open('Email ou mot de passe invalide', 'Fermer', { duration: 5000 });
+      this.snackBar.open('Identifiant ou mot de passe invalide', 'Fermer', { duration: 5000 });
       // Clear the fields
       this.loginForm.reset();
     }
