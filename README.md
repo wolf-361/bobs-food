@@ -14,12 +14,18 @@ Projet de fin de session pour le cours INF1007
 
 ## Setup Docker en production
 
-1. Cloner le docker-compose.yml
+1. Cloner le docker-compose.prod.yml
 2. Changer les variables d'environnement dans celui-ci pour les valeurs désirées
 3. Exécuter le docker-compose
 
 ```bash
-docker-compose up -d
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+## Setup en buildant des images locales
+
+```bash
+docker-compose -f docker-compose.all.yml up -d
 ```
 
 ## Setup Docker en développement
@@ -28,7 +34,7 @@ docker-compose up -d
 2. Commencer le docker de la bd
 
 ```bash
-docker-compose -f docker-compose.dev.yml up -d
+docker-compose up -d
 ```
 
 3. Installer les dépendances pour le backend et le frontend

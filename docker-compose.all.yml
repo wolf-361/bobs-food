@@ -27,11 +27,16 @@ services:
       # Mode
       MODE: 'prod'
       DB_LOGGING: 'false'
+      DB_SYNC: 'true'
 
       # Database
       DB_HOST: 'bobs-db'
       DB_USER: 'bobs-db'
       DB_PASSWORD: '*@foWyYrMi9GVwZFb4GKdYRjkj.ZXC6j'
+
+      # JWT
+      JWT_SECRET: 'Wp3QeqgkAyDLVqhm7LwVnVxHdNYYeH4zVZP6m88D3wKGKYFF4iPa2C4UbrvhPayA'
+      JWT_EXPIRATION_TIME: '1h'
 
   bobs-db:
     image: postgres:16.0
